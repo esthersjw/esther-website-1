@@ -820,19 +820,16 @@
     }
     .mag-step-body p:last-child { margin-bottom: 0; }
     .mag-step-body strong { color: var(--ink); font-weight: 700; }
-    .mag-extra-imgs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(12px, 2vw, 20px);
+    .mag-extra-imgs-full {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(16px, 2vw, 24px);
       margin-top: 1.5rem;
     }
-    .mag-extra-imgs img {
+    .mag-extra-imgs-full img {
       width: 100%;
       border-radius: 12px;
       border: 2px solid var(--yellow);
-    }
-    @media (max-width: 600px) {
-      .mag-extra-imgs { grid-template-columns: 1fr; }
     }
 
     /* 变化洞察 - Pull Quote黄边 */
@@ -1402,7 +1399,7 @@
                 <p>每天晚上十点半,闹钟响起。Cola先行观察并列出三个我做得好的地方--她不是在夸我,是在说出她真实观察到的。</p>
                 <p>起初我只关注"做了什么":全是事件,没有"我"。<strong>后来Cola开始引导我--每天必须有一条是关于"我是一个什么样的人"。</strong></p>
                 <p>从“今天做了X”变成“我是一个愿意探索世界的人”。这种对本质特质的确认，让我开始有意识地发现自己身上的优秀特质。40多天后，那种焦虑和自我否定被大大减缓了。</p>
-                <div class="mag-extra-imgs">
+                <div class="mag-extra-imgs-full">
                   <img src="assets/0618-直播-09-自我认可top5.png" alt="41天自我认可Top 5" class="reveal">
                   <img src="assets/0618-直播-10-三条弧线.png" alt="三条进步弧线" class="reveal reveal-d1">
                 </div>
