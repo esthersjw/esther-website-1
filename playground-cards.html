@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>卡片风格 Playground — 10 Styles</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Fira+Code:wght@400;500&family=Fraunces:ital,wght@0,400;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #fefcf6;
+  --blue: #2B7FD8;
+  --blue-deep: #1E5BA8;
+  --yellow: #F4D758;
+  --red: #E84A5F;
+  --ink: #1A1A2E;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--cream);
+  font-family: 'Noto Sans SC', 'Inter', sans-serif;
+  padding: 40px;
+}
+h1 {
+  font-family: 'Caveat', cursive;
+  font-size: 32px;
+  color: var(--blue-deep);
+  margin-bottom: 12px;
+}
+.subtitle { font-size: 13px; color: #888; margin-bottom: 40px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 32px;
+}
+.card-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--blue);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+/* ===== STYLE 1: 杂志剪报风 ===== */
+.card-1 {
+  background: #fff;
+  border: 2px solid var(--ink);
+  padding: 24px;
+  position: relative;
+  transform: rotate(-0.8deg);
+}
+.card-1::before {
+  content: '';
+  position: absolute;
+  top: -4px; left: 20px;
+  width: 40px; height: 16px;
+  background: var(--yellow);
+  opacity: 0.8;
+}
+.card-1 h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.card-1 p { font-size: 13px; line-height: 1.8; color: #444; }
+
+/* ===== STYLE 2: 蓝色渐变底+白字 ===== */
+.card-2 {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+  border-radius: 14px;
+  padding: 28px;
+  color: #fff;
+}
+.card-2 h3 {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  margin-bottom: 12px;
+  opacity: 0.95;
+}
+.card-2 p { font-size: 13px; line-height: 1.8; opacity: 0.8; }
+.card-2 .tag {
+  display: inline-block;
+  margin-top: 12px;
+  background: rgba(255,255,255,0.15);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+}
+
+/* ===== STYLE 3: 手写便签 ===== */
+.card-3 {
+  background: #FFF9DB;
+  padding: 24px 20px;
+  border-radius: 2px;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.06);
+  transform: rotate(1.2deg);
+  border-bottom: 3px solid rgba(244,215,88,0.5);
+}
+.card-3 h3 {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.card-3 p {
+  font-family: 'Caveat', cursive;
+  font-size: 15px;
+  line-height: 1.9;
+  color: #555;
+}
+
+/* ===== STYLE 4: 终端风 ===== */
+.card-4 {
+  background: var(--blue-deep);
+  border-radius: 10px;
+  padding: 0;
+  overflow: hidden;
+}
+.card-4 .titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: rgba(0,0,0,0.2);
+}
+.card-4 .dot { width: 8px; height: 8px; border-radius: 50%; }
+.card-4 .dot-r { background: #ff5f57; }
+.card-4 .dot-y { background: #ffbd2e; }
+.card-4 .dot-g { background: #28ca41; }
+.card-4 .body {
+  padding: 16px;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.85);
+}
+.card-4 .prompt { color: var(--yellow); }
+.card-4 .cmd { color: #fff; }
+
+/* ===== STYLE 5: 极简线框 ===== */
+.card-5 {
+  background: transparent;
+  border: 1.5px solid rgba(43,127,216,0.3);
+  border-radius: 12px;
+  padding: 24px;
+}
+.card-5 h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue);
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.card-5 p { font-size: 13px; line-height: 1.8; color: #666; }
+.card-5 .divider {
+  width: 30px; height: 2px;
+  background: var(--yellow);
+  margin: 12px 0;
+}
+
+/* ===== STYLE 6: 大引号卡 ===== */
+.card-6 {
+  background: #fff;
+  border-left: 5px solid var(--blue);
+  padding: 24px 24px 24px 28px;
+  border-radius: 0 12px 12px 0;
+  box-shadow: 0 4px 16px rgba(43,127,216,0.08);
+  position: relative;
+}
+.card-6::before {
+  content: '"';
+  position: absolute;
+  top: 8px; left: 12px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 48px;
+  color: rgba(43,127,216,0.12);
+  line-height: 1;
+}
+.card-6 h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.card-6 p { font-size: 13px; line-height: 1.8; color: #555; }
+
+/* ===== STYLE 7: 圆角照片卡 (带彩色阴影) ===== */
+.card-7 {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(232,74,95,0.1), 0 2px 8px rgba(43,127,216,0.06);
+}
+.card-7 .emoji { font-size: 28px; margin-bottom: 12px; }
+.card-7 h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.card-7 p { font-size: 12px; line-height: 1.8; color: #666; }
+.card-7 .footer-tags {
+  margin-top: 14px;
+  display: flex;
+  gap: 6px;
+}
+.card-7 .ftag {
+  background: rgba(43,127,216,0.08);
+  color: var(--blue);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* ===== STYLE 8: 编号主导 ===== */
+.card-8 {
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px;
+  border: 1px solid rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+}
+.card-8 .big-num {
+  position: absolute;
+  top: -10px; right: 10px;
+  font-family: 'Fraunces', serif;
+  font-size: 80px;
+  font-weight: 900;
+  color: rgba(43,127,216,0.06);
+  line-height: 1;
+}
+.card-8 h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-deep);
+  margin-bottom: 10px;
+}
+.card-8 p { font-size: 12px; line-height: 1.8; color: #666; position: relative; z-index: 1; }
+
+/* ===== STYLE 9: washi tape 拼贴 ===== */
+.card-9 {
+  background: #fff;
+  padding: 20px;
+  border: 1px dashed rgba(43,127,216,0.25);
+  position: relative;
+  transform: rotate(0.5deg);
+}
+.card-9::before {
+  content: '';
+  position: absolute;
+  top: -6px; left: 30%;
+  width: 60px; height: 14px;
+  background: repeating-linear-gradient(90deg, var(--yellow) 0px, var(--yellow) 4px, rgba(244,215,88,0.4) 4px, rgba(244,215,88,0.4) 8px);
+  border-radius: 1px;
+  transform: rotate(-2deg);
+}
+.card-9::after {
+  content: '';
+  position: absolute;
+  bottom: -6px; right: 20%;
+  width: 50px; height: 14px;
+  background: repeating-linear-gradient(90deg, var(--red) 0px, var(--red) 4px, rgba(232,74,95,0.3) 4px, rgba(232,74,95,0.3) 8px);
+  border-radius: 1px;
+  transform: rotate(1.5deg);
+}
+.card-9 h3 {
+  font-family: 'Caveat', cursive;
+  font-size: 18px;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.card-9 p { font-size: 12px; line-height: 1.8; color: #555; }
+
+/* ===== STYLE 10: 深色玻璃态 ===== */
+.card-10 {
+  background: rgba(30,91,168,0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+}
+.card-10 h3 {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.6;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.card-10 .content {
+  font-size: 15px;
+  line-height: 1.9;
+  font-weight: 400;
+}
+.card-10 .highlight {
+  color: var(--yellow);
+  font-weight: 600;
+}
+.card-10 .bottom-line {
+  margin-top: 16px;
+  width: 40px; height: 2px;
+  background: var(--yellow);
+  opacity: 0.6;
+  border-radius: 1px;
+}
+</style>
+</head>
+<body>
+
+<h1>Card Styles Playground</h1>
+<p class="subtitle">10 种卡片风格，用 values / journey 内容示意。选一个喜欢的方向。</p>
+
+<div class="grid">
+
+  <!-- Style 1: 杂志剪报 -->
+  <div>
+    <div class="card-label">Style 1 · 杂志剪报</div>
+    <div class="card-1">
+      <h3>values.md</h3>
+      <p>做东西丑了我会睡不着觉<br>人类是不会被AI替代的<br>讨厌所有散播焦虑的信息</p>
+    </div>
+  </div>
+
+  <!-- Style 2: 蓝色渐变 -->
+  <div>
+    <div class="card-label">Style 2 · 蓝色渐变</div>
+    <div class="card-2">
+      <h3>My Journey</h3>
+      <p>建筑 → 运营 → AI<br>每次都以为在走弯路，回头看是在找同一件事——把混乱变成秩序。</p>
+      <span class="tag">南大建筑</span>
+      <span class="tag">米兰理工</span>
+      <span class="tag">ColaOS</span>
+    </div>
+  </div>
+
+  <!-- Style 3: 手写便签 -->
+  <div>
+    <div class="card-label">Style 3 · 手写便签</div>
+    <div class="card-3">
+      <h3>Things I Believe</h3>
+      <p>做东西丑了我会睡不着觉<br>人类是不会被AI替代的<br>讨厌所有散播焦虑的信息<br>慢慢来比较快</p>
+    </div>
+  </div>
+
+  <!-- Style 4: 终端风 -->
+  <div>
+    <div class="card-label">Style 4 · 终端风</div>
+    <div class="card-4">
+      <div class="titlebar">
+        <span class="dot dot-r"></span>
+        <span class="dot dot-y"></span>
+        <span class="dot dot-g"></span>
+      </div>
+      <div class="body">
+        <div><span class="prompt">$ </span><span class="cmd">cat values.md</span></div>
+        <div style="margin-top:6px;">→ 做东西丑了我会睡不着觉</div>
+        <div>→ 人类是不会被AI替代的</div>
+        <div>→ 讨厌所有散播焦虑的信息</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 5: 极简线框 -->
+  <div>
+    <div class="card-label">Style 5 · 极简线框</div>
+    <div class="card-5">
+      <h3>Values</h3>
+      <div class="divider"></div>
+      <p>做东西丑了我会睡不着觉<br>人类是不会被AI替代的<br>讨厌所有散播焦虑的信息</p>
+    </div>
+  </div>
+
+  <!-- Style 6: 大引号 -->
+  <div>
+    <div class="card-label">Style 6 · 大引号卡</div>
+    <div class="card-6">
+      <h3>journey.md</h3>
+      <p>每一次都以为自己在走弯路，回头看才发现，都是在找同一件事——把混乱变成秩序，然后点亮其他人。</p>
+    </div>
+  </div>
+
+  <!-- Style 7: 彩色阴影 -->
+  <div>
+    <div class="card-label">Style 7 · 圆角彩影</div>
+    <div class="card-7">
+      <div class="emoji">🧭</div>
+      <h3>两次转弯</h3>
+      <p>南大建筑 → 米兰理工 → 达人运营 → 白酒市场 → AI ColaOS</p>
+      <div class="footer-tags">
+        <span class="ftag">建筑学</span>
+        <span class="ftag">AI</span>
+        <span class="ftag">运营</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 8: 编号主导 -->
+  <div>
+    <div class="card-label">Style 8 · 编号主导</div>
+    <div class="card-8">
+      <div class="big-num">01</div>
+      <h3>做东西丑了我会睡不着觉</h3>
+      <p>审美不是装饰，是底线。所有产出物如果不好看，我会推翻重来——不管花了多少时间。</p>
+    </div>
+  </div>
+
+  <!-- Style 9: washi tape 拼贴 -->
+  <div>
+    <div class="card-label">Style 9 · Washi Tape</div>
+    <div class="card-9">
+      <h3>My Values</h3>
+      <p>做东西丑了我会睡不着觉<br>人类是不会被AI替代的<br>讨厌所有散播焦虑的信息<br>慢慢来比较快</p>
+    </div>
+  </div>
+
+  <!-- Style 10: 深色玻璃态 -->
+  <div>
+    <div class="card-label">Style 10 · 深色玻璃</div>
+    <div class="card-10">
+      <h3>Journey</h3>
+      <div class="content">
+        <span class="highlight">建筑 → 运营 → AI</span><br>
+        每次都以为在走弯路。回头看才发现，都是在找同一件事。
+      </div>
+      <div class="bottom-line"></div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

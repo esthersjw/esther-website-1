@@ -1215,6 +1215,50 @@ html, body {
 .card-resize-handle:hover { opacity: 1 !important; }
 .card-resize-handle:hover::after { opacity: 1; }
 
+/* ===== WASHI TAPE CARD (Style 9) ===== */
+.card-washi {
+  background: #fff;
+  padding: 22px 20px;
+  border: 1px dashed rgba(43,127,216,0.25);
+  border-radius: 2px;
+  position: relative;
+}
+.card-washi::before {
+  content: '';
+  position: absolute;
+  top: -6px; left: 30%;
+  width: 60px; height: 14px;
+  background: repeating-linear-gradient(90deg, #F4D758 0px, #F4D758 4px, rgba(244,215,88,0.4) 4px, rgba(244,215,88,0.4) 8px);
+  border-radius: 1px;
+  transform: rotate(-2deg);
+}
+.card-washi::after {
+  content: '';
+  position: absolute;
+  bottom: -6px; right: 20%;
+  width: 50px; height: 14px;
+  background: repeating-linear-gradient(90deg, #E84A5F 0px, #E84A5F 4px, rgba(232,74,95,0.3) 4px, rgba(232,74,95,0.3) 8px);
+  border-radius: 1px;
+  transform: rotate(1.5deg);
+}
+.card-washi .washi-title {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  color: #1A1A2E;
+  margin-bottom: 12px;
+}
+.card-washi .washi-body {
+  font-size: 13px;
+  line-height: 1.9;
+  color: #444;
+}
+.card-washi .washi-body p {
+  margin-bottom: 8px;
+}
+.card-washi .washi-body strong {
+  color: #1E5BA8;
+}
+
 /* ===== ANIMATIONS ===== */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(16px); }
@@ -1565,47 +1609,7 @@ html, body {
       <div class="card-resize-handle"></div>
     </div>
 
-    <!-- ====== CARD: Work — NORUSH ====== -->
-    <div class="card card-work" id="card-work-norush" style="left:2100px;top:600px;animation-delay:0.25s;">
-      <div class="card-tag-strip blue"></div>
-      <div class="card-controls">
-        <div class="card-drag-handle">⋮⋮</div>
-        <div class="card-delete-btn" data-card-id="card-work-norush">×</div>
-      </div>
-      <div class="work-banner norush">
-        <div class="work-banner-text">✏️ NORUSH</div>
-      </div>
-      <div class="work-body">
-        <div class="work-name editable-area">NORUSH 公众号排版编辑器</div>
-        <div class="work-desc editable-area">Markdown 编辑 + 手机实时预览，支持对话气泡、引用卡、终端金句等自定义组件，一键导出微信兼容 HTML。Vibe coding 产出，从需求到上线。</div>
-        <span class="work-tag">GitHub</span>
-        <span class="work-tag">Vibe Coding</span>
-        <a class="work-link" href="https://github.com/esthersjw/norush-wechat-editor">GitHub →</a>
-      </div>
-      <div class="card-connect-dot"></div>
-      <div class="card-resize-handle"></div>
-    </div>
 
-    <!-- ====== CARD: Work — Poem Collage ====== -->
-    <div class="card card-work" id="card-work-poem" style="left:1640px;top:600px;animation-delay:0.28s;">
-      <div class="card-tag-strip yellow"></div>
-      <div class="card-controls">
-        <div class="card-drag-handle">⋮⋮</div>
-        <div class="card-delete-btn" data-card-id="card-work-poem">×</div>
-      </div>
-      <div class="work-banner poem">
-        <div class="work-banner-text">🎨 Poem Collage</div>
-      </div>
-      <div class="work-body">
-        <div class="work-name editable-area">Cola 拼贴诗生成器 Skill</div>
-        <div class="work-desc editable-area">为 ColaOS 开发的 Skill，拼贴风格的诗歌图片生成器。展示 Agent 生态的开发能力。</div>
-        <span class="work-tag">ColaOS Skill</span>
-        <span class="work-tag">Agent 生态</span>
-        <a class="work-link" href="https://github.com/esthersjw/poem-collage">GitHub →</a>
-      </div>
-      <div class="card-connect-dot"></div>
-      <div class="card-resize-handle"></div>
-    </div>
 
     <!-- ====== CARD: Opinions ====== -->
     <div class="card card-opinions" id="card-opinions" style="left:500px;top:1100px;animation-delay:0.3s;">
@@ -1686,88 +1690,40 @@ html, body {
       <div class="card-resize-handle"></div>
     </div>
     <!-- ====== CARD: Values ====== -->
-    <div class="card" id="card-values" style="left:2400px;top:100px;width:320px;animation-delay:0.5s;">
-      <div class="card-tag-strip blue"></div>
+    <!-- ====== CARD: Values (Washi Tape) ====== -->
+    <div class="card card-washi" id="card-values" style="left:2400px;top:100px;width:300px;animation-delay:0.5s;transform:rotate(-0.8deg);">
       <div class="card-controls">
         <div class="card-drag-handle">⋮⋮</div>
         <div class="card-delete-btn" data-card-id="card-values">×</div>
       </div>
-      <div class="card-body">
-        <div class="card-title">values.md</div>
-        <div class="card-subtitle">我是这样的人</div>
-        <ul style="list-style:none;padding:0;margin-top:12px;font-size:13px;line-height:2;">
-          <li style="border-left:4px solid #2B7FD8;padding-left:10px;margin-bottom:8px;">做东西丑了我会睡不着觉</li>
-          <li style="border-left:4px solid #F4D758;padding-left:10px;margin-bottom:8px;">人类是不会被AI替代的</li>
-          <li style="border-left:4px solid #E84A5F;padding-left:10px;">讨厌所有散播焦虑的信息</li>
-        </ul>
+      <div class="washi-title">My Values</div>
+      <div class="washi-body">
+        <p>做东西丑了我会睡不着觉</p>
+        <p>人类是不会被AI替代的</p>
+        <p>讨厌所有散播焦虑的信息</p>
+        <p>慢慢来比较快</p>
       </div>
       <div class="card-connect-dot"></div>
       <div class="card-resize-handle"></div>
     </div>
 
-    <!-- ====== CARD: Journey ====== -->
-    <div class="card" id="card-journey" style="left:2400px;top:380px;width:340px;animation-delay:0.55s;">
-      <div class="card-tag-strip yellow"></div>
+    <!-- ====== CARD: Journey (Washi Tape) ====== -->
+    <div class="card card-washi" id="card-journey" style="left:2400px;top:380px;width:320px;animation-delay:0.55s;transform:rotate(0.5deg);">
       <div class="card-controls">
         <div class="card-drag-handle">⋮⋮</div>
         <div class="card-delete-btn" data-card-id="card-journey">×</div>
       </div>
-      <div class="card-body">
-        <div class="card-title">journey.md</div>
-        <div class="card-subtitle">两次转弯</div>
-        <div style="margin-top:12px;font-size:12px;line-height:1.8;color:#555;">
-          <p><strong>建筑 → 运营</strong><br>南京大学建筑学 → 米兰理工。然后离开了画图桌。</p>
-          <p style="margin-top:8px;"><strong>运营 → AI</strong><br>从达人运营到白酒行业市场，再到 AI — 现在在 ColaOS 从 0 到 1。</p>
-          <p style="margin-top:8px;"><strong>同一件事</strong><br>每一次都以为自己在走弯路，回头看才发现，都是在找同一件事——把混乱变成秩序，然后点亮其他人。</p>
-        </div>
+      <div class="washi-title">My Journey</div>
+      <div class="washi-body">
+        <p><strong>建筑 → 运营</strong><br>南京大学建筑学 → 米兰理工。然后离开了画图桌。</p>
+        <p><strong>运营 → AI</strong><br>从达人运营到白酒行业市场，再到 AI — 现在在 ColaOS 从 0 到 1。</p>
+        <p><strong>同一件事</strong><br>每一次都以为在走弯路，回头看才发现——都是在找同一件事，把混乱变成秩序，然后点亮其他人。</p>
       </div>
       <div class="card-connect-dot"></div>
       <div class="card-resize-handle"></div>
     </div>
 
-    <!-- ====== CARD: Now ====== -->
-    <div class="card" id="card-now" style="left:2780px;top:100px;width:280px;animation-delay:0.6s;">
-      <div class="card-tag-strip blue"></div>
-      <div class="card-controls">
-        <div class="card-drag-handle">⋮⋮</div>
-        <div class="card-delete-btn" data-card-id="card-now">×</div>
-      </div>
-      <div class="card-body">
-        <div class="card-title">now.html</div>
-        <div class="card-subtitle">正在做的事</div>
-        <div style="margin-top:12px;font-size:12px;line-height:2;">
-          <div style="display:flex;align-items:baseline;gap:8px;"><span style="font-family:'Fraunces',serif;font-size:20px;color:rgba(43,127,216,0.3);font-weight:900;">01</span> <span>ColaOS 运营</span></div>
-          <div style="display:flex;align-items:baseline;gap:8px;"><span style="font-family:'Fraunces',serif;font-size:20px;color:rgba(244,215,88,0.5);font-weight:900;">02</span> <span>人生系统搭建</span></div>
-          <div style="display:flex;align-items:baseline;gap:8px;"><span style="font-family:'Fraunces',serif;font-size:20px;color:rgba(232,74,95,0.3);font-weight:900;">03</span> <span>IP 搭建</span></div>
-        </div>
-      </div>
-      <div class="card-connect-dot"></div>
-      <div class="card-resize-handle"></div>
-    </div>
 
-    <!-- ====== CARD: 不二 IP ====== -->
-    <div class="card" id="card-buer" style="left:2780px;top:380px;width:260px;animation-delay:0.65s;">
-      <div class="card-tag-strip yellow"></div>
-      <div class="card-controls">
-        <div class="card-drag-handle">⋮⋮</div>
-        <div class="card-delete-btn" data-card-id="card-buer">×</div>
-      </div>
-      <img src="buer-ip.jpg" alt="不二 IP 形象" style="width:100%;border-radius:8px;">
-      <div class="card-connect-dot"></div>
-      <div class="card-resize-handle"></div>
-    </div>
-
-    <!-- ====== CARD: 三视图 ====== -->
-    <div class="card" id="card-3views" style="left:2400px;top:680px;width:400px;animation-delay:0.7s;">
-      <div class="card-tag-strip blue"></div>
-      <div class="card-controls">
-        <div class="card-drag-handle">⋮⋮</div>
-        <div class="card-delete-btn" data-card-id="card-3views">×</div>
-      </div>
-      <img src="buer-3views.png" alt="不二三视图" style="width:100%;border-radius:8px;">
-      <div class="card-connect-dot"></div>
-      <div class="card-resize-handle"></div>
-    </div>
 
   </div><!-- /canvas-transform -->
 </div><!-- /canvas-area -->
