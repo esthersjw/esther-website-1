@@ -1,0 +1,3853 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>不二的个人看板</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+SC:wght@400;700;900&family=Caveat:wght@400;700&family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue: #2B7FD8;
+  --yellow: #F4D758;
+  --red: #E84A5F;
+  --bg: #fefcf6;
+  --ink: #1A1A2E;
+  --sub: #4A4A5A;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --paper-light: #faf5e8;
+  --paper-warm: #f7f2e4;
+  --dream-green: #2d6a4f;
+  --dream-cream: #f5f0dc;
+}
+
+::selection { background: #F4D758; color: #1a1a1a; }
+
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+a, button, [onclick], input[type='file'], .tab-btn, .cal-cell, .cal-nav, .cal-filter-btn, .mood-btn, .body-opt, .dream-poster-actions button, .bm-del, .btn, .btn-img, .archive-toggle button, .archive-topic-picker button {
+  cursor: pointer;
+}
+
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 32px);
+}
+
+/* Header */
+.header {
+  padding: clamp(32px, 6vw, 64px) 0 clamp(16px, 3vw, 24px);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 28px);
+}
+.header-avatar {
+  width: clamp(72px, 10vw, 96px);
+  height: clamp(72px, 10vw, 96px);
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+  flex-shrink: 0;
+}
+.header-info {
+  flex: 1;
+}
+.header-tagline {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  color: var(--sub);
+  opacity: 0.75;
+  margin-bottom: 2px;
+}
+.greeting {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.greeting-sub {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: var(--sub);
+  transform: rotate(-1deg);
+  display: inline-block;
+}
+.header-deco {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background: var(--yellow);
+  border-radius: 50%;
+  opacity: 0.4;
+  filter: blur(1px);
+}
+
+/* Tabs */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  margin: clamp(12px, 2vw, 20px) 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #eee;
+}
+.tab-btn {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: var(--sub);
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.tab-btn:hover { color: var(--ink); background: rgba(43,127,216,0.05); }
+.tab-btn.active {
+  color: var(--blue);
+  background: rgba(43,127,216,0.08);
+}
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 20%;
+  width: 60%;
+  height: 3px;
+  background: var(--blue);
+  border-radius: 2px;
+}
+
+.tab-content { display: none; padding: clamp(16px, 3vw, 32px) 0; }
+.tab-content.active { display: block; }
+
+/* Section */
+.section {
+  margin-bottom: clamp(28px, 5vw, 48px);
+}
+.section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title .en {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.8em;
+  color: var(--sub);
+  opacity: 0.7;
+}
+
+/* Input styles */
+.input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.text-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 2px solid #e8e4dc;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: #fff;
+  transition: border-color 0.2s;
+  outline: none;
+}
+.text-input:focus { border-color: var(--blue); }
+.text-input::placeholder { color: #aaa; }
+
+.btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: #2370c0; transform: translateY(-1px); }
+.btn-small {
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  background: var(--red);
+  color: #fff;
+  opacity: 0.8;
+}
+.btn-small:hover { opacity: 1; }
+.btn-yellow { background: var(--yellow); color: var(--ink); }
+.btn-yellow:hover { background: #e8c94d; }
+.btn-img {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-img:hover { border-color: var(--blue); background: rgba(43,127,216,0.05); }
+
+/* Cards */
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: clamp(12px, 2vw, 20px);
+  box-shadow: var(--shadow);
+  border: 1px solid #f0ece4;
+}
+
+/* ============ Calendar Board (EMOJI ENLARGED) ============ */
+.cal-filter {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.cal-filter-btn {
+  padding: 5px 14px;
+  border: 2px solid #e8e4dc;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-weight: 500;
+}
+.cal-filter-btn:hover { border-color: var(--blue); }
+.cal-filter-btn.active { border-color: var(--blue); background: rgba(43,127,216,0.08); color: var(--blue); font-weight: 600; }
+
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.cal-header h4 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.cal-nav {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 2px 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.cal-nav:hover { background: #f5f5f5; }
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.cal-day-label {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--sub);
+  padding: 4px 0;
+  font-weight: 600;
+}
+.cal-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 2px 2px;
+  border-radius: 6px;
+  background: #faf8f3;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.15s;
+  overflow: hidden;
+}
+.cal-cell:hover { background: rgba(43,127,216,0.06); }
+.cal-cell.today { border: 2px solid var(--blue); background: rgba(43,127,216,0.05); }
+.cal-cell.empty { background: transparent; cursor: default; }
+.cal-cell.empty:hover { background: transparent; }
+.cal-cell .day-num {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  font-size: 0.45rem;
+  color: #bbb;
+  font-weight: 500;
+  line-height: 1;
+}
+.cal-cell .mood-emoji {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+.cal-cell .mood-emoji-big {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+.cal-cell .body-icons {
+  display: flex;
+  gap: 1px;
+  font-size: 0.85rem;
+  line-height: 1;
+  margin-top: 2px;
+  opacity: 0.9;
+}
+
+/* Calendar Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: var(--bg);
+  border-radius: 16px;
+  padding: clamp(20px, 4vw, 32px);
+  max-width: 400px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--sub);
+  line-height: 1;
+}
+.modal-close:hover { color: var(--red); }
+.modal-title {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+.modal-section {
+  margin-bottom: 16px;
+}
+.modal-section label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--sub);
+}
+.mood-picker-modal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.mood-btn {
+  font-size: 1.5rem;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #eee;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.mood-btn:hover { transform: scale(1.15); border-color: var(--yellow); }
+.mood-btn.selected { border-color: var(--blue); background: rgba(43,127,216,0.08); transform: scale(1.2); }
+
+.body-row-modal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.body-row-modal .body-label { font-size: 0.85rem; min-width: 55px; }
+.body-opt {
+  padding: 5px 12px;
+  border: 2px solid #e8e4dc;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.15s;
+}
+.body-opt:hover { border-color: var(--blue); }
+.body-opt.selected { border-color: var(--blue); background: rgba(43,127,216,0.08); }
+
+.modal-save-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.15s;
+}
+.modal-save-btn:hover { background: #2370c0; }
+
+
+
+/* ============ #10 Blue Card - 属于自己的时间 ============ */
+.metime-cards { display: flex; flex-wrap: wrap; gap: 16px; }
+.metime-card {
+  background: #2B7FD8;
+  color: #fff;
+  border-radius: 4px;
+  padding: 18px 20px;
+  position: relative;
+  box-shadow: 2px 3px 12px rgba(43,127,216,0.25);
+  width: calc(50% - 8px);
+  transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.metime-card.dragging { opacity: 0.5; }
+.metime-card.drop-target { outline: 2px dashed rgba(255,255,255,0.7); outline-offset: 4px; }
+.metime-card.just-dropped { animation: cardDrop 0.25s ease; }
+.metime-card.w-sm { width: calc(33.333% - 11px); }
+.metime-card.w-md { width: calc(50% - 8px); }
+.metime-card.w-lg { width: 100%; }
+.metime-card-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 6px;
+}
+.metime-card-text {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.metime-card-footer {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  opacity: 0.6;
+  margin-top: 12px;
+}
+.metime-card-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(43,127,216,0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 10px;
+}
+.metime-card-img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 28px rgba(43,127,216,0.35);
+}
+.metime-card-del {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.metime-card:hover .metime-card-del { opacity: 1; }
+.metime-card-del:hover { color: #fff; }
+.metime-card-del-img {
+  position: absolute;
+  bottom: 12px;
+  right: 10px;
+  background: rgba(232,74,95,0.85);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.metime-card:hover .metime-card-del-img { opacity: 1; }
+
+/* ============ #11 Yellow Strip - 灵感碎片 ============ */
+.idea-strips { display: flex; flex-wrap: wrap; gap: 16px; }
+.idea-strip {
+  background: #F4D758;
+  color: #1a1a1a;
+  border-radius: 3px;
+  padding: 14px 16px 10px;
+  position: relative;
+  box-shadow: 1px 2px 6px rgba(0,0,0,0.08);
+  width: calc(50% - 8px);
+  transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.idea-strip.dragging { opacity: 0.5; }
+.idea-strip.drop-target { outline: 2px dashed rgba(0,0,0,0.35); outline-offset: 4px; }
+.idea-strip.just-dropped { animation: cardDrop 0.25s ease; }
+.idea-strip.w-sm { width: calc(33.333% - 11px); }
+.idea-strip.w-md { width: calc(50% - 8px); }
+.idea-strip.w-lg { width: 100%; }
+.idea-strip-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(244,215,88,0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 10px;
+}
+.idea-strip-img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 28px rgba(244,215,88,0.5);
+}
+.idea-strip-text {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.idea-strip-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.idea-strip-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  opacity: 0.4;
+}
+.idea-strip-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(0,0,0,0.15);
+}
+.idea-strip-time {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: #555;
+}
+.idea-strip-del {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(0,0,0,0.25);
+  font-size: 0.8rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.idea-strip:hover .idea-strip-del { opacity: 1; color: var(--red); }
+.idea-strip-del-img {
+  position: absolute;
+  top: 6px;
+  right: 30px;
+  background: rgba(232,74,95,0.85);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.idea-strip:hover .idea-strip-del-img { opacity: 1; }
+
+/* ============ Drag Handle & Resize Button ============ */
+.drag-handle {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.3;
+  cursor: grab;
+  user-select: none;
+  letter-spacing: 1px;
+  z-index: 2;
+}
+.drag-handle:active { cursor: grabbing; }
+.metime-card:hover .drag-handle,
+.idea-strip:hover .drag-handle { opacity: 1; }
+.resize-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 0.7rem;
+  background: rgba(0,0,0,0.15);
+  border: none;
+  border-radius: 4px;
+  padding: 2px 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: inherit;
+  z-index: 2;
+}
+.metime-card:hover .resize-btn,
+.idea-strip:hover .resize-btn { opacity: 1; }
+.resize-btn:hover { background: rgba(0,0,0,0.25); }
+@keyframes cardDrop {
+  0% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* ============ #6 Beatles Poster - Dream List ============ */
+.dream-poster-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.dream-poster {
+  padding: 22px 20px 18px;
+  border-radius: 3px;
+  position: relative;
+  min-width: 200px;
+  max-width: 300px;
+  flex: 1 1 240px;
+  box-shadow: 3px 4px 14px rgba(0,0,0,0.12);
+  transition: transform 0.2s;
+}
+.dream-poster:nth-child(odd) {
+  background: var(--blue);
+  color: #fff;
+}
+.dream-poster:nth-child(even) {
+  background: var(--yellow);
+  color: var(--ink);
+}
+.dream-poster:hover { transform: rotate(0deg) !important; z-index: 2; }
+.dream-poster-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.dream-poster-text-alt {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+.dream-poster-text-hand {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.dream-poster-done-date {
+  font-family: 'Caveat', cursive;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-top: 6px;
+}
+.dream-poster.done { opacity: 0.65; }
+.dream-poster.done .dream-poster-text,
+.dream-poster.done .dream-poster-text-alt,
+.dream-poster.done .dream-poster-text-hand {
+  text-decoration: line-through;
+  text-decoration-color: var(--red);
+}
+.dream-poster-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.dream-poster:hover .dream-poster-actions { opacity: 1; }
+.dream-poster-actions button {
+  background: rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  color: inherit;
+  transition: all 0.15s;
+}
+.dream-poster-actions button:hover { background: rgba(0,0,0,0.2); }
+
+/* ============ #19 Build Log - 归档按日期 ============ */
+.archive-buildlog {
+  background: #fefcf6;
+  border: 1.5px solid #1a1a1a;
+  border-radius: 2px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.archive-buildlog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid #e8e4dc;
+}
+.archive-buildlog-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #1a1a1a;
+}
+.archive-buildlog-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--sub);
+}
+.archive-buildlog-body {
+  padding: 10px 16px;
+}
+.archive-buildlog-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px dotted #ccc;
+  position: relative;
+}
+.archive-buildlog-line:last-child { border-bottom: none; }
+.archive-del-btn {
+  opacity: 0;
+  transition: opacity 0.15s;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  margin-left: auto;
+}
+.archive-del-btn:hover { color: var(--ink); }
+.archive-buildlog-line:hover .archive-del-btn { opacity: 1; }
+.archive-edit-btn {
+  opacity: 0;
+  transition: opacity 0.15s;
+  background: none;
+  border: none;
+  color: var(--blue);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+}
+.archive-buildlog-line:hover .archive-edit-btn { opacity: 1; }
+.archive-category-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 14px 0 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #eee;
+}
+.archive-category-title:first-child { margin-top: 0; }
+.archive-buildlog-idx {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: #999;
+  min-width: 24px;
+}
+.archive-buildlog-text {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px;
+  color: #1a1a1a;
+  flex: 1;
+  line-height: 1.5;
+}
+.archive-buildlog-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--sub);
+  white-space: nowrap;
+}
+.archive-buildlog-footer {
+  padding: 6px 16px 10px;
+  font-family: 'Caveat', cursive;
+  font-size: 0.9rem;
+  color: var(--sub);
+  text-align: right;
+  opacity: 0.7;
+}
+
+/* Image lightbox */
+.lightbox {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.lightbox.show { display: flex; }
+.lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+}
+
+/* Tab 2: Input */
+.group-title {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--blue);
+  margin: 16px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed #ddd;
+}
+.repo-item, .builder-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #f0ece4;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.repo-item:last-child, .builder-item:last-child { border-bottom: none; }
+.repo-name {
+  font-weight: 600;
+  color: var(--blue);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.repo-name:hover { text-decoration: underline; }
+.repo-stars { font-size: 0.8rem; color: var(--sub); }
+.repo-desc { font-size: 0.85rem; color: var(--sub); }
+
+/* Tab 3: Bookmarks */
+.bm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.bm-card {
+  background: #fff;
+  border: 1px solid #f0ece4;
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s;
+  cursor: default;
+}
+.bm-card:hover { transform: translateY(-2px); }
+.bm-card .bm-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+}
+.bm-card img {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.bm-info { flex: 1; min-width: 0; }
+.bm-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bm-desc { font-size: 0.8rem; color: var(--sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bm-del {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ccc;
+  font-size: 0.8rem;
+  padding: 2px;
+  transition: color 0.15s;
+}
+.bm-del:hover { color: var(--red); }
+
+.bm-filter { margin-bottom: 12px; }
+.bm-filter input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #e8e4dc;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  outline: none;
+  background: #fff;
+}
+.bm-filter input:focus { border-color: var(--blue); }
+
+/* Tab 5: Archive */
+.archive-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.archive-toggle button {
+  padding: 6px 14px;
+  border: 2px solid #e8e4dc;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.archive-toggle button.active { border-color: var(--blue); background: rgba(43,127,216,0.08); color: var(--blue); }
+
+.archive-date-picker { margin-bottom: 16px; }
+.archive-date-picker input {
+  padding: 8px 12px;
+  border: 2px solid #e8e4dc;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  outline: none;
+}
+.archive-date-picker input:focus { border-color: var(--blue); }
+
+.archive-topic-picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.archive-topic-picker button {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.archive-topic-picker button.active { border-color: var(--blue); background: rgba(43,127,216,0.08); }
+
+.archive-content { min-height: 100px; }
+.archive-empty {
+  text-align: center;
+  color: var(--sub);
+  padding: 40px 0;
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+}
+
+/* Today page quick nav */
+/* 方案B:杂志式大字锚点 */
+.today-quick-nav {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  margin-bottom: 28px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(254,252,246,0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.today-nav-item {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--sub);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.2s;
+  padding-bottom: 4px;
+}
+.today-nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2.5px;
+  background: var(--yellow);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+.today-nav-item:hover {
+  color: var(--ink);
+}
+.today-nav-item:hover::after {
+  width: 100%;
+}
+.today-nav-item.active-section {
+  color: var(--ink);
+}
+.today-nav-item.active-section::after {
+  width: 100%;
+  background: var(--yellow);
+}
+
+/* Quick Index Sidebar */
+.quick-index {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(254,252,246,0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 20px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 900;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+.quick-index-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.quick-index-btn .qi-label { display: none; }
+.quick-index-btn:hover {
+  background: rgba(43,127,216,0.1);
+  transform: scale(1.15);
+}
+.quick-index-btn.active {
+  background: var(--blue);
+  box-shadow: 0 2px 8px rgba(43,127,216,0.3);
+}
+.quick-index-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.72rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  font-family: 'Noto Serif SC', serif;
+}
+.quick-index-btn:hover::after {
+  opacity: 1;
+}
+
+/* ============ MODE SWITCHER ============ */
+.mode-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: #eee;
+  border-radius: 24px;
+  width: fit-content;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.mode-btn {
+  padding: 7px 20px;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: transparent;
+  color: var(--sub);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: -apple-system, 'PingFang SC', sans-serif;
+}
+.mode-btn.active {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.mode-btn:hover:not(.active) { color: var(--ink); }
+
+.mode-panel { display: none; }
+.mode-panel.active { display: block; }
+
+/* ============ PRODUCTIVITY PANEL ============ */
+.prod-panel {
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+.prod-panel .container { max-width: 820px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); }
+
+.prod-nav {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  margin-bottom: 28px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(248,249,250,0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.prod-nav-item {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: #6c757d;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.2s;
+  padding-bottom: 4px;
+}
+.prod-nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 2.5px;
+  background: var(--blue);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+.prod-nav-item:hover { color: #1a1a2e; }
+.prod-nav-item:hover::after { width: 100%; }
+.prod-nav-item.active-section { color: #1a1a2e; }
+.prod-nav-item.active-section::after { width: 100%; background: var(--blue); }
+
+.prod-section {
+  margin-bottom: clamp(32px, 5vw, 48px);
+}
+.prod-section-title {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  margin-bottom: 14px;
+  color: #1a1a2e;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.prod-section-title .icon {
+  font-size: 1.1em;
+}
+
+.prod-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  padding: clamp(14px, 2.5vw, 20px);
+}
+
+/* Prod inputs */
+.prod-input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.prod-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1.5px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: -apple-system, 'PingFang SC', sans-serif;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.prod-input:focus { border-color: var(--blue); }
+.prod-input::placeholder { color: #adb5bd; }
+
+.prod-btn {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  background: var(--blue);
+  color: #fff;
+}
+.prod-btn:hover { background: #2370c0; transform: translateY(-1px); }
+
+/* Todo */
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f3f5;
+}
+.todo-item:last-child { border-bottom: none; }
+.todo-item input[type="checkbox"] {
+  width: 18px; height: 18px;
+  accent-color: var(--blue);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.todo-item .todo-text {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #1a1a2e;
+  line-height: 1.4;
+}
+.todo-item.done .todo-text {
+  text-decoration: line-through;
+  color: #adb5bd;
+}
+.todo-item .todo-del {
+  background: none; border: none;
+  color: #dee2e6; font-size: 0.8rem;
+  cursor: pointer; padding: 4px;
+  transition: color 0.15s;
+  opacity: 0;
+}
+.todo-item:hover .todo-del { opacity: 1; }
+.todo-item .todo-del:hover { color: var(--red); }
+.todo-stat {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f3f5;
+}
+
+/* Weekly */
+.weekly-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f3f5;
+}
+.weekly-item:last-child { border-bottom: none; }
+.weekly-item .priority-tag {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.priority-tag.p0 { background: #fee2e2; color: #dc2626; }
+.priority-tag.p1 { background: #fef3c7; color: #d97706; }
+.priority-tag.p2 { background: #fef9c3; color: #ca8a04; }
+.weekly-item .weekly-text {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #1a1a2e;
+}
+.weekly-item .weekly-del {
+  background: none; border: none;
+  color: #dee2e6; font-size: 0.8rem;
+  cursor: pointer; padding: 4px;
+  opacity: 0; transition: opacity 0.15s;
+}
+.weekly-item:hover .weekly-del { opacity: 1; }
+.weekly-item .weekly-del:hover { color: var(--red); }
+
+/* Smart Input Box */
+.smart-input-box {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-left: 3px solid var(--blue);
+  border-radius: 10px;
+  padding: clamp(16px, 2.5vw, 24px);
+  margin-bottom: clamp(28px, 4vw, 40px);
+}
+.smart-input-box textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 12px 14px;
+  border: 1.5px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-family: -apple-system, 'PingFang SC', sans-serif;
+  background: #f8f9fa;
+  outline: none;
+  resize: vertical;
+  line-height: 1.6;
+  transition: border-color 0.2s;
+}
+.smart-input-box textarea:focus { border-color: var(--blue); background: #fff; }
+.smart-input-box textarea::placeholder { color: #adb5bd; }
+.smart-input-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.smart-input-actions .prod-btn {
+  padding: 10px 22px;
+  font-size: 0.9rem;
+}
+.smart-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a2e;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.smart-toast.show { opacity: 1; }
+
+/* Projects */
+/* Projects */
+.project-cards { display: flex; flex-direction: column; gap: 12px; }
+.project-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  padding: 16px;
+  position: relative;
+  transition: box-shadow 0.15s;
+}
+.project-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.project-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.project-collapse-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #6c757d;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.project-collapse-btn:hover { color: var(--blue); }
+.project-card-name {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1a1a2e;
+  flex: 1;
+}
+.project-progress {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: #6c757d;
+}
+.project-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.project-status.active { background: #d4edda; color: #155724; }
+.project-status.paused { background: #fef3c7; color: #92400e; }
+.project-status.done { background: #e2e3e5; color: #383d41; }
+.project-card-actions {
+  position: absolute;
+  top: 10px; right: 10px;
+  display: flex; gap: 4px;
+  opacity: 0; transition: opacity 0.15s;
+}
+.project-card:hover .project-card-actions { opacity: 1; }
+.project-card-actions button {
+  background: none; border: 1px solid #dee2e6;
+  border-radius: 4px; padding: 2px 6px;
+  font-size: 0.7rem; cursor: pointer;
+  color: #6c757d; transition: all 0.15s;
+}
+.project-card-actions button:hover { border-color: var(--blue); color: var(--blue); }
+.project-body { margin-top: 10px; }
+.project-body.collapsed { display: none; }
+.subtask-list { list-style: none; padding: 0; margin: 0 0 8px 0; }
+.subtask-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f1f3f5;
+}
+.subtask-item:last-child { border-bottom: none; }
+.subtask-item input[type="checkbox"] {
+  width: 16px; height: 16px;
+  accent-color: var(--blue);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.subtask-item .subtask-text {
+  flex: 1;
+  font-size: 0.85rem;
+  color: #1a1a2e;
+  line-height: 1.4;
+}
+.subtask-item.done .subtask-text {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+.subtask-item .subtask-del {
+  background: none; border: none;
+  color: #dee2e6; font-size: 0.75rem;
+  cursor: pointer; padding: 2px;
+  opacity: 0; transition: opacity 0.15s;
+}
+.subtask-item:hover .subtask-del { opacity: 1; }
+.subtask-item .subtask-del:hover { color: var(--red); }
+.subtask-add-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.subtask-add-row input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1.5px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  outline: none;
+  background: #f8f9fa;
+  transition: border-color 0.2s;
+}
+.subtask-add-row input:focus { border-color: var(--blue); background: #fff; }
+.subtask-add-row button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--blue);
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.subtask-add-row button:hover { background: #2370c0; }
+.project-archived-section {
+  margin-top: 16px;
+  border-top: 1px solid #e9ecef;
+  padding-top: 12px;
+}
+.project-archived-toggle {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  color: #6c757d;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px 0;
+}
+.project-archived-toggle:hover { color: var(--blue); }
+
+/* Quick Notes */
+.note-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f3f5;
+}
+.note-item:last-child { border-bottom: none; }
+.note-time {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: #adb5bd;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+.note-text {
+  flex: 1;
+  font-size: 0.88rem;
+  color: #1a1a2e;
+  line-height: 1.5;
+}
+.note-del {
+  background: none; border: none;
+  color: #dee2e6; font-size: 0.75rem;
+  cursor: pointer; padding: 2px;
+  opacity: 0; transition: opacity 0.15s;
+}
+.note-item:hover .note-del { opacity: 1; }
+.note-del:hover { color: var(--red); }
+
+/* ============ Prod Archive ============ */
+.prod-archive-sub {
+  margin-bottom: 0;
+}
+.prod-archive-sub-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  color: #6c757d;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.prod-archive-divider {
+  border-top: 1px solid #e9ecef;
+  margin: 24px 0;
+}
+.prod-archive-date-picker {
+  margin-bottom: 16px;
+}
+.prod-archive-date-picker input {
+  padding: 8px 12px;
+  border: 1.5px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: -apple-system, 'PingFang SC', sans-serif;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+.prod-archive-date-picker input:focus { border-color: var(--blue); }
+
+.prod-archive-week-picker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.prod-archive-week-nav {
+  background: none;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #6c757d;
+}
+.prod-archive-week-nav:hover { border-color: var(--blue); color: var(--blue); }
+.prod-archive-week-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.88rem;
+  color: #1a1a2e;
+}
+
+.prod-archive-content { min-height: 60px; }
+.prod-archive-empty {
+  text-align: center;
+  color: #adb5bd;
+  padding: 40px 0;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.95rem;
+}
+
+.prod-archive-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.prod-archive-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid #f1f3f5;
+}
+.prod-archive-card-title {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #1a1a2e;
+}
+.prod-archive-card-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: #6c757d;
+}
+.prod-archive-card-body {
+  padding: 10px 16px;
+}
+.prod-archive-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid #f1f3f5;
+}
+.prod-archive-line:last-child { border-bottom: none; }
+.prod-archive-idx {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: #adb5bd;
+  min-width: 24px;
+}
+.prod-archive-text {
+  font-size: 0.88rem;
+  color: #1a1a2e;
+  flex: 1;
+  line-height: 1.5;
+}
+.prod-archive-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: #6c757d;
+  white-space: nowrap;
+}
+.prod-archive-card-footer {
+  padding: 6px 16px 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: #adb5bd;
+  text-align: right;
+}
+
+/* Three-day todo layout */
+.todo-three-day {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+.todo-day-col {
+  min-width: 0;
+}
+.todo-day-col-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6c757d;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid #e9ecef;
+  text-align: center;
+}
+.todo-day-col-title.is-today {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+}
+.todo-archive-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f3f5;
+}
+.todo-archive-btn {
+  padding: 6px 14px;
+  border: 1.5px solid #dee2e6;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6c757d;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.todo-archive-btn:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: rgba(43,127,216,0.05);
+}
+
+/* Inline editing */
+.inline-edit-input {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1.5px solid var(--blue);
+  border-radius: 6px;
+  font-size: inherit;
+  font-family: inherit;
+  background: #fff;
+  outline: none;
+  line-height: 1.4;
+}
+.todo-text[data-editable],
+.subtask-text[data-editable],
+.weekly-text[data-editable] {
+  cursor: text;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.todo-text[data-editable]:hover,
+.subtask-text[data-editable]:hover,
+.weekly-text[data-editable]:hover {
+  background: rgba(43,127,216,0.04);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .quick-index { display: none; }
+  .todo-three-day { grid-template-columns: 1fr; gap: 12px; }
+}
+@media (max-width: 600px) {
+  .tab-btn { padding: 6px 10px; font-size: 0.8rem; }
+  .mood-btn { width: 36px; height: 36px; font-size: 1.2rem; }
+  .bm-grid { grid-template-columns: 1fr; }
+  .cal-cell .mood-emoji { font-size: 1.3rem; }
+  .cal-cell .mood-emoji-big { font-size: 1.6rem; }
+  .cal-cell .body-icons { font-size: 0.65rem; }
+  .dream-poster { max-width: 100%; min-width: 0; flex: 1 1 100%; }
+  .metime-card, .metime-card.w-sm, .metime-card.w-md, .metime-card.w-lg { width: 100%; }
+  .idea-strip, .idea-strip.w-sm, .idea-strip.w-md, .idea-strip.w-lg { width: 100%; }
+  .metime-card-title { font-size: 1.3rem; }
+  .prod-nav { gap: 14px; }
+  .prod-nav-item { font-size: 0.95rem; }
+  .todo-three-day { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-deco"></div>
+    <img class="header-avatar" src="avatar.jpg" alt="esther">
+    <div class="header-info">
+      <div class="header-tagline">esther's space ✦</div>
+      <div class="greeting" id="greeting"></div>
+      <div class="greeting-sub">personal dashboard</div>
+    </div>
+    <div class="mode-switcher">
+      <button class="mode-btn active" data-mode="charge" onclick="switchMode('charge')">✦ 充电</button>
+      <button class="mode-btn" data-mode="prod" onclick="switchMode('prod')">⚡ 生产力</button>
+    </div>
+  </div>
+
+  <!-- ========== CHARGE MODE ========== -->
+  <div class="mode-panel active" id="mode-charge">
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="today">今天</button>
+    <button class="tab-btn" data-tab="input">输入</button>
+    <button class="tab-btn" data-tab="bookmarks">收藏</button>
+    <button class="tab-btn" data-tab="dreamlist">Dream List</button>
+    <button class="tab-btn" data-tab="archive">归档</button>
+    <span style="margin-left:auto;display:flex;gap:8px;">
+      <button onclick="exportMarkdown()" style="font-size:11px;padding:4px 10px;border:1px solid #ddd;border-radius:12px;background:#fefcf6;cursor:pointer;font-family:'Space Mono',monospace;color:#888;">Export .md ↓</button>
+      <button onclick="exportJSON()" style="font-size:11px;padding:4px 10px;border:1px solid #ddd;border-radius:12px;background:#fefcf6;cursor:pointer;font-family:'Space Mono',monospace;color:#666;opacity:0.6;">JSON ↓</button>
+      <button onclick="document.getElementById('importFile').click()" style="font-size:11px;padding:4px 10px;border:1px solid #ddd;border-radius:12px;background:#fefcf6;cursor:pointer;font-family:'Space Mono',monospace;color:#888;">Import ↑</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    </span>
+  </div>
+
+  <!-- Tab: 今天 -->
+  <div class="tab-content active" id="tab-today">
+
+    <!-- 今天页内快速索引 -->
+    <div class="today-quick-nav">
+      <a href="#sec-calendar" class="today-nav-item active-section">calendar</a>
+      <a href="#sec-metime" class="today-nav-item">me time</a>
+      <a href="#sec-sparks" class="today-nav-item">sparks</a>
+    </div>
+
+    <!-- 日历看板 -->
+    <div class="section" id="sec-calendar">
+      <div class="section-title">📅 日历看板 <span class="en">daily tracker</span></div>
+      <div class="cal-filter">
+        <button class="cal-filter-btn active" data-filter="all" onclick="setCalFilter('all', this)">全部</button>
+        <button class="cal-filter-btn" data-filter="mood" onclick="setCalFilter('mood', this)">心情</button>
+        <button class="cal-filter-btn" data-filter="exercise" onclick="setCalFilter('exercise', this)">运动</button>
+        <button class="cal-filter-btn" data-filter="milk_tea" onclick="setCalFilter('milk_tea', this)">奶茶</button>
+        <button class="cal-filter-btn" data-filter="diet" onclick="setCalFilter('diet', this)">饮食</button>
+      </div>
+      <div class="card">
+        <div class="cal-header">
+          <button class="cal-nav" onclick="changeCalMonth(-1)">←</button>
+          <h4 id="cal-title"></h4>
+          <button class="cal-nav" onclick="changeCalMonth(1)">→</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+    </div>
+
+
+    <!-- 属于自己的时间 -->
+    <div class="section" id="sec-metime">
+      <div class="section-title">⏰ 属于自己的时间 <span class="en">me time</span></div>
+      <div class="input-row">
+        <input type="text" class="text-input" id="metime-input" placeholder="今天做了什么跟工作无关的事?">
+        <button class="btn-img" onclick="triggerMetimeImg()" title="插入图片 📷">📷</button>
+        <button class="btn btn-primary" onclick="addMetime()">记录</button>
+        <input type="file" id="metime-img-input" accept="image/*" style="display:none;" onchange="handleMetimeImg(this)">
+      </div>
+      <div id="metime-img-preview" style="margin-bottom:8px;"></div>
+      <div class="metime-cards" id="metime-list"></div>
+    </div>
+
+    <!-- 灵感碎片 -->
+    <div class="section" id="sec-sparks">
+      <div class="section-title">💡 灵感碎片 <span class="en">sparks</span></div>
+      <div class="input-row">
+        <input type="text" class="text-input" id="idea-input" placeholder="闪过什么念头?">
+        <button class="btn-img" onclick="triggerIdeaImg()" title="插入图片 📷">📷</button>
+        <button class="btn btn-yellow" onclick="addIdea()">贴上</button>
+        <input type="file" id="idea-img-input" accept="image/*" style="display:none;" onchange="handleIdeaImg(this)">
+      </div>
+      <div id="idea-img-preview" style="margin-bottom:8px;"></div>
+      <div class="idea-strips" id="idea-grid"></div>
+    </div>
+  </div>
+
+  <!-- Tab: 输入 -->
+  <div class="tab-content" id="tab-input">
+    <div class="section">
+      <div class="section-title">🐙 GitHub 周报 <span class="en">repos this week</span></div>
+      <div class="card" id="github-weekly"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">🔥 Builders 周报 <span class="en">builders digest</span></div>
+      <div class="card" id="builders-weekly"></div>
+    </div>
+  </div>
+
+  <!-- Tab: 收藏 -->
+  <div class="tab-content" id="tab-bookmarks">
+    <div class="section">
+      <div class="section-title">⭐ 收藏夹 <span class="en">bookmarks</span></div>
+      <div class="input-row" style="flex-wrap:wrap;">
+        <input type="text" class="text-input" id="bm-name" placeholder="名称" style="min-width:100px;flex:1;">
+        <input type="text" class="text-input" id="bm-url" placeholder="URL" style="min-width:150px;flex:2;">
+        <input type="text" class="text-input" id="bm-desc" placeholder="描述/标签(可选)" style="min-width:100px;flex:1;">
+        <button class="btn btn-primary" onclick="addBookmark()">添加</button>
+      </div>
+      <div class="bm-filter">
+        <input type="text" id="bm-search" placeholder="搜索收藏..." oninput="renderBookmarks()">
+      </div>
+      <div class="bm-grid" id="bm-grid"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Dream List -->
+  <div class="tab-content" id="tab-dreamlist">
+    <div class="section">
+      <div class="section-title">🚀 Dream List</div>
+      <div class="input-row">
+        <input type="text" class="text-input" id="dream-input" placeholder="想做的事,不设deadline">
+        <button class="btn btn-yellow" onclick="addDream()">停进来</button>
+      </div>
+      <div class="dream-poster-grid" id="dream-list"></div>
+    </div>
+  </div>
+
+  <!-- Tab: 归档 -->
+  <div class="tab-content" id="tab-archive">
+    <div class="section">
+      <div class="section-title">📦 归档 <span class="en">archive</span></div>
+      <div class="archive-toggle">
+        <button class="active" onclick="setArchiveMode('date', this)">按日期</button>
+        <button onclick="setArchiveMode('topic', this)">按主题</button>
+      </div>
+
+      <div id="archive-date-view">
+        <div class="archive-date-picker">
+          <input type="date" id="archive-date" onchange="renderArchiveByDate()">
+        </div>
+        <div class="archive-content" id="archive-date-content"></div>
+      </div>
+
+      <div id="archive-topic-view" style="display:none;">
+        <div class="archive-topic-picker" id="archive-topic-btns">
+          <button class="active" onclick="setArchiveTopic('calendar', this)">日历看板</button>
+          <button onclick="setArchiveTopic('ideas', this)">灵感碎片</button>
+          <button onclick="setArchiveTopic('metime', this)">属于自己的时间</button>
+        </div>
+        <div class="archive-content" id="archive-topic-content"></div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- END mode-charge -->
+
+  <!-- ========== PRODUCTIVITY MODE ========== -->
+  <div class="mode-panel" id="mode-prod">
+    <div class="prod-panel">
+
+      <!-- Prod Nav -->
+      <div class="prod-nav">
+        <a href="#prod-today" class="prod-nav-item active-section">today</a>
+        <a href="#prod-weekly" class="prod-nav-item">weekly</a>
+        <a href="#prod-projects" class="prod-nav-item">projects</a>
+        <a href="#prod-notes" class="prod-nav-item">notes</a>
+        <a href="#sec-prod-archive" class="prod-nav-item">archive</a>
+      </div>
+
+      <!-- Smart Input -->
+      <div class="smart-input-box">
+        <textarea id="smart-input" placeholder="随便写点什么... 我会帮你分类" rows="4"></textarea>
+        <div class="smart-input-actions">
+          <button class="prod-btn" onclick="smartDispatch()">发送</button>
+        </div>
+      </div>
+
+      <!-- 1. 待办事项(三日视图) -->
+      <div class="prod-section" id="prod-today">
+        <div class="prod-section-title"><span class="icon">☐</span> 待办事项</div>
+        <div class="prod-card">
+          <div class="prod-input-row">
+            <input type="text" class="prod-input" id="todo-input" placeholder="添加今日待办...">
+            <button class="prod-btn" onclick="addTodo()">添加</button>
+          </div>
+          <div class="todo-three-day">
+            <div class="todo-day-col">
+              <div class="todo-day-col-title">昨天</div>
+              <div id="todo-list-yesterday"></div>
+            </div>
+            <div class="todo-day-col">
+              <div class="todo-day-col-title is-today">今天</div>
+              <div id="todo-list"></div>
+            </div>
+            <div class="todo-day-col">
+              <div class="todo-day-col-title">明天</div>
+              <div id="todo-list-tomorrow"></div>
+              <div class="prod-input-row" style="margin-top:8px;">
+                <input type="text" class="prod-input" id="todo-input-tomorrow" placeholder="明日待办..." style="font-size:0.82rem;padding:7px 10px;">
+                <button class="prod-btn" onclick="addTodoTomorrow()" style="font-size:0.78rem;padding:6px 10px;">添加</button>
+              </div>
+            </div>
+          </div>
+          <div class="todo-stat" id="todo-stat"></div>
+        </div>
+      </div>
+
+      <!-- 2. 本周重点 -->
+      <div class="prod-section" id="prod-weekly">
+        <div class="prod-section-title"><span class="icon">◉</span> 本周重点</div>
+        <div class="prod-card">
+          <div class="prod-input-row">
+            <input type="text" class="prod-input" id="weekly-input" placeholder="本周大石头(最多5条)">
+            <button class="prod-btn" onclick="addWeekly()">添加</button>
+          </div>
+          <div id="weekly-list"></div>
+        </div>
+      </div>
+
+      <!-- 3. 项目 -->
+      <div class="prod-section" id="prod-projects">
+        <div class="prod-section-title"><span class="icon">▣</span> 项目</div>
+        <div class="prod-card">
+          <div class="prod-input-row">
+            <input type="text" class="prod-input" id="project-name" placeholder="新建项目...">
+            <button class="prod-btn" onclick="addProject()">添加</button>
+          </div>
+          <div class="project-cards" id="project-list"></div>
+          <div class="project-archived-section" id="project-archived-section" style="display:none;">
+            <button class="project-archived-toggle" id="project-archived-toggle" onclick="toggleArchivedProjects()">▸ 已归档项目</button>
+            <div id="project-archived-list" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 快速笔记 -->
+      <div class="prod-section" id="prod-notes">
+        <div class="prod-section-title"><span class="icon">✎</span> 快速笔记</div>
+        <div class="prod-card">
+          <div class="prod-input-row">
+            <input type="text" class="prod-input" id="note-input" placeholder="按回车添加笔记...">
+          </div>
+          <div id="note-list"></div>
+        </div>
+      </div>
+
+      <!-- 5. 归档 -->
+      <div class="prod-section" id="sec-prod-archive">
+        <div class="prod-section-title"><span class="icon">📋</span> 归档</div>
+        <div class="prod-card">
+
+          <!-- 待办记录 -->
+          <div class="prod-archive-sub">
+            <div class="prod-archive-sub-title">━━ 待办记录 ━━</div>
+            <div class="prod-archive-date-picker">
+              <input type="date" id="prod-archive-date" onchange="renderProdArchiveTodos()">
+            </div>
+            <div class="prod-archive-content" id="prod-archive-todo-content"></div>
+          </div>
+
+          <div class="prod-archive-divider"></div>
+
+          <!-- 本周重点记录 -->
+          <div class="prod-archive-sub">
+            <div class="prod-archive-sub-title">━━ 本周重点记录 ━━</div>
+            <div class="prod-archive-week-picker">
+              <button class="prod-archive-week-nav" onclick="shiftArchiveWeek(-1)">←</button>
+              <span class="prod-archive-week-label" id="prod-archive-week-label"></span>
+              <button class="prod-archive-week-nav" onclick="shiftArchiveWeek(1)">→</button>
+            </div>
+            <div class="prod-archive-content" id="prod-archive-weekly-content"></div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div><!-- END mode-prod -->
+
+</div><!-- END container -->
+
+<!-- Calendar Day Modal -->
+<div class="modal-overlay" id="cal-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeCalModal()">✕</button>
+    <div class="modal-title" id="cal-modal-title">记录</div>
+    <div class="modal-section">
+      <label>🎭 今天心情</label>
+      <div class="mood-picker-modal" id="modal-mood-picker"></div>
+    </div>
+    <div class="modal-section">
+      <label>🏃 运动</label>
+      <div class="body-row-modal">
+        <button class="body-opt" data-cat="exercise" data-val="yes" onclick="setModalBody(this)">动了 💪</button>
+        <button class="body-opt" data-cat="exercise" data-val="no" onclick="setModalBody(this)">没动 😴</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <label>🧋 奶茶</label>
+      <div class="body-row-modal">
+        <button class="body-opt" data-cat="milk_tea" data-val="no" onclick="setModalBody(this)">没喝 ✨</button>
+        <button class="body-opt" data-cat="milk_tea" data-val="yes" onclick="setModalBody(this)">喝了 🧋</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <label>🥗 饮食</label>
+      <div class="body-row-modal">
+        <button class="body-opt" data-cat="diet" data-val="yes" onclick="setModalBody(this)">有控制 ✅</button>
+        <button class="body-opt" data-cat="diet" data-val="no" onclick="setModalBody(this)">没控制 🍔</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:12px;"><button class="modal-save-btn" onclick="saveCalModal()" style="flex:1;background:var(--blue);">保存</button><button class="modal-save-btn" onclick="clearCalDay()" style="flex:1;background:var(--yellow);color:var(--ink);">清空当天</button></div>
+  </div>
+</div>
+
+<!-- Quick Index Sidebar -->
+<div class="quick-index" id="quick-index">
+  <button class="quick-index-btn active" data-tab="today" data-tooltip="今天" onclick="quickNav('today')"><span class="qi-emoji">☀️</span></button>
+  <button class="quick-index-btn" data-tab="input" data-tooltip="输入" onclick="quickNav('input')"><span class="qi-emoji">📰</span></button>
+  <button class="quick-index-btn" data-tab="bookmarks" data-tooltip="收藏" onclick="quickNav('bookmarks')"><span class="qi-emoji">🔖</span></button>
+  <button class="quick-index-btn" data-tab="dreamlist" data-tooltip="Dream" onclick="quickNav('dreamlist')"><span class="qi-emoji">🌙</span></button>
+  <button class="quick-index-btn" data-tab="archive" data-tooltip="归档" onclick="quickNav('archive')"><span class="qi-emoji">📦</span></button>
+</div>
+
+<!-- Smart Toast -->
+<div class="smart-toast" id="smart-toast"></div>
+
+<!-- Image Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+// === Utilities ===
+const TODAY = new Date().toISOString().slice(0, 10);
+
+function getKey(prefix, date) { return `buer_${prefix}_${date || TODAY}`; }
+function load(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) || fallback; }
+  catch { return fallback; }
+}
+function save(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+function formatTime(ts) {
+  const d = new Date(ts);
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function formatDate(ts) {
+  const d = new Date(ts);
+  return `${d.getMonth()+1}/${d.getDate()}`;
+}
+function escHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+function randRotate(idx) {
+  const angles = [-1.2, 0.8, -0.6, 1.3, -0.9, 0.5, -1.4, 1.1, -0.3, 0.7];
+  return angles[idx % angles.length];
+}
+
+// === Greeting ===
+function setGreeting() {
+  const h = new Date().getHours();
+  let msg = '';
+  if (h >= 6 && h < 9) msg = '早安,新的一天 ☀️';
+  else if (h >= 9 && h < 12) msg = '上午好 ✨';
+  else if (h >= 12 && h < 14) msg = '中午好,记得吃饭 🍜';
+  else if (h >= 14 && h < 18) msg = '下午好 🌿';
+  else if (h >= 18 && h < 22) msg = '晚上好 🌙';
+  else msg = '夜深了,早点休息 💤';
+  document.getElementById('greeting').textContent = msg;
+}
+setGreeting();
+
+// === Tabs ===
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  const tabBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+  if (tabBtn) tabBtn.classList.add('active');
+  document.getElementById('tab-' + tabName).classList.add('active');
+  // Update quick index
+  document.querySelectorAll('.quick-index-btn').forEach(b => b.classList.remove('active'));
+  const qiBtn = document.querySelector(`.quick-index-btn[data-tab="${tabName}"]`);
+  if (qiBtn) qiBtn.classList.add('active');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    switchTab(btn.dataset.tab);
+  });
+});
+
+function quickNav(tabName) {
+  switchTab(tabName);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// "今天"页内滚动自动高亮当前板块
+const sectionIds = ['sec-calendar','sec-metime','sec-sparks'];
+const navItems = document.querySelectorAll('.today-nav-item');
+const sectionObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navItems.forEach(n => n.classList.remove('active-section'));
+      const idx = sectionIds.indexOf(entry.target.id);
+      if (idx >= 0) navItems[idx].classList.add('active-section');
+    }
+  });
+}, { rootMargin: '-20% 0px -60% 0px' });
+sectionIds.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) sectionObs.observe(el);
+});
+
+// === 1. 日历看板 (EMOJI ENLARGED) ===
+const MOODS = ['😊','😴','😤','😢','🥰','🤔','😎','🫠','💪','✨'];
+let calMonth = new Date().getFullYear() * 12 + new Date().getMonth();
+let calFilter = 'all';
+let modalDate = TODAY;
+let modalMood = null;
+let modalBody = {};
+
+function setCalFilter(filter, btn) {
+  calFilter = filter;
+  document.querySelectorAll('.cal-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCalendar();
+}
+
+function changeCalMonth(delta) {
+  calMonth += delta;
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const year = Math.floor(calMonth / 12);
+  const month = calMonth % 12;
+  document.getElementById('cal-title').textContent = `${year}年${month + 1}月`;
+  const firstDay = new Date(year, month, 1).getDay();
+  const days = new Date(year, month + 1, 0).getDate();
+  const labels = ['日','一','二','三','四','五','六'];
+  let html = labels.map(l => `<div class="cal-day-label">${l}</div>`).join('');
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-cell empty"></div>';
+  for (let d = 1; d <= days; d++) {
+    const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const mood = load(`buer_mood_${ds}`, null);
+    const body = load(`buer_body_${ds}`, {});
+    const isToday = ds === TODAY ? ' today' : '';
+
+    let moodHtml = '';
+    let bodyHtml = '';
+
+    if (calFilter === 'all') {
+      // Show mood big + body icons below
+      moodHtml = mood ? `<span class="mood-emoji">${mood}</span>` : '';
+      const icons = [];
+      if (body.exercise === 'yes') icons.push('💪');
+      else if (body.exercise === 'no') icons.push('😴');
+      if (body.milk_tea === 'yes') icons.push('🧋');
+      else if (body.milk_tea === 'no') icons.push('✨');
+      if (body.diet === 'yes') icons.push('✅');
+      else if (body.diet === 'no') icons.push('🍔');
+      if (icons.length) bodyHtml = `<span class="body-icons">${icons.map(ic => `<span>${ic}</span>`).join('')}</span>`;
+    } else if (calFilter === 'mood') {
+      // Sub-calendar: show HUGE emoji
+      moodHtml = mood ? `<span class="mood-emoji-big">${mood}</span>` : '';
+    } else if (calFilter === 'exercise') {
+      if (body.exercise === 'yes') moodHtml = `<span class="mood-emoji-big">💪</span>`;
+      else if (body.exercise === 'no') moodHtml = `<span class="mood-emoji-big">😴</span>`;
+    } else if (calFilter === 'milk_tea') {
+      if (body.milk_tea === 'yes') moodHtml = `<span class="mood-emoji-big">🧋</span>`;
+      else if (body.milk_tea === 'no') moodHtml = `<span class="mood-emoji-big">✨</span>`;
+    } else if (calFilter === 'diet') {
+      if (body.diet === 'yes') moodHtml = `<span class="mood-emoji-big">✅</span>`;
+      else if (body.diet === 'no') moodHtml = `<span class="mood-emoji-big">🍔</span>`;
+    }
+
+    html += `<div class="cal-cell${isToday}" onclick="openCalModal('${ds}')"><span class="day-num">${d}</span>${moodHtml}${bodyHtml}</div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+}
+
+function openCalModal(ds) {
+  modalDate = ds;
+  modalMood = load(`buer_mood_${ds}`, null);
+  modalBody = load(`buer_body_${ds}`, {});
+
+  document.getElementById('cal-modal-title').textContent = `记录 · ${ds}`;
+
+  document.getElementById('modal-mood-picker').innerHTML = MOODS.map(m =>
+    `<button class="mood-btn ${modalMood === m ? 'selected' : ''}" onclick="selectModalMood('${m}')">${m}</button>`
+  ).join('');
+
+  document.querySelectorAll('#cal-modal .body-opt').forEach(btn => {
+    btn.classList.toggle('selected', modalBody[btn.dataset.cat] === btn.dataset.val);
+  });
+
+  document.getElementById('cal-modal').classList.add('show');
+}
+
+function closeCalModal() {
+  document.getElementById('cal-modal').classList.remove('show');
+}
+
+function selectModalMood(emoji) {
+  modalMood = emoji;
+  document.querySelectorAll('#modal-mood-picker .mood-btn').forEach(btn => {
+    btn.classList.toggle('selected', btn.textContent === emoji);
+  });
+}
+
+function setModalBody(el) {
+  const cat = el.dataset.cat;
+  const val = el.dataset.val;
+  modalBody[cat] = val;
+  el.closest('.body-row-modal').querySelectorAll('.body-opt').forEach(b => {
+    b.classList.toggle('selected', b.dataset.cat === cat && b.dataset.val === modalBody[cat]);
+  });
+}
+
+function saveCalModal() {
+  if (modalMood) save(`buer_mood_${modalDate}`, modalMood);
+  if (Object.keys(modalBody).length) save(`buer_body_${modalDate}`, modalBody);
+  closeCalModal();
+  renderCalendar();
+}
+
+function clearCalDay() {
+  if (!confirm(`确定清空 ${modalDate} 的心情和身体记录吗?`)) return;
+  localStorage.removeItem(`buer_mood_${modalDate}`);
+  localStorage.removeItem(`buer_body_${modalDate}`);
+  closeCalModal();
+  renderCalendar();
+}
+
+document.getElementById('cal-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeCalModal();
+});
+
+renderCalendar();
+
+
+// === 3. 属于自己的时间 (#10 Blue Card) ===
+let metimeImgData = null;
+
+function triggerMetimeImg() {
+  document.getElementById('metime-img-input').click();
+}
+
+function compressImage(file, maxSize, quality) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if (w > maxSize || h > maxSize) {
+          if (w > h) { h = h * maxSize / w; w = maxSize; }
+          else { w = w * maxSize / h; h = maxSize; }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function handleMetimeImg(input) {
+  const file = input.files[0];
+  if (!file) return;
+  compressImage(file, 800, 0.7).then(dataUrl => {
+    metimeImgData = dataUrl;
+    document.getElementById('metime-img-preview').innerHTML = `<img src="${metimeImgData}" style="max-height:60px;border-radius:6px;border:1px solid #ddd;"> <button class="btn-small" onclick="clearMetimeImg()">移除</button>`;
+  });
+}
+
+function clearMetimeImg() {
+  metimeImgData = null;
+  document.getElementById('metime-img-preview').innerHTML = '';
+  document.getElementById('metime-img-input').value = '';
+}
+
+function addMetime() {
+  const input = document.getElementById('metime-input');
+  const val = input.value.trim();
+  if (!val && !metimeImgData) return;
+  const data = load(getKey('metime'), []);
+  data.push({ text: val, ts: Date.now(), img: metimeImgData || null, width: 'md' });
+  save(getKey('metime'), data);
+  input.value = '';
+  clearMetimeImg();
+  renderMetime();
+}
+document.getElementById('metime-input').addEventListener('keydown', e => { if (e.key === 'Enter') addMetime(); });
+
+function deleteMetime(idx) {
+  const data = load(getKey('metime'), []);
+  data.splice(idx, 1);
+  save(getKey('metime'), data);
+  renderMetime();
+}
+
+function deleteMetimeImg(idx) {
+  const data = load(getKey('metime'), []);
+  data[idx].img = null;
+  save(getKey('metime'), data);
+  renderMetime();
+}
+
+function renderMetime() {
+  const data = load(getKey('metime'), []);
+  document.getElementById('metime-list').innerHTML = data.map((item, i) => {
+    const dateObj = new Date(item.ts);
+    const timeStr = formatTime(item.ts);
+    const dateDisplay = `${dateObj.getFullYear()}.${String(dateObj.getMonth()+1).padStart(2,'0')}.${String(dateObj.getDate()).padStart(2,'0')}`;
+    const imgHtml = item.img ? `<img class="metime-card-img" src="${item.img}" onclick="openLightboxDirect(this.src)"><button class="metime-card-del-img" onclick="event.stopPropagation();deleteMetimeImg(${i})">✕</button>` : '';
+    const w = item.width || 'md';
+    return `<div class="metime-card w-${w}${item.img ? ' has-img' : ''}" draggable="true" data-idx="${i}" data-section="metime">
+      <span class="drag-handle" title="拖拽排序">⋮⋮</span>
+      <div class="metime-card-label">MY TIME</div>
+      <div class="metime-card-text">${escHtml(item.text)}</div>
+      <div class="metime-card-footer">${timeStr} · ${dateDisplay}</div>
+      ${imgHtml}
+      <button class="metime-card-del" onclick="deleteMetime(${i})">✕</button>
+      <button class="resize-btn" onclick="event.stopPropagation();cycleWidth('metime',${i})" title="切换宽度">↔</button>
+    </div>`;
+  }).join('');
+  initDragDrop('metime-list', 'metime');
+}
+renderMetime();
+
+// === 4. 灵感碎片 (#11 Yellow Strip) ===
+let ideaImgData = null;
+
+function triggerIdeaImg() {
+  document.getElementById('idea-img-input').click();
+}
+
+function handleIdeaImg(input) {
+  const file = input.files[0];
+  if (!file) return;
+  compressImage(file, 800, 0.7).then(dataUrl => {
+    ideaImgData = dataUrl;
+    document.getElementById('idea-img-preview').innerHTML = `<img src="${ideaImgData}" style="max-height:60px;border-radius:6px;border:1px solid #ddd;"> <button class="btn-small" onclick="clearIdeaImg()">移除</button>`;
+  });
+}
+
+function clearIdeaImg() {
+  ideaImgData = null;
+  document.getElementById('idea-img-preview').innerHTML = '';
+  document.getElementById('idea-img-input').value = '';
+}
+
+function addIdea() {
+  const input = document.getElementById('idea-input');
+  const val = input.value.trim();
+  if (!val && !ideaImgData) return;
+  const data = load(getKey('ideas'), []);
+  data.push({ text: val, ts: Date.now(), img: ideaImgData || null, width: 'md' });
+  save(getKey('ideas'), data);
+  input.value = '';
+  clearIdeaImg();
+  renderIdeas();
+}
+document.getElementById('idea-input').addEventListener('keydown', e => { if (e.key === 'Enter') addIdea(); });
+
+function deleteIdea(idx) {
+  const data = load(getKey('ideas'), []);
+  data.splice(idx, 1);
+  save(getKey('ideas'), data);
+  renderIdeas();
+}
+
+function deleteIdeaImg(idx) {
+  const data = load(getKey('ideas'), []);
+  data[idx].img = null;
+  save(getKey('ideas'), data);
+  renderIdeas();
+}
+
+function renderIdeas() {
+  const data = load(getKey('ideas'), []);
+  document.getElementById('idea-grid').innerHTML = data.map((item, i) => {
+    const imgHtml = item.img ? `<img class="idea-strip-img" src="${item.img}" onclick="openLightboxDirect(this.src)"><button class="idea-strip-del-img" onclick="event.stopPropagation();deleteIdeaImg(${i})">✕</button>` : '';
+    const w = item.width || 'md';
+    return `<div class="idea-strip w-${w}${item.img ? ' has-img' : ''}" draggable="true" data-idx="${i}" data-section="ideas">
+      <span class="drag-handle" title="拖拽排序">⋮⋮</span>
+      <div class="idea-strip-text">${escHtml(item.text)}</div>
+      <div class="idea-strip-footer">
+        <span class="idea-strip-dot"></span>
+        <span class="idea-strip-line"></span>
+        <span class="idea-strip-time">${formatTime(item.ts)}</span>
+      </div>
+      ${imgHtml}
+      <button class="idea-strip-del" onclick="deleteIdea(${i})">✕</button>
+      <button class="resize-btn" onclick="event.stopPropagation();cycleWidth('ideas',${i})" title="切换宽度">↔</button>
+    </div>`;
+  }).join('');
+  initDragDrop('idea-grid', 'ideas');
+}
+renderIdeas();
+
+// === Lightbox ===
+function openLightboxDirect(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('show');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+  document.getElementById('lightbox-img').src = '';
+}
+
+// === Tab 2: 输入 ===
+const GITHUB_DATA = [
+  { group: '内容创作', items: [
+    { name: 'content-engine', url: 'https://github.com/example/content-engine', stars: 342, desc: '多平台内容分发自动化工具' },
+  ]},
+  { group: '数据抓取', items: [
+    { name: 'web-harvester', url: 'https://github.com/example/web-harvester', stars: 891, desc: '高性能分布式爬虫框架' },
+  ]},
+  { group: '自动化', items: [
+    { name: 'flow-runner', url: 'https://github.com/example/flow-runner', stars: 567, desc: '可视化工作流编排引擎' },
+  ]},
+  { group: 'AI Agent', items: [
+    { name: 'agent-kit', url: 'https://github.com/example/agent-kit', stars: 2103, desc: '轻量级AI Agent构建框架' },
+  ]},
+  { group: '知识管理', items: [
+    { name: 'memo-graph', url: 'https://github.com/example/memo-graph', stars: 456, desc: '基于图数据库的个人知识管理' },
+  ]},
+];
+
+const BUILDERS_DATA = [
+  { group: 'X/Twitter', items: [
+    { name: '@levelsio', summary: '分享了如何用AI实现月收入$50k的SaaS产品', url: 'https://x.com/levelsio' },
+    { name: '@tdinh_me', summary: '独立开发者周报:用户增长策略复盘', url: 'https://x.com/tdinh_me' },
+  ]},
+  { group: '播客', items: [
+    { name: 'Indie Hackers Podcast', summary: 'E312: 从0到$10k MRR的真实路径', url: 'https://indiehackers.com' },
+    { name: '硬地骇客', summary: '聊聊AI Native产品的设计哲学', url: 'https://harddisk.fm' },
+  ]},
+];
+
+function renderGithub() {
+  let html = '';
+  GITHUB_DATA.forEach(g => {
+    html += `<div class="group-title">${g.group}</div>`;
+    g.items.forEach(item => {
+      html += `<div class="repo-item"><a class="repo-name" href="${item.url}" target="_blank">${item.name}</a> <span class="repo-stars">⭐ ${item.stars}</span><div class="repo-desc">${item.desc}</div></div>`;
+    });
+  });
+  document.getElementById('github-weekly').innerHTML = html;
+}
+
+function renderBuilders() {
+  let html = '';
+  BUILDERS_DATA.forEach(g => {
+    html += `<div class="group-title">${g.group}</div>`;
+    g.items.forEach(item => {
+      html += `<div class="builder-item"><a class="repo-name" href="${item.url}" target="_blank">${item.name}</a><div class="repo-desc">${item.summary}</div></div>`;
+    });
+  });
+  document.getElementById('builders-weekly').innerHTML = html;
+}
+renderGithub();
+renderBuilders();
+
+// === Tab 3: 收藏 (URL opens in new tab) ===
+function addBookmark() {
+  const name = document.getElementById('bm-name').value.trim();
+  let url = document.getElementById('bm-url').value.trim();
+  const desc = document.getElementById('bm-desc').value.trim();
+  if (!name || !url) return;
+  // Ensure url has protocol
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  const data = load('buer_bookmarks', []);
+  data.push({ name, url, desc, ts: Date.now() });
+  save('buer_bookmarks', data);
+  document.getElementById('bm-name').value = '';
+  document.getElementById('bm-url').value = '';
+  document.getElementById('bm-desc').value = '';
+  renderBookmarks();
+}
+
+function deleteBookmark(idx) {
+  const data = load('buer_bookmarks', []);
+  data.splice(idx, 1);
+  save('buer_bookmarks', data);
+  renderBookmarks();
+}
+
+function renderBookmarks() {
+  const data = load('buer_bookmarks', []);
+  const q = document.getElementById('bm-search').value.trim().toLowerCase();
+  const filtered = q ? data.filter(b => b.name.toLowerCase().includes(q) || (b.desc||'').toLowerCase().includes(q) || b.url.toLowerCase().includes(q)) : data;
+  document.getElementById('bm-grid').innerHTML = filtered.map((b, i) => {
+    const realIdx = data.indexOf(b);
+    const domain = (() => { try { return new URL(b.url).hostname; } catch { return ''; }})();
+    const favicon = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=32` : '';
+    return `<div class="bm-card">
+      <a class="bm-link" href="${escHtml(b.url)}" target="_blank" rel="noopener noreferrer">
+        ${favicon ? `<img src="${favicon}" alt="">` : ''}
+        <div class="bm-info"><div class="bm-title">${escHtml(b.name)}</div>${b.desc ? `<div class="bm-desc">${escHtml(b.desc)}</div>` : ''}</div>
+      </a>
+      <button class="bm-del" onclick="event.stopPropagation();deleteBookmark(${realIdx})">✕</button>
+    </div>`;
+  }).join('');
+}
+renderBookmarks();
+
+// === Tab 4: Dream List (#6 Beatles Poster) ===
+function addDream() {
+  const input = document.getElementById('dream-input');
+  const val = input.value.trim();
+  if (!val) return;
+  const data = load('buer_dreams', []);
+  data.push({ text: val, done: false, ts: Date.now(), doneTs: null });
+  save('buer_dreams', data);
+  input.value = '';
+  renderDreams();
+}
+document.getElementById('dream-input').addEventListener('keydown', e => { if (e.key === 'Enter') addDream(); });
+
+function doneDream(idx) {
+  const data = load('buer_dreams', []);
+  data[idx].done = true;
+  data[idx].doneTs = Date.now();
+  save('buer_dreams', data);
+  renderDreams();
+}
+function deleteDream(idx) {
+  const data = load('buer_dreams', []);
+  data.splice(idx, 1);
+  save('buer_dreams', data);
+  renderDreams();
+}
+function renderDreams() {
+  const data = load('buer_dreams', []);
+  const undone = data.filter(d => !d.done);
+  const done = data.filter(d => d.done);
+  const all = [...undone, ...done];
+  document.getElementById('dream-list').innerHTML = all.map((d, displayIdx) => {
+    const realIdx = data.indexOf(d);
+    const doneClass = d.done ? ' done' : '';
+    const rot = randRotate(displayIdx);
+    // Alternate font style per card
+    const fontStyles = ['dream-poster-text', 'dream-poster-text-alt', 'dream-poster-text-hand'];
+    const fontClass = fontStyles[displayIdx % 3];
+    const doneDate = d.doneTs ? `<div class="dream-poster-done-date">✓ done on ${new Date(d.doneTs).toLocaleDateString('zh-CN')}</div>` : '';
+    const doneBtn = d.done ? '' : `<button onclick="doneDream(${realIdx})">做了!🎉</button>`;
+    return `<div class="dream-poster${doneClass}" style="transform:rotate(${rot}deg);">
+      <div class="${fontClass}">${escHtml(d.text)}</div>
+      ${doneDate}
+      <div class="dream-poster-actions">${doneBtn}<button onclick="deleteDream(${realIdx})">删除</button></div>
+    </div>`;
+  }).join('');
+}
+renderDreams();
+
+// === Tab 5: 归档 (#19 Build Log) ===
+let archiveMode = 'date';
+let archiveTopic = 'calendar';
+let archiveCalMonth = new Date().getFullYear() * 12 + new Date().getMonth();
+
+function setArchiveMode(mode, btn) {
+  archiveMode = mode;
+  document.querySelectorAll('.archive-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('archive-date-view').style.display = mode === 'date' ? 'block' : 'none';
+  document.getElementById('archive-topic-view').style.display = mode === 'topic' ? 'block' : 'none';
+  if (mode === 'date') renderArchiveByDate();
+  else renderArchiveByTopic();
+}
+
+function renderArchiveByDate() {
+  const dateVal = document.getElementById('archive-date').value;
+  if (!dateVal) {
+    document.getElementById('archive-date-content').innerHTML = '<div class="archive-empty">选一天看看吧 ~</div>';
+    return;
+  }
+  const mood = load(`buer_mood_${dateVal}`, null);
+  const body = load(`buer_body_${dateVal}`, {});
+  const ideas = load(`buer_ideas_${dateVal}`, []);
+  const metime = load(`buer_metime_${dateVal}`, []);
+  const todoArchive = load(`buer_todo_archive_${dateVal}`, []);
+
+  if (!mood && !Object.keys(body).length && !ideas.length && !metime.length && !todoArchive.length) {
+    document.getElementById('archive-date-content').innerHTML = '<div class="archive-empty">这天没有记录 📭</div>';
+    return;
+  }
+
+  const footers = ['every day counts.', 'trace your steps.', 'small data, big picture.', 'the log remembers.'];
+  const footer = footers[new Date(dateVal).getDate() % footers.length];
+
+  let html = `<div class="archive-buildlog">
+    <div class="archive-buildlog-header">
+      <span class="archive-buildlog-title">DAILY LOG</span>
+      <span class="archive-buildlog-date">${dateVal}</span>
+    </div>
+    <div class="archive-buildlog-body">`;
+
+  // 🌈 心情 & 身体
+  let moodBodyEntries = [];
+  if (mood) moodBodyEntries.push({ text: `心情:${mood}`, type: '心情', time: '', origIdx: 0 });
+  if (Object.keys(body).length) {
+    const ex = body.exercise === 'yes' ? '💪运动了' : (body.exercise === 'no' ? '😴没运动' : '');
+    const mt = body.milk_tea === 'no' ? '✨没喝奶茶' : (body.milk_tea === 'yes' ? '🧋喝了奶茶' : '');
+    const di = body.diet === 'yes' ? '✅控制饮食' : (body.diet === 'no' ? '🍔没控制' : '');
+    const parts = [ex, mt, di].filter(Boolean).join(' / ');
+    if (parts) moodBodyEntries.push({ text: parts, type: '身体', time: '', origIdx: 0 });
+  }
+  if (moodBodyEntries.length) {
+    html += `<div class="archive-category-title">🌈 心情 & 身体</div>`;
+    moodBodyEntries.forEach(e => {
+      html += `<div class="archive-buildlog-line">
+        <span class="archive-buildlog-text">${escHtml(e.text)}</span>
+        <span class="archive-buildlog-meta">${e.type}</span>
+        <button class="archive-del-btn" onclick="deleteArchiveEntry('${dateVal}','${e.type}',${e.origIdx})" title="删除">✕</button>
+      </div>`;
+    });
+  }
+
+  // ⏰ 属于自己的时间
+  // ✅ 已完成的待办
+  if (todoArchive.length) {
+    html += `<div class="archive-category-title">✅ 已完成的待办</div>`;
+    todoArchive.forEach((t) => {
+      html += `<div class="archive-buildlog-line">
+        <span class="archive-buildlog-text">${escHtml(t.text)}</span>
+        <span class="archive-buildlog-meta">${t.ts ? formatTime(t.ts) : ''}</span>
+      </div>`;
+    });
+  }
+
+  if (metime.length) {
+    html += `<div class="archive-category-title">⏰ 属于自己的时间</div>`;
+    metime.forEach((a, idx) => {
+      const imgTag = a.img ? `<img src="${a.img}" style="display:block;max-width:200px;height:auto;border-radius:6px;margin-top:6px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.1);" onclick="openLightboxDirect(this.src)">` : '';
+      html += `<div class="archive-buildlog-line">
+        <span class="archive-buildlog-text">${escHtml(a.text)}${imgTag}</span>
+        <span class="archive-buildlog-meta">${formatTime(a.ts)}</span>
+        <button class="archive-edit-btn" onclick="editArchiveEntry('${dateVal}','时间',${idx})" title="编辑">✎</button>
+        <button class="archive-del-btn" onclick="deleteArchiveEntry('${dateVal}','时间',${idx})" title="删除">✕</button>
+      </div>`;
+    });
+  }
+
+  // 💡 灵感碎片
+  if (ideas.length) {
+    html += `<div class="archive-category-title">💡 灵感碎片</div>`;
+    ideas.forEach((a, idx) => {
+      const imgTag = a.img ? `<img src="${a.img}" style="display:block;max-width:200px;height:auto;border-radius:6px;margin-top:6px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.1);" onclick="openLightboxDirect(this.src)">` : '';
+      html += `<div class="archive-buildlog-line">
+        <span class="archive-buildlog-text">${escHtml(a.text)}${imgTag}</span>
+        <span class="archive-buildlog-meta">${formatTime(a.ts)}</span>
+        <button class="archive-edit-btn" onclick="editArchiveEntry('${dateVal}','灵感',${idx})" title="编辑">✎</button>
+        <button class="archive-del-btn" onclick="deleteArchiveEntry('${dateVal}','灵感',${idx})" title="删除">✕</button>
+      </div>`;
+    });
+  }
+
+  html += `</div><div class="archive-buildlog-footer">${footer}</div></div>`;
+  document.getElementById('archive-date-content').innerHTML = html;
+}
+
+
+function refreshTodayViews() {
+  if (typeof renderMetime === 'function') renderMetime();
+  if (typeof renderIdeas === 'function') renderIdeas();
+}
+
+function editArchiveEntry(dateVal, type, origIdx) {
+  const keyMap = { '时间': `buer_metime_${dateVal}`, '灵感': `buer_ideas_${dateVal}` };
+  const key = keyMap[type];
+  if (!key) return;
+  const arr = load(key, []);
+  if (!arr[origIdx]) return;
+  const newText = prompt('编辑内容:', arr[origIdx].text);
+  if (newText === null || newText.trim() === '') return;
+  arr[origIdx].text = newText.trim();
+  save(key, arr);
+  renderArchiveByDate();
+  renderArchiveByTopic();
+  refreshTodayViews();
+}
+
+function deleteArchiveEntry(dateVal, type, origIdx) {
+  if (!confirm('确定删除这条记录吗?')) return;
+  const keyMap = { '心情': `buer_mood_${dateVal}`, '身体': `buer_body_${dateVal}`, '时间': `buer_metime_${dateVal}`, '灵感': `buer_ideas_${dateVal}` };
+  const key = keyMap[type];
+  if (!key) return;
+  if (type === '心情') { localStorage.removeItem(key); }
+  else if (type === '身体') { localStorage.removeItem(key); }
+  else {
+    const arr = load(key, []);
+    arr.splice(origIdx, 1);
+    if (arr.length) save(key, arr);
+    else localStorage.removeItem(key);
+  }
+  renderArchiveByDate();
+  renderArchiveByTopic();
+  refreshTodayViews();
+}
+
+function deleteArchiveEntryTopic(dateVal, type, origIdx) {
+  if (!confirm('确定删除这条记录吗?')) return;
+  const keyMap = { '时间': `buer_metime_${dateVal}`, '灵感': `buer_ideas_${dateVal}` };
+  const key = keyMap[type];
+  if (!key) return;
+  const arr = load(key, []);
+  arr.splice(origIdx, 1);
+  if (arr.length) save(key, arr);
+  else localStorage.removeItem(key);
+  renderArchiveByTopic();
+  refreshTodayViews();
+}
+
+function setArchiveTopic(topic, btn) {
+  archiveTopic = topic;
+  document.querySelectorAll('#archive-topic-btns button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderArchiveByTopic();
+}
+
+function renderArchiveByTopic() {
+  const container = document.getElementById('archive-topic-content');
+  if (archiveTopic === 'calendar') {
+    container.innerHTML = renderArchiveCalendar();
+  } else if (archiveTopic === 'ideas') {
+    const allKeys = getAllDateKeys('ideas');
+    if (!allKeys.length) { container.innerHTML = '<div class="archive-empty">还没有灵感</div>'; return; }
+    let html = '';
+    allKeys.sort().reverse().forEach(ds => {
+      const data = load(`buer_ideas_${ds}`, []);
+      if (data.length) {
+        html += renderBuildLogCard('SPARKS', ds, data.map((a,i) => ({ text: a.text, time: formatTime(a.ts), type: '灵感', img: a.img || null, origIdx: i })), '灵感');
+      }
+    });
+    container.innerHTML = html || '<div class="archive-empty">还没有灵感</div>';
+  } else if (archiveTopic === 'metime') {
+    const allKeys = getAllDateKeys('metime');
+    if (!allKeys.length) { container.innerHTML = '<div class="archive-empty">还没有记录</div>'; return; }
+    let html = '';
+    allKeys.sort().reverse().forEach(ds => {
+      const data = load(`buer_metime_${ds}`, []);
+      if (data.length) {
+        html += renderBuildLogCard('ME TIME', ds, data.map((a,i) => ({ text: a.text, time: formatTime(a.ts), type: '时间', img: a.img || null, origIdx: i })), '时间');
+      }
+    });
+    container.innerHTML = html || '<div class="archive-empty">还没有记录</div>';
+  }
+}
+
+function renderBuildLogCard(title, dateStr, entries, editType) {
+  const footers = ['keep building.', 'data speaks.', 'the archive grows.', 'trace & reflect.'];
+  const footer = footers[entries.length % footers.length];
+  let html = `<div class="archive-buildlog">
+    <div class="archive-buildlog-header">
+      <span class="archive-buildlog-title">${title}</span>
+      <span class="archive-buildlog-date">${dateStr}</span>
+    </div>
+    <div class="archive-buildlog-body">`;
+  entries.forEach((e, i) => {
+    const imgTag = (e.img) ? `<img src="${e.img}" style="display:block;max-width:200px;height:auto;border-radius:6px;margin-top:6px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.1);" onclick="openLightboxDirect(this.src)">` : '';
+    const idx = e.origIdx !== undefined ? e.origIdx : i;
+    const editBtns = editType ? `<button class="archive-edit-btn" onclick="editArchiveEntry('${dateStr}','${editType}',${idx})" title="编辑">✎</button><button class="archive-del-btn" onclick="deleteArchiveEntryTopic('${dateStr}','${editType}',${idx})" title="删除">✕</button>` : '';
+    html += `<div class="archive-buildlog-line">
+      <span class="archive-buildlog-idx">${String(i+1).padStart(2,'0')}</span>
+      <span class="archive-buildlog-text">${escHtml(e.text)}${imgTag}</span>
+      <span class="archive-buildlog-meta">${e.time ? e.time + ' ' : ''}${e.type}</span>
+      ${editBtns}
+    </div>`;
+  });
+  html += `</div><div class="archive-buildlog-footer">${footer}</div></div>`;
+  return html;
+}
+
+function renderArchiveCalendar() {
+  const year = Math.floor(archiveCalMonth / 12);
+  const month = archiveCalMonth % 12;
+  const firstDay = new Date(year, month, 1).getDay();
+  const days = new Date(year, month + 1, 0).getDate();
+  const labels = ['日','一','二','三','四','五','六'];
+  let html = `<div class="card"><div class="cal-header"><button class="cal-nav" onclick="archiveCalMonth--;renderArchiveByTopic()">←</button><h4>${year}年${month+1}月</h4><button class="cal-nav" onclick="archiveCalMonth++;renderArchiveByTopic()">→</button></div>`;
+  html += '<div class="cal-grid">';
+  html += labels.map(l => `<div class="cal-day-label">${l}</div>`).join('');
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-cell empty"></div>';
+  for (let d = 1; d <= days; d++) {
+    const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const mood = load(`buer_mood_${ds}`, null);
+    const body = load(`buer_body_${ds}`, {});
+    const isToday = ds === TODAY ? ' today' : '';
+    const moodHtml = mood ? `<span class="mood-emoji">${mood}</span>` : '';
+    const icons = [];
+    if (body.exercise === 'yes') icons.push('💪');
+    else if (body.exercise === 'no') icons.push('😴');
+    if (body.milk_tea === 'yes') icons.push('🧋');
+    else if (body.milk_tea === 'no') icons.push('✨');
+    if (body.diet === 'yes') icons.push('✅');
+    else if (body.diet === 'no') icons.push('🍔');
+    const bodyHtml = icons.length ? `<span class="body-icons">${icons.map(ic => `<span>${ic}</span>`).join('')}</span>` : '';
+    html += `<div class="cal-cell${isToday}"><span class="day-num">${d}</span>${moodHtml}${bodyHtml}</div>`;
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function getAllDateKeys(prefix) {
+  const keys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k.startsWith(`buer_${prefix}_`) && k.match(/\d{4}-\d{2}-\d{2}$/)) {
+      keys.push(k.replace(`buer_${prefix}_`, ''));
+    }
+  }
+  return keys;
+}
+// === 数据导出/导入 ===
+function exportJSON() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k.startsWith('buer_')) {
+      data[k] = localStorage.getItem(k);
+    }
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `buer-dashboard-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportMarkdown() {
+  const dateStr = TODAY;
+  let md = `# Esther's Dashboard Export\n## ${dateStr}\n\n`;
+
+  // 日历记录
+  const mood = load(`buer_mood_${dateStr}`, null);
+  const body = load(`buer_body_${dateStr}`, {});
+  if (mood || Object.keys(body).length) {
+    md += `### 🗓️ 日历记录\n`;
+    if (mood) md += `- 心情:${mood}\n`;
+    if (Object.keys(body).length) {
+      const parts = [];
+      if (body.exercise === 'yes') parts.push('💪运动了');
+      else if (body.exercise === 'no') parts.push('😴没运动');
+      if (body.milk_tea === 'no') parts.push('✨没喝奶茶');
+      else if (body.milk_tea === 'yes') parts.push('🧋喝了奶茶');
+      if (body.diet === 'yes') parts.push('✅控制饮食');
+      else if (body.diet === 'no') parts.push('🍔没控制');
+      if (parts.length) md += `- 身体:${parts.join(' / ')}\n`;
+    }
+    md += '\n';
+  }
+
+  // 属于自己的时间
+  const metime = load(getKey('metime'), []);
+  if (metime.length) {
+    md += `### ⏰ 属于自己的时间\n`;
+    metime.forEach(m => md += `- ${m.text} (${formatTime(m.ts)})\n`);
+    md += '\n';
+  }
+
+  // 灵感碎片
+  const ideas = load(getKey('ideas'), []);
+  if (ideas.length) {
+    md += `### 💡 灵感碎片\n`;
+    ideas.forEach(i => md += `- ${i.text} (${formatTime(i.ts)})\n`);
+    md += '\n';
+  }
+
+  // 今日待办
+  const todos = load(getTodoKey(), []);
+  if (todos.length) {
+    md += `### 📋 今日待办\n`;
+    todos.forEach(t => md += `- [${t.done ? 'x' : ' '}] ${t.text}\n`);
+    md += '\n';
+  }
+
+  // 本周重点
+  const weekly = load(getWeekKey(), []);
+  if (weekly.length) {
+    md += `### 🎯 本周重点\n`;
+    const pLabels = { p0: 'P0', p1: 'P1', p2: 'P2' };
+    weekly.forEach(w => md += `- [${pLabels[w.priority] || 'P2'}] ${w.text}\n`);
+    md += '\n';
+  }
+
+  // 项目
+  const projects = migrateProjects(load('buer_projects', [])).filter(p => !p.archived);
+  if (projects.length) {
+    md += `### 📁 项目\n`;
+    const statusLabels = { active: '进行中', paused: '暂停', done: '完成' };
+    projects.forEach(p => {
+      md += `#### ${p.name} (${statusLabels[p.status] || p.status})\n`;
+      p.subtasks.forEach(st => md += `- [${st.done ? 'x' : ' '}] ${st.text}\n`);
+      md += '\n';
+    });
+  }
+
+  // 快速笔记
+  const notes = load(getNoteKey(), []);
+  if (notes.length) {
+    md += `### 📝 快速笔记\n`;
+    notes.forEach(n => md += `- ${n.text} (${formatTime(n.ts)})\n`);
+    md += '\n';
+  }
+
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `esther-dashboard-${dateStr}.md`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      let count = 0;
+      for (const [k, v] of Object.entries(data)) {
+        if (k.startsWith('buer_')) {
+          localStorage.setItem(k, v);
+          count++;
+        }
+      }
+      alert(`✅ 已恢复 ${count} 条数据,刷新页面即可查看`);
+      location.reload();
+    } catch (err) {
+      alert('❌ 文件格式错误,请选择正确的备份文件');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ============================================================
+// =================== PRODUCTIVITY PANEL =====================
+// ============================================================
+
+// === Mode Switcher ===
+function switchMode(mode) {
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
+  document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('mode-' + mode).classList.add('active');
+  // Toggle quick-index visibility
+  const qi = document.getElementById('quick-index');
+  if (qi) qi.style.display = mode === 'charge' ? '' : 'none';
+  // Update body background
+  document.body.style.background = mode === 'prod' ? '#f8f9fa' : '';
+  localStorage.setItem('buer_mode', mode);
+}
+
+// Restore saved mode
+(function() {
+  const savedMode = localStorage.getItem('buer_mode');
+  if (savedMode === 'prod') switchMode('prod');
+})();
+
+// Prod nav scroll spy
+const prodSectionIds = ['prod-today','prod-weekly','prod-projects','prod-notes','sec-prod-archive'];
+const prodNavItems = document.querySelectorAll('.prod-nav-item');
+const prodObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      prodNavItems.forEach(n => n.classList.remove('active-section'));
+      const idx = prodSectionIds.indexOf(entry.target.id);
+      if (idx >= 0) prodNavItems[idx].classList.add('active-section');
+    }
+  });
+}, { rootMargin: '-20% 0px -60% 0px' });
+prodSectionIds.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) prodObs.observe(el);
+});
+
+// === Helpers ===
+function getISOWeek(d) {
+  const date = new Date(d.getTime());
+  date.setHours(0,0,0,0);
+  date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+  const week1 = new Date(date.getFullYear(), 0, 4);
+  return { year: date.getFullYear(), week: Math.round(((date - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7) + 1 };
+}
+function getWeekKey() {
+  const w = getISOWeek(new Date());
+  return `buer_weekly_${w.year}-W${String(w.week).padStart(2, '0')}`;
+}
+// === 1. Todo (Three-day view) ===
+function getTodoKey(dateStr) { return `buer_todo_${dateStr || TODAY}`; }
+function getYesterday() {
+  const d = new Date(); d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+function getTomorrow() {
+  const d = new Date(); d.setDate(d.getDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
+function addTodo() {
+  const input = document.getElementById('todo-input');
+  const val = input.value.trim();
+  if (!val) return;
+  const data = load(getTodoKey(TODAY), []);
+  data.push({ text: val, done: false, ts: Date.now() });
+  save(getTodoKey(TODAY), data);
+  input.value = '';
+  renderTodos();
+}
+function addTodoTomorrow() {
+  const input = document.getElementById('todo-input-tomorrow');
+  const val = input.value.trim();
+  if (!val) return;
+  const tmr = getTomorrow();
+  const data = load(getTodoKey(tmr), []);
+  data.push({ text: val, done: false, ts: Date.now() });
+  save(getTodoKey(tmr), data);
+  input.value = '';
+  renderTodos();
+}
+document.getElementById('todo-input').addEventListener('keydown', e => { if (e.key === 'Enter') addTodo(); });
+document.getElementById('todo-input-tomorrow').addEventListener('keydown', e => { if (e.key === 'Enter') addTodoTomorrow(); });
+
+function toggleTodo(dateStr, idx) {
+  const data = load(getTodoKey(dateStr), []);
+  data[idx].done = !data[idx].done;
+  save(getTodoKey(dateStr), data);
+  renderTodos();
+}
+function deleteTodo(dateStr, idx) {
+  const data = load(getTodoKey(dateStr), []);
+  data.splice(idx, 1);
+  save(getTodoKey(dateStr), data);
+  renderTodos();
+}
+function editTodoInline(dateStr, idx, el) {
+  const data = load(getTodoKey(dateStr), []);
+  const item = data[idx];
+  if (!item) return;
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'inline-edit-input';
+  input.value = item.text;
+  el.replaceWith(input);
+  input.focus();
+  input.select();
+  function save_edit() {
+    const newText = input.value.trim();
+    if (newText && newText !== item.text) {
+      data[idx].text = newText;
+      save(getTodoKey(dateStr), data);
+    }
+    renderTodos();
+  }
+  input.addEventListener('blur', save_edit);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { input.blur(); }
+    if (e.key === 'Escape') { input.value = item.text; input.blur(); }
+  });
+}
+
+function renderTodoList(dateStr, containerId) {
+  const data = load(getTodoKey(dateStr), []);
+  const el = document.getElementById(containerId);
+  el.innerHTML = data.map((item, i) => {
+    const doneClass = item.done ? ' done' : '';
+    return `<div class="todo-item${doneClass}">
+      <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleTodo('${dateStr}',${i})">
+      <span class="todo-text" data-editable ondblclick="editTodoInline('${dateStr}',${i},this)">${escHtml(item.text)}</span>
+      <button class="todo-del" onclick="deleteTodo('${dateStr}',${i})">✕</button>
+    </div>`;
+  }).join('');
+  return data;
+}
+
+function renderTodos() {
+  const yesterday = getYesterday();
+  const tomorrow = getTomorrow();
+  renderTodoList(yesterday, 'todo-list-yesterday');
+  const todayData = renderTodoList(TODAY, 'todo-list');
+  renderTodoList(tomorrow, 'todo-list-tomorrow');
+  const done = todayData.filter(d => d.done).length;
+  const total = todayData.length;
+  document.getElementById('todo-stat').textContent = total ? `今日 ${done}/${total} done` : '';
+}
+
+// === Auto-archive on date change ===
+function autoArchiveOnDateChange() {
+  const LAST_OPEN_KEY = 'buer_last_open_date';
+  const lastOpenDate = localStorage.getItem(LAST_OPEN_KEY);
+  const currentDate = TODAY;
+
+  if (lastOpenDate && lastOpenDate !== currentDate) {
+    // Date has changed — perform archive roll
+    const lastToday = lastOpenDate;
+    const lastTomorrow = (() => {
+      const d = new Date(lastOpenDate);
+      d.setDate(d.getDate() + 1);
+      return d.toISOString().slice(0, 10);
+    })();
+
+    const yesterday = getYesterday();
+    const tomorrow = getTomorrow();
+
+    // Load last today's data
+    const lastTodayData = load(getTodoKey(lastToday), []);
+    const lastTodayIncomplete = lastTodayData.filter(t => !t.done);
+    const lastTodayComplete = lastTodayData.filter(t => t.done);
+
+    // ✅ Archive completed items (never delete them)
+    if (lastTodayComplete.length) {
+      const archiveKey = `buer_todo_archive_${lastToday}`;
+      const existing = load(archiveKey, []);
+      save(archiveKey, [...existing, ...lastTodayComplete]);
+    }
+
+    // Also archive yesterday's completed if it existed separately
+    const lastYesterday = (() => {
+      const d = new Date(lastOpenDate);
+      d.setDate(d.getDate() - 1);
+      return d.toISOString().slice(0, 10);
+    })();
+    const lastYesterdayData = load(getTodoKey(lastYesterday), []);
+    const lastYesterdayComplete = lastYesterdayData.filter(t => t.done);
+    if (lastYesterdayComplete.length) {
+      const archiveKey = `buer_todo_archive_${lastYesterday}`;
+      const existing = load(archiveKey, []);
+      save(archiveKey, [...existing, ...lastYesterdayComplete]);
+    }
+
+    // Current yesterday = last today's incompletes (carry forward)
+    if (lastToday !== yesterday) {
+      save(getTodoKey(yesterday), lastTodayIncomplete);
+    } else {
+      save(getTodoKey(yesterday), lastTodayIncomplete);
+    }
+
+    // Current today = last tomorrow's data
+    const lastTomorrowData = load(getTodoKey(lastTomorrow), []);
+    if (lastTomorrow === currentDate) {
+      // Normal: tomorrow became today, already in right key
+    } else {
+      save(getTodoKey(currentDate), lastTomorrowData);
+      if (lastTomorrow !== currentDate && lastTomorrow !== yesterday) {
+        save(getTodoKey(lastTomorrow), []);
+      }
+    }
+
+    // Clear current tomorrow
+    save(getTodoKey(tomorrow), []);
+
+    console.log(`[Auto-archive] Date changed from ${lastOpenDate} to ${currentDate}. Completed items archived.`);
+  }
+
+  // Save current date
+  localStorage.setItem(LAST_OPEN_KEY, currentDate);
+}
+
+autoArchiveOnDateChange();
+
+renderTodos();
+
+// === 2. Weekly ===
+function addWeekly() {
+  const input = document.getElementById('weekly-input');
+  const val = input.value.trim();
+  if (!val) return;
+  const key = getWeekKey();
+  const data = load(key, []);
+  if (data.length >= 5) { alert('本周最多5条大石头'); return; }
+  data.push({ text: val, priority: 'p1', ts: Date.now() });
+  save(key, data);
+  input.value = '';
+  renderWeekly();
+}
+document.getElementById('weekly-input').addEventListener('keydown', e => { if (e.key === 'Enter') addWeekly(); });
+
+function cycleWeeklyPriority(idx) {
+  const key = getWeekKey();
+  const data = load(key, []);
+  const cycle = { p0: 'p1', p1: 'p2', p2: 'p0' };
+  data[idx].priority = cycle[data[idx].priority] || 'p0';
+  save(key, data);
+  renderWeekly();
+}
+function deleteWeekly(idx) {
+  const key = getWeekKey();
+  const data = load(key, []);
+  data.splice(idx, 1);
+  save(key, data);
+  renderWeekly();
+}
+function editWeeklyInline(idx, el) {
+  const key = getWeekKey();
+  const data = load(key, []);
+  const item = data[idx];
+  if (!item) return;
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'inline-edit-input';
+  input.value = item.text;
+  el.replaceWith(input);
+  input.focus();
+  input.select();
+  function save_edit() {
+    const newText = input.value.trim();
+    if (newText && newText !== item.text) {
+      data[idx].text = newText;
+      save(key, data);
+    }
+    renderWeekly();
+  }
+  input.addEventListener('blur', save_edit);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { input.blur(); }
+    if (e.key === 'Escape') { input.value = item.text; input.blur(); }
+  });
+}
+
+function renderWeekly() {
+  const data = load(getWeekKey(), []);
+  document.getElementById('weekly-list').innerHTML = data.map((item, i) => {
+    const labels = { p0: 'P0', p1: 'P1', p2: 'P2' };
+    const hints = { p0: '🔴 紧急重要', p1: '🟠 重要', p2: '🟡 一般' };
+    const prio = item.priority || 'p1';
+    return `<div class="weekly-item">
+      <span class="priority-tag ${prio}" onclick="cycleWeeklyPriority(${i})" title="${hints[prio] || ''} · 点击切换">${labels[prio] || 'P1'}</span>
+      <span class="weekly-text" data-editable ondblclick="editWeeklyInline(${i},this)">${escHtml(item.text)}</span>
+      <button class="weekly-del" onclick="deleteWeekly(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+renderWeekly();
+
+// === 3. Smart Dispatch (improved recognition) ===
+function smartDispatch() {
+  const textarea = document.getElementById('smart-input');
+  const raw = textarea.value.trim();
+  if (!raw) return;
+
+  const results = { yesterday: [], today: [], tomorrow: [] };
+
+  // === STEP 1: Split into clauses ===
+  // Split by newline, 。, ；, and also by ，/还 (which often separates distinct tasks)
+  const rawSentences = raw.split(/[\n。；]+/).map(s => s.trim()).filter(Boolean);
+  
+  // Further split each sentence by comma/还/另外 to get individual clauses
+  let clauses = [];
+  rawSentences.forEach(s => {
+    // Split by numbered list first: "1. XX 2. XX"
+    const numbered = s.match(/\d+[.、]\s*[^\d。\n]+/g);
+    if (numbered && numbered.length >= 2) {
+      numbered.forEach(n => clauses.push(n.replace(/^\d+[.、]\s*/, '').trim()));
+    } else {
+      // Split by ，/还/另外 but keep the parts
+      const parts = s.split(/[,，]|还要|还得|还有|另外/).map(p => p.trim()).filter(Boolean);
+      clauses.push(...parts);
+    }
+  });
+
+  // === STEP 2: Process each clause ===
+  let currentTimeContext = 'today';
+
+  clauses.forEach(clause => {
+    // --- 2a: Detect time context switch ---
+    // If clause starts with or contains 明天 as a time marker (not part of task)
+    if (/^明天|明日/.test(clause)) {
+      currentTimeContext = 'tomorrow';
+    } else if (/^昨天|昨日/.test(clause)) {
+      currentTimeContext = 'yesterday';
+    } else if (/^今天|今日/.test(clause)) {
+      currentTimeContext = 'today';
+    }
+    // Mid-clause "明天" after action = split: action is current, rest is tomorrow
+    const midTomorrow = clause.match(/^(.+?)明天(.+)$/);
+    if (midTomorrow && midTomorrow[1].length > 2 && midTomorrow[2].length > 1) {
+      // First part stays in current context, second part goes to tomorrow
+      clause = midTomorrow[1].trim();
+      let tPart = cleanTask(midTomorrow[2].trim());
+      if (tPart && isValidTask(tPart)) results.tomorrow.push(tPart);
+    }
+
+    // --- 2b: Clean the clause into a task ---
+    let task = cleanTask(clause);
+    
+    // --- 2c: Validate and add ---
+    if (task && isValidTask(task)) {
+      results[currentTimeContext].push(task);
+    }
+  });
+
+  // === HELPER: Clean a raw clause into a task string ===
+  function cleanTask(s) {
+    if (!s) return '';
+    // Strip time words
+    s = s.replace(/^我?(昨天|今天|明天|昨日|今日|明日)/, '').trim();
+    // Strip filler preambles
+    s = s.replace(/^(然后|并且|还|也|就是|主要是|大概要做的事情是|要做的事情是|主要的事情是|具体是|安排是)[:：]?\s*/g, '').trim();
+    s = s.replace(/^(我|还|又|就|也|然后|接着|会接着|会继续|继续|准备|打算|需要|要|得)+/g, '').trim();
+    // Strip leading connectors
+    s = s.replace(/^[的是在就了]+/, '').trim();
+    // Strip numbered prefix
+    s = s.replace(/^\d+[.、]\s*/, '').trim();
+    // Strip trailing 的 + noun padding: "打扫了房间的卫生" → "打扫房间"
+    s = s.replace(/了/, '').trim();
+    // "做一个手工" → "做手工"
+    s = s.replace(/一个/, '').trim();
+    // "的卫生" at end → keep (it's the object)
+    return s;
+  }
+
+  // === HELPER: Is this a valid task? ===
+  function isValidTask(s) {
+    if (!s) return false;
+    // Too short (less than 2 real chars)
+    if (s.replace(/[\s\p{P}]/gu, '').length < 2) return false;
+    // Pure noise / emotion
+    if (/^(哈哈|嗯|啊|呜|好累|好烦|感觉|觉得|希望|不想|天啊|我去|卧槽|无语|emm|hmm)$/i.test(s)) return false;
+    // Intro/header phrases
+    if (/^(有|共|总共)?\d*[几多]*件?[事情件]*[:：]?$/.test(s)) return false;
+    if (/^(以下|如下|分别是|具体是|主要是|安排|计划|打算|权益|大概)[:：]?$/.test(s)) return false;
+    // Fragments starting with connectors
+    if (/^[的就是在有]{1,3}$/.test(s)) return false;
+    return true;
+  }
+
+  // === STEP 3: Dispatch to storage (no quantity limits) ===
+  let totalDispatched = 0;
+  const yesterday = getYesterday();
+  const tomorrow = getTomorrow();
+
+  if (results.yesterday.length) {
+    const key = getTodoKey(yesterday);
+    const data = load(key, []);
+    results.yesterday.forEach(t => data.push({ text: t, done: false, ts: Date.now() }));
+    save(key, data);
+    totalDispatched += results.yesterday.length;
+  }
+
+  if (results.today.length) {
+    const key = getTodoKey(TODAY);
+    const data = load(key, []);
+    results.today.forEach(t => data.push({ text: t, done: false, ts: Date.now() }));
+    save(key, data);
+    totalDispatched += results.today.length;
+  }
+
+  if (results.tomorrow.length) {
+    const key = getTodoKey(tomorrow);
+    const data = load(key, []);
+    results.tomorrow.forEach(t => data.push({ text: t, done: false, ts: Date.now() }));
+    save(key, data);
+    totalDispatched += results.tomorrow.length;
+  }
+
+  if (totalDispatched) renderTodos();
+  if (!totalDispatched) return;
+
+  // Step 7: Toast
+  const toastParts = [];
+  if (results.yesterday.length) toastParts.push(`${results.yesterday.length}条→昨日`);
+  if (results.today.length) toastParts.push(`${results.today.length}条→今日`);
+  if (results.tomorrow.length) toastParts.push(`${results.tomorrow.length}条→明日`);
+  showSmartToast(`✓ 已添加 ${toastParts.join(',')}`);
+  textarea.value = '';
+}
+
+
+function showSmartToast(msg) {
+  const toast = document.getElementById('smart-toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// Ctrl+Enter to send
+document.getElementById('smart-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) smartDispatch();
+});
+
+// === 3. Projects ===
+let showArchived = false;
+let projectCollapsed = {};
+
+function genId(prefix) {
+  return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+}
+
+function migrateProjects(data) {
+  return data.map(p => {
+    if (!p.id) p.id = genId('proj');
+    if (!p.subtasks) p.subtasks = [];
+    if (!p.createdAt) p.createdAt = p.ts ? new Date(p.ts).toISOString().slice(0,10) : TODAY;
+    if (p.status === 'completed') p.status = 'done';
+    return p;
+  });
+}
+
+function addProject() {
+  const name = document.getElementById('project-name').value.trim();
+  if (!name) return;
+  const data = migrateProjects(load('buer_projects', []));
+  data.push({ id: genId('proj'), name, status: 'active', subtasks: [], createdAt: TODAY });
+  save('buer_projects', data);
+  document.getElementById('project-name').value = '';
+  renderProjects();
+}
+document.getElementById('project-name').addEventListener('keydown', e => { if (e.key === 'Enter') addProject(); });
+
+function cycleProjectStatus(idx) {
+  const data = migrateProjects(load('buer_projects', []));
+  const cycle = { active: 'paused', paused: 'done', done: 'active' };
+  data[idx].status = cycle[data[idx].status] || 'active';
+  save('buer_projects', data);
+  renderProjects();
+}
+function archiveProject(idx) {
+  const data = migrateProjects(load('buer_projects', []));
+  data[idx].archived = true;
+  save('buer_projects', data);
+  renderProjects();
+}
+function deleteProject(idx) {
+  const data = migrateProjects(load('buer_projects', []));
+  data.splice(idx, 1);
+  save('buer_projects', data);
+  renderProjects();
+}
+function toggleArchivedProjects() {
+  showArchived = !showArchived;
+  document.getElementById('project-archived-toggle').textContent = (showArchived ? '▾' : '▸') + ' 已归档项目';
+  document.getElementById('project-archived-list').style.display = showArchived ? 'block' : 'none';
+}
+
+function toggleProjectCollapse(projId) {
+  projectCollapsed[projId] = !projectCollapsed[projId];
+  renderProjects();
+}
+
+function addSubtask(projIdx) {
+  const input = document.getElementById('subtask-input-' + projIdx);
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+  const data = migrateProjects(load('buer_projects', []));
+  data[projIdx].subtasks.push({ id: genId('st'), text, done: false });
+  save('buer_projects', data);
+  input.value = '';
+  renderProjects();
+}
+
+function toggleSubtask(projIdx, stIdx) {
+  const data = migrateProjects(load('buer_projects', []));
+  data[projIdx].subtasks[stIdx].done = !data[projIdx].subtasks[stIdx].done;
+  save('buer_projects', data);
+  renderProjects();
+}
+
+function deleteSubtask(projIdx, stIdx) {
+  const data = migrateProjects(load('buer_projects', []));
+  data[projIdx].subtasks.splice(stIdx, 1);
+  save('buer_projects', data);
+  renderProjects();
+}
+
+function editSubtaskInline(projIdx, stIdx, el) {
+  const data = migrateProjects(load('buer_projects', []));
+  const item = data[projIdx] && data[projIdx].subtasks[stIdx];
+  if (!item) return;
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'inline-edit-input';
+  input.value = item.text;
+  el.replaceWith(input);
+  input.focus();
+  input.select();
+  function save_edit() {
+    const newText = input.value.trim();
+    if (newText && newText !== item.text) {
+      data[projIdx].subtasks[stIdx].text = newText;
+      save('buer_projects', data);
+    }
+    renderProjects();
+  }
+  input.addEventListener('blur', save_edit);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { input.blur(); }
+    if (e.key === 'Escape') { input.value = item.text; input.blur(); }
+  });
+}
+
+function renderProjects() {
+  const data = migrateProjects(load('buer_projects', []));
+  const active = data.filter(p => !p.archived);
+  const archived = data.filter(p => p.archived);
+
+  const statusLabels = { active: '进行中', paused: '暂停', done: '完成' };
+  document.getElementById('project-list').innerHTML = active.map((p, displayIdx) => {
+    const realIdx = data.indexOf(p);
+    const isCollapsed = projectCollapsed[p.id] || false;
+    const arrow = isCollapsed ? '▸' : '▾';
+    const doneCount = p.subtasks.filter(s => s.done).length;
+    const totalCount = p.subtasks.length;
+    const progressText = totalCount > 0 ? `${doneCount}/${totalCount} 完成` : '';
+
+    let subtasksHtml = '';
+    if (!isCollapsed) {
+      const stListHtml = p.subtasks.map((st, si) => {
+        const doneClass = st.done ? ' done' : '';
+        return `<li class="subtask-item${doneClass}">
+          <input type="checkbox" ${st.done ? 'checked' : ''} onchange="toggleSubtask(${realIdx}, ${si})">
+          <span class="subtask-text" data-editable ondblclick="editSubtaskInline(${realIdx},${si},this)">${escHtml(st.text)}</span>
+          <button class="subtask-del" onclick="deleteSubtask(${realIdx}, ${si})">✕</button>
+        </li>`;
+      }).join('');
+      subtasksHtml = `<div class="project-body">
+        <ul class="subtask-list">${stListHtml}</ul>
+        <div class="subtask-add-row">
+          <input type="text" id="subtask-input-${realIdx}" placeholder="添加子任务..." onkeydown="if(event.key==='Enter')addSubtask(${realIdx})">
+          <button onclick="addSubtask(${realIdx})">添加</button>
+        </div>
+      </div>`;
+    } else {
+      subtasksHtml = `<div class="project-body collapsed"></div>`;
+    }
+
+    return `<div class="project-card">
+      <div class="project-card-header">
+        <button class="project-collapse-btn" onclick="toggleProjectCollapse('${p.id}')">${arrow}</button>
+        <span class="project-card-name">${escHtml(p.name)}</span>
+        <span class="project-status ${p.status}">${statusLabels[p.status]}</span>
+        <span class="project-progress">${progressText}</span>
+      </div>
+      ${subtasksHtml}
+      <div class="project-card-actions">
+        <button onclick="cycleProjectStatus(${realIdx})">切换</button>
+        <button onclick="archiveProject(${realIdx})">归档</button>
+        <button onclick="deleteProject(${realIdx})">删除</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Archived section
+  const archivedSection = document.getElementById('project-archived-section');
+  if (archived.length) {
+    archivedSection.style.display = '';
+    document.getElementById('project-archived-list').innerHTML = archived.map((p) => {
+      const realIdx = data.indexOf(p);
+      return `<div class="project-card" style="opacity:0.6;">
+        <div class="project-card-header">
+          <span class="project-card-name">${escHtml(p.name)}</span>
+          <span class="project-status done">已归档</span>
+        </div>
+        <div class="project-card-actions" style="opacity:1;">
+          <button onclick="deleteProject(${realIdx})">删除</button>
+        </div>
+      </div>`;
+    }).join('');
+    document.getElementById('project-archived-list').style.display = showArchived ? 'block' : 'none';
+  } else {
+    archivedSection.style.display = 'none';
+  }
+}
+renderProjects();
+
+// === 5. Quick Notes ===
+function getNoteKey() { return `buer_worknotes_${TODAY}`; }
+
+function addNote() {
+  const input = document.getElementById('note-input');
+  const val = input.value.trim();
+  if (!val) return;
+  const data = load(getNoteKey(), []);
+  data.push({ text: val, ts: Date.now() });
+  save(getNoteKey(), data);
+  input.value = '';
+  renderNotes();
+}
+document.getElementById('note-input').addEventListener('keydown', e => { if (e.key === 'Enter') addNote(); });
+
+function deleteNote(idx) {
+  const data = load(getNoteKey(), []);
+  data.splice(idx, 1);
+  save(getNoteKey(), data);
+  renderNotes();
+}
+function renderNotes() {
+  const data = load(getNoteKey(), []);
+  document.getElementById('note-list').innerHTML = data.map((item, i) => {
+    return `<div class="note-item">
+      <span class="note-time">${formatTime(item.ts)}</span>
+      <span class="note-text">${escHtml(item.text)}</span>
+      <button class="note-del" onclick="deleteNote(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+renderNotes();
+
+// === Drag & Drop + Resize for idea-strips and metime-cards ===
+function cycleWidth(section, idx) {
+  const key = getKey(section);
+  const data = load(key, []);
+  const cycle = { sm: 'md', md: 'lg', lg: 'sm' };
+  const current = data[idx].width || 'md';
+  data[idx].width = cycle[current] || 'md';
+  save(key, data);
+  if (section === 'ideas') renderIdeas();
+  else renderMetime();
+}
+
+// === Prod Archive ===
+let archiveWeekOffset = 0;
+
+function getArchiveWeekInfo(offset) {
+  const now = new Date();
+  const day = now.getDay();
+  const mondayDiff = (day === 0 ? -6 : 1 - day);
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + mondayDiff + offset * 7);
+  monday.setHours(0,0,0,0);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const wInfo = getISOWeek(monday);
+  const weekKey = `buer_weekly_${wInfo.year}-W${String(wInfo.week).padStart(2, '0')}`;
+  const label = `${monday.getMonth()+1}月${monday.getDate()}日 - ${sunday.getMonth()+1}月${sunday.getDate()}日`;
+  return { weekKey, label };
+}
+
+function shiftArchiveWeek(delta) {
+  archiveWeekOffset += delta;
+  renderProdArchiveWeekly();
+}
+
+function renderProdArchiveTodos() {
+  const dateVal = document.getElementById('prod-archive-date').value;
+  if (!dateVal) {
+    document.getElementById('prod-archive-todo-content').innerHTML = '<div class="prod-archive-empty">选一天看看吧</div>';
+    return;
+  }
+  const todos = load(`buer_todo_${dateVal}`, []);
+  if (!todos.length) {
+    document.getElementById('prod-archive-todo-content').innerHTML = '<div class="prod-archive-empty">这天没有记录</div>';
+    return;
+  }
+  const doneCount = todos.filter(t => t.done).length;
+  let html = `<div class="prod-archive-card">
+    <div class="prod-archive-card-header">
+      <span class="prod-archive-card-title">TODO</span>
+      <span class="prod-archive-card-date">${dateVal}</span>
+    </div>
+    <div class="prod-archive-card-body">`;
+  todos.forEach((t, i) => {
+    html += `<div class="prod-archive-line">
+      <span class="prod-archive-idx">${String(i+1).padStart(2,'0')}</span>
+      <span class="prod-archive-text">[${t.done ? 'x' : ' '}] ${escHtml(t.text)}</span>
+    </div>`;
+  });
+  html += `</div><div class="prod-archive-card-footer">${doneCount}/${todos.length} 完成</div></div>`;
+  document.getElementById('prod-archive-todo-content').innerHTML = html;
+}
+
+function renderProdArchiveWeekly() {
+  const info = getArchiveWeekInfo(archiveWeekOffset);
+  document.getElementById('prod-archive-week-label').textContent = info.label;
+  const data = load(info.weekKey, []);
+  if (!data.length) {
+    document.getElementById('prod-archive-weekly-content').innerHTML = '<div class="prod-archive-empty">这周没有记录</div>';
+    return;
+  }
+  const pLabels = { p0: 'P0', p1: 'P1', p2: 'P2' };
+  let html = `<div class="prod-archive-card">
+    <div class="prod-archive-card-body">`;
+  data.forEach((w, i) => {
+    html += `<div class="prod-archive-line">
+      <span class="prod-archive-idx">${String(i+1).padStart(2,'0')}</span>
+      <span class="prod-archive-text">${escHtml(w.text)}</span>
+      <span class="prod-archive-meta">${pLabels[w.priority] || 'P1'}</span>
+    </div>`;
+  });
+  html += `</div></div>`;
+  document.getElementById('prod-archive-weekly-content').innerHTML = html;
+}
+
+// Init archive
+renderProdArchiveWeekly();
+
+function initDragDrop(containerId, section) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const cards = container.querySelectorAll('[draggable="true"]');
+  let dragSrcIdx = null;
+
+  cards.forEach(card => {
+    // Only start drag from handle
+    const handle = card.querySelector('.drag-handle');
+    card.addEventListener('dragstart', function(e) {
+      // Allow drag only if started from handle
+      const rect = handle.getBoundingClientRect();
+      const inHandle = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+      if (!inHandle) { e.preventDefault(); return; }
+      dragSrcIdx = parseInt(this.dataset.idx);
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', dragSrcIdx);
+    });
+
+    card.addEventListener('dragend', function() {
+      this.classList.remove('dragging');
+      container.querySelectorAll('.drop-target').forEach(c => c.classList.remove('drop-target'));
+    });
+
+    card.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      this.classList.add('drop-target');
+    });
+
+    card.addEventListener('dragleave', function() {
+      this.classList.remove('drop-target');
+    });
+
+    card.addEventListener('drop', function(e) {
+      e.preventDefault();
+      this.classList.remove('drop-target');
+      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+      const toIdx = parseInt(this.dataset.idx);
+      if (fromIdx === toIdx || isNaN(fromIdx) || isNaN(toIdx)) return;
+
+      const key = getKey(section);
+      const data = load(key, []);
+      const [moved] = data.splice(fromIdx, 1);
+      data.splice(toIdx, 0, moved);
+      save(key, data);
+
+      if (section === 'ideas') renderIdeas();
+      else renderMetime();
+
+      // Animate the dropped card
+      setTimeout(() => {
+        const newContainer = document.getElementById(containerId);
+        const droppedCard = newContainer.querySelector(`[data-idx="${toIdx}"]`);
+        if (droppedCard) {
+          droppedCard.classList.add('just-dropped');
+          setTimeout(() => droppedCard.classList.remove('just-dropped'), 250);
+        }
+      }, 10);
+    });
+  });
+}
+</script>
+</body>
+</html>

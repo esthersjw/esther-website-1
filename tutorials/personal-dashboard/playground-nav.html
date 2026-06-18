@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📌 页内导航 Playground — 选你喜欢的</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400;1,700&family=Caveat:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Space+Mono&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #fefcf6;
+  font-family: -apple-system, BlinkMacSystemFont, 'Noto Serif SC', 'PingFang SC', sans-serif;
+  color: #2a2a2a;
+  padding: 2rem 1.5rem 4rem;
+  line-height: 1.6;
+}
+
+h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  text-align: center;
+  margin-bottom: 2.5rem;
+  color: #1a1a1a;
+}
+
+.scheme {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+}
+
+.scheme-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.demo-container {
+  background: #f0ede6;
+  border-radius: 12px;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e5e0d8;
+}
+
+/* === 方案A：横向药丸标签条 === */
+.nav-pills {
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.nav-pills .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #e8e5de;
+  color: #4a4a4a;
+  border: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+}
+
+.nav-pills .pill:hover {
+  background: #ddd9d0;
+}
+
+.nav-pills .pill.active {
+  background: #2B7FD8;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(43,127,216,0.3);
+}
+
+/* === 方案B：杂志式大字锚点 === */
+.nav-editorial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 0;
+  flex-wrap: wrap;
+  padding: 0 20px;
+}
+
+.nav-editorial a {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: #3a3a3a;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 4px;
+  transition: color 0.2s;
+}
+
+.nav-editorial a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background: #F4D758;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.nav-editorial a:hover::after,
+.nav-editorial a.active::after {
+  width: 100%;
+}
+
+.nav-editorial a.active {
+  color: #1a1a1a;
+}
+
+.nav-editorial .sep {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  color: #bbb;
+  margin: 0 clamp(8px, 2vw, 20px);
+  user-select: none;
+}
+
+/* === 方案C：竖向侧边小标签 === */
+.demo-container-c {
+  position: relative;
+}
+
+.nav-tabs-side {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-tabs-side .tab {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px 8px 8px;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform: translateX(-60%);
+  white-space: nowrap;
+}
+
+.nav-tabs-side .tab:nth-child(1) { background: #2B7FD8; }
+.nav-tabs-side .tab:nth-child(2) { background: #F4D758; color: #4a3a00; }
+.nav-tabs-side .tab:nth-child(3) { background: #E84A5F; }
+.nav-tabs-side .tab:nth-child(4) { background: #4CAF50; }
+
+.nav-tabs-side .tab:hover {
+  transform: translateX(-10%);
+}
+
+.nav-tabs-side .tab.active {
+  transform: translateX(0);
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+}
+
+/* === 方案D：浮动面包屑条 === */
+.nav-breadcrumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 30px;
+  background: rgba(254,252,246,0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.nav-breadcrumb .node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-breadcrumb .node .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ccc;
+  transition: all 0.3s ease;
+  border: 2px solid #fefcf6;
+}
+
+.nav-breadcrumb .node.active .dot {
+  width: 16px;
+  height: 16px;
+  background: #2B7FD8;
+  box-shadow: 0 0 0 4px rgba(43,127,216,0.2);
+}
+
+.nav-breadcrumb .node .label {
+  font-size: 0.65rem;
+  margin-top: 6px;
+  color: #888;
+  font-family: 'Space Mono', monospace;
+  transition: color 0.2s;
+}
+
+.nav-breadcrumb .node.active .label {
+  color: #2B7FD8;
+  font-weight: 700;
+}
+
+.nav-breadcrumb .line {
+  width: clamp(30px, 8vw, 60px);
+  height: 2px;
+  background: #ddd;
+  margin: 0 -1px;
+  margin-bottom: 20px;
+}
+
+/* === 方案E：vintage小票式索引 === */
+.nav-tickets {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 0 16px;
+  flex-wrap: wrap;
+}
+
+.nav-tickets .ticket {
+  padding: 14px 16px;
+  border-radius: 4px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px dashed transparent;
+  text-align: center;
+  min-width: 80px;
+}
+
+.nav-tickets .ticket:nth-child(1) {
+  background: #d4edda;
+  transform: rotate(-2deg);
+}
+.nav-tickets .ticket:nth-child(2) {
+  background: #fff8e8;
+  border-color: #e8dcc8;
+  transform: rotate(1.5deg);
+}
+.nav-tickets .ticket:nth-child(3) {
+  background: #d6eaf8;
+  transform: rotate(-1deg);
+}
+.nav-tickets .ticket:nth-child(4) {
+  background: #fef3cd;
+  transform: rotate(2.5deg);
+}
+
+.nav-tickets .ticket:hover {
+  transform: rotate(0deg) scale(1.05);
+}
+
+.nav-tickets .ticket.active {
+  transform: rotate(0deg) scale(1.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  body { padding: 1.5rem 1rem 3rem; }
+  .demo-container { height: 180px; }
+  .nav-pills .pill { padding: 6px 14px; font-size: 0.8rem; }
+  .nav-tickets .ticket { padding: 10px 12px; font-size: 1rem; min-width: 65px; }
+  .nav-editorial .sep { margin: 0 8px; }
+}
+</style>
+</head>
+<body>
+
+<h1>📌 页内导航 Playground — 选你喜欢的</h1>
+
+<!-- 方案A -->
+<section class="scheme">
+  <h2 class="scheme-title">方案A：横向药丸标签条</h2>
+  <div class="demo-container">
+    <nav class="nav-pills" data-group="a">
+      <button class="pill active" data-idx="0">📅 日历</button>
+      <button class="pill" data-idx="1">✨ 肯定</button>
+      <button class="pill" data-idx="2">⏰ 我的时间</button>
+      <button class="pill" data-idx="3">💡 灵感</button>
+    </nav>
+  </div>
+</section>
+
+<!-- 方案B -->
+<section class="scheme">
+  <h2 class="scheme-title">方案B：杂志式大字锚点</h2>
+  <div class="demo-container">
+    <nav class="nav-editorial" data-group="b">
+      <a href="#" class="active" data-idx="0">calendar</a>
+      <span class="sep">·</span>
+      <a href="#" data-idx="1">affirmation</a>
+      <span class="sep">·</span>
+      <a href="#" data-idx="2">me time</a>
+      <span class="sep">·</span>
+      <a href="#" data-idx="3">sparks</a>
+    </nav>
+  </div>
+</section>
+
+<!-- 方案C -->
+<section class="scheme">
+  <h2 class="scheme-title">方案C：竖向侧边小标签</h2>
+  <div class="demo-container demo-container-c">
+    <nav class="nav-tabs-side" data-group="c">
+      <div class="tab active" data-idx="0">📅 日历</div>
+      <div class="tab" data-idx="1">✨ 肯定</div>
+      <div class="tab" data-idx="2">⏰ 时间</div>
+      <div class="tab" data-idx="3">💡 灵感</div>
+    </nav>
+  </div>
+</section>
+
+<!-- 方案D -->
+<section class="scheme">
+  <h2 class="scheme-title">方案D：浮动面包屑条</h2>
+  <div class="demo-container">
+    <nav class="nav-breadcrumb" data-group="d">
+      <div class="node active" data-idx="0">
+        <div class="dot"></div>
+        <span class="label">日历</span>
+      </div>
+      <div class="line"></div>
+      <div class="node" data-idx="1">
+        <div class="dot"></div>
+        <span class="label">肯定</span>
+      </div>
+      <div class="line"></div>
+      <div class="node" data-idx="2">
+        <div class="dot"></div>
+        <span class="label">时间</span>
+      </div>
+      <div class="line"></div>
+      <div class="node" data-idx="3">
+        <div class="dot"></div>
+        <span class="label">灵感</span>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<!-- 方案E -->
+<section class="scheme">
+  <h2 class="scheme-title">方案E：vintage小票式索引</h2>
+  <div class="demo-container">
+    <nav class="nav-tickets" data-group="e">
+      <div class="ticket active" data-idx="0">日历</div>
+      <div class="ticket" data-idx="1">肯定日记</div>
+      <div class="ticket" data-idx="2">我的时间</div>
+      <div class="ticket" data-idx="3">灵感</div>
+    </nav>
+  </div>
+</section>
+
+<script>
+// Generic click-to-activate for all nav groups
+document.querySelectorAll('[data-group]').forEach(nav => {
+  nav.addEventListener('click', e => {
+    const item = e.target.closest('[data-idx]');
+    if (!item) return;
+    e.preventDefault();
+    nav.querySelectorAll('[data-idx]').forEach(el => el.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+
+// 方案D: simulate auto-scroll highlight cycling
+let dIdx = 0;
+setInterval(() => {
+  const nodes = document.querySelectorAll('[data-group="d"] .node');
+  nodes.forEach(n => n.classList.remove('active'));
+  dIdx = (dIdx + 1) % nodes.length;
+  nodes[dIdx].classList.add('active');
+}, 2500);
+</script>
+
+</body>
+</html>

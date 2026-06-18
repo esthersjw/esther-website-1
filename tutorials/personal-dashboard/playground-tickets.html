@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎫 Vintage Ticket Playground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@400;700&family=Fraunces:opsz,wght@9..144,100;9..144,400;9..144,700;9..144,900&family=Noto+Serif+SC:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #fefcf6;
+  min-height: 100vh;
+  padding: 60px 40px;
+  font-family: -apple-system, 'PingFang SC', sans-serif;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 60px;
+  font-family: 'Fraunces', serif;
+  font-size: 2.4rem;
+  color: #1a1a1a;
+  letter-spacing: -0.02em;
+}
+.page-title span { font-weight: 100; font-style: italic; }
+
+.grid {
+  columns: 3;
+  column-gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) { .grid { columns: 2; } }
+@media (max-width: 560px) { .grid { columns: 1; } body { padding: 30px 16px; } }
+
+.card-wrap {
+  break-inside: avoid;
+  margin-bottom: 32px;
+  display: inline-block;
+  width: 100%;
+}
+
+.card {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 2px 3px 12px rgba(0,0,0,0.08);
+}
+
+.card:hover {
+  transform: scale(1.03) rotate(0deg) !important;
+  box-shadow: 4px 6px 24px rgba(0,0,0,0.15);
+  z-index: 10;
+}
+
+.card-num {
+  text-align: center;
+  margin-top: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: #999;
+}
+
+/* ============================================
+   TICKET STYLES
+   ============================================ */
+
+/* --- #1 HAERIN-style interview ticket --- */
+.ticket-1 {
+  background: #c8e6c0;
+  padding: 28px 24px;
+  font-family: 'Space Mono', monospace;
+  transform: rotate(-1.2deg);
+}
+.ticket-1 .t-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.2rem;
+  letter-spacing: 0.04em;
+  color: #1a1a1a;
+  line-height: 0.9;
+  margin-bottom: 12px;
+}
+.ticket-1 .t-stars {
+  font-size: 9px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  color: #333;
+}
+.ticket-1 .t-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  border-bottom: 1px dashed #5a8a50;
+  padding: 4px 0;
+  color: #2a2a2a;
+}
+.ticket-1 .t-row:last-child { border-bottom: none; }
+.ticket-1 .t-label { font-weight: 700; }
+.ticket-1 .t-content {
+  font-size: 13px;
+  margin: 14px 0;
+  line-height: 1.6;
+  color: #1a1a1a;
+}
+.ticket-1 .t-footer {
+  margin-top: 14px;
+  font-size: 9px;
+  text-align: center;
+  letter-spacing: 3px;
+  color: #444;
+}
+.ticket-1 .t-barcode {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 1px;
+}
+.ticket-1 .t-barcode span {
+  display: inline-block;
+  width: 2px;
+  height: 20px;
+  background: #1a1a1a;
+}
+.ticket-1 .t-barcode span:nth-child(even) { width: 1px; }
+.ticket-1 .t-barcode span:nth-child(3n) { width: 3px; }
+
+/* --- #2 BINGO card style --- */
+.ticket-2 {
+  background: #f4c2c2;
+  padding: 24px 20px;
+  text-align: center;
+  transform: rotate(0.8deg);
+}
+.ticket-2 .t-title {
+  font-family: 'Fraunces', serif;
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+.ticket-2 .t-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin: 12px 0;
+}
+.ticket-2 .t-grid .cell {
+  background: rgba(255,255,255,0.6);
+  padding: 8px 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  border: 1px solid rgba(0,0,0,0.15);
+}
+.ticket-2 .t-grid .cell.free {
+  background: #1a1a1a;
+  color: #f4c2c2;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+}
+.ticket-2 .t-content {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  margin-top: 12px;
+  color: #3a1a1a;
+}
+.ticket-2 .t-footer {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  margin-top: 8px;
+  color: #6a3a3a;
+}
+
+/* --- #3 OLYMPIA STADIUM style --- */
+.ticket-3 {
+  background: #ede5c8;
+  padding: 20px;
+  transform: rotate(1.5deg);
+  border: 1px solid #c8b888;
+}
+.ticket-3 .t-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #1a1a1a;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+.ticket-3 .t-venue {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  color: #666;
+}
+.ticket-3 .t-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 0.85;
+  color: #1a1a1a;
+}
+.ticket-3 .t-date-sm {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #888;
+}
+.ticket-3 .t-content {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  margin: 14px 0;
+  color: #2a2a2a;
+  line-height: 1.6;
+}
+.ticket-3 .t-price {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: #E84A5F;
+  text-align: right;
+}
+
+/* --- #4 Fan Club card --- */
+.ticket-4 {
+  background: #f5f0dc;
+  padding: 22px;
+  border: 3px solid #1a1a1a;
+  transform: rotate(-0.5deg);
+}
+.ticket-4 .t-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 6px;
+}
+.ticket-4 .t-title {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  font-style: italic;
+  color: #1a1a1a;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.ticket-4 .t-content {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  color: #3a3a3a;
+  margin: 12px 0;
+  line-height: 1.3;
+}
+.ticket-4 .t-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  border-top: 1px solid #ccc;
+  padding-top: 8px;
+  color: #999;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* --- #5 HANNI-style green interview --- */
+.ticket-5 {
+  background: #1a5c38;
+  padding: 24px 20px;
+  color: #fff;
+  transform: rotate(0.3deg);
+}
+.ticket-5 .t-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.6rem;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid rgba(255,255,255,0.4);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+.ticket-5 .t-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+.ticket-5 .t-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ticket-5 .t-table td {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  padding: 5px 0;
+  border-bottom: 1px dashed rgba(255,255,255,0.3);
+  vertical-align: top;
+}
+.ticket-5 .t-table td:first-child {
+  width: 30%;
+  opacity: 0.6;
+  font-size: 9px;
+}
+.ticket-5 .t-content {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  margin: 14px 0;
+  line-height: 1.7;
+  opacity: 0.95;
+}
+.ticket-5 .t-footer {
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-align: center;
+  opacity: 0.5;
+  margin-top: 12px;
+}
+
+/* --- #6 Beatles poster style --- */
+.ticket-6 {
+  background: #2d6a4f;
+  padding: 30px 20px;
+  color: #f5f0dc;
+  text-align: center;
+  transform: rotate(-1.8deg);
+}
+.ticket-6 .t-line1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 6px;
+  opacity: 0.7;
+}
+.ticket-6 .t-line2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  line-height: 1;
+  margin: 8px 0;
+}
+.ticket-6 .t-line3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  font-weight: 100;
+  margin: 4px 0;
+  opacity: 0.8;
+}
+.ticket-6 .t-line4 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem;
+  letter-spacing: 0.06em;
+  line-height: 0.9;
+  margin: 10px 0;
+}
+.ticket-6 .t-line5 {
+  font-family: 'Caveat', cursive;
+  font-size: 1.4rem;
+  margin-top: 8px;
+}
+.ticket-6 .t-line6 {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  margin-top: 12px;
+  opacity: 0.5;
+}
+
+/* --- #7 Library card style --- */
+.ticket-7 {
+  background: #fefcf6;
+  padding: 22px;
+  border: 1.5px solid #1a1a1a;
+  transform: rotate(0.6deg);
+}
+.ticket-7 .t-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 2px solid #1a1a1a;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+.ticket-7 .t-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.ticket-7 .t-num {
+  font-family: 'Caveat', cursive;
+  font-size: 1.8rem;
+  color: #E84A5F;
+}
+.ticket-7 .t-list {
+  list-style: none;
+}
+.ticket-7 .t-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 4px 0;
+  border-bottom: 1px dotted #ccc;
+  font-size: 11px;
+}
+.ticket-7 .t-list li .item-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px;
+}
+.ticket-7 .t-list li .item-year {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: #888;
+}
+.ticket-7 .t-content {
+  font-family: 'Caveat', cursive;
+  font-size: 1.4rem;
+  margin-top: 12px;
+  color: #2a2a2a;
+}
+
+/* --- #8 Red calendar date --- */
+.ticket-8 {
+  background: #E84A5F;
+  padding: 24px;
+  color: #fff;
+  text-align: center;
+  transform: rotate(1.2deg);
+}
+.ticket-8 .t-day {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 4px;
+  opacity: 0.8;
+}
+.ticket-8 .t-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 6rem;
+  line-height: 0.85;
+  margin: 4px 0;
+}
+.ticket-8 .t-month {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.ticket-8 .t-content {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  margin-top: 14px;
+  opacity: 0.9;
+}
+.ticket-8 .t-arrow {
+  font-size: 1.4rem;
+  margin-top: 8px;
+  opacity: 0.6;
+}
+
+/* --- #9 Wine label / product label --- */
+.ticket-9 {
+  background: #f5f0dc;
+  padding: 24px 20px;
+  border: 2px solid #2a2a2a;
+  transform: rotate(-0.8deg);
+}
+.ticket-9 .t-top {
+  text-align: right;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #888;
+  margin-bottom: 6px;
+}
+.ticket-9 .t-brand {
+  font-family: 'Fraunces', serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  text-align: center;
+  border-bottom: 1px solid #2a2a2a;
+  border-top: 1px solid #2a2a2a;
+  padding: 8px 0;
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+}
+.ticket-9 .t-subtitle {
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  text-align: center;
+  color: #666;
+  margin-bottom: 12px;
+}
+.ticket-9 .t-info-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  border: 1px solid #aaa;
+  padding: 10px;
+}
+.ticket-9 .t-info-grid .label {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.ticket-9 .t-signature {
+  font-family: 'Caveat', cursive;
+  font-size: 1.6rem;
+  text-align: center;
+  margin-top: 14px;
+  color: #2a2a2a;
+}
+.ticket-9 .t-vol {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #aaa;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+}
+
+/* --- #10 Blue brand ticket --- */
+.ticket-10 {
+  background: #2B7FD8;
+  padding: 20px;
+  color: #fff;
+  transform: rotate(0.4deg);
+}
+.ticket-10 .t-top {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  opacity: 0.6;
+  margin-bottom: 6px;
+}
+.ticket-10 .t-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem;
+  line-height: 0.9;
+  margin-bottom: 8px;
+}
+.ticket-10 .t-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.3);
+  margin: 10px 0;
+}
+.ticket-10 .t-content {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+.ticket-10 .t-bottom {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  opacity: 0.7;
+  margin-top: 12px;
+}
+
+/* --- #11 Yellow minimal strip --- */
+.ticket-11 {
+  background: #F4D758;
+  padding: 16px 20px;
+  transform: rotate(-1.5deg);
+}
+.ticket-11 .t-content {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.5;
+}
+.ticket-11 .t-deco {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ticket-11 .t-deco .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1a1a1a;
+}
+.ticket-11 .t-deco .line {
+  flex: 1;
+  height: 1px;
+  background: #1a1a1a;
+}
+.ticket-11 .t-deco .time {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #555;
+}
+
+/* --- #12 Black poster --- */
+.ticket-12 {
+  background: #1a1a1a;
+  padding: 28px 22px;
+  color: #fefcf6;
+  text-align: center;
+  transform: rotate(0.7deg);
+}
+.ticket-12 .t-line1 {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 4px;
+  opacity: 0.5;
+}
+.ticket-12 .t-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  font-style: italic;
+  margin: 12px 0;
+  line-height: 1;
+}
+.ticket-12 .t-content {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  opacity: 0.9;
+  margin: 10px 0;
+}
+.ticket-12 .t-stars {
+  font-size: 10px;
+  letter-spacing: 3px;
+  opacity: 0.4;
+  margin-top: 12px;
+}
+
+/* --- #13 Green interview 2 --- */
+.ticket-13 {
+  background: #a8d8a0;
+  padding: 22px;
+  font-family: 'Space Mono', monospace;
+  transform: rotate(-0.4deg);
+}
+.ticket-13 .t-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.ticket-13 .t-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.03em;
+}
+.ticket-13 .t-no {
+  font-size: 9px;
+  color: #3a6a30;
+}
+.ticket-13 .t-fields {
+  font-size: 10px;
+}
+.ticket-13 .t-field {
+  display: flex;
+  padding: 5px 0;
+  border-bottom: 1px dashed #5a8a50;
+}
+.ticket-13 .t-field .fl { width: 80px; opacity: 0.7; }
+.ticket-13 .t-content {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  margin-top: 14px;
+  line-height: 1.6;
+  color: #1a3a1a;
+}
+.ticket-13 .t-check {
+  margin-top: 10px;
+  font-size: 9px;
+  color: #4a7a40;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+/* --- #14 Cream list/catalog --- */
+.ticket-14 {
+  background: #fefcf6;
+  padding: 22px;
+  border: 1px solid #ddd;
+  border-left: 4px solid #E84A5F;
+  transform: rotate(0.9deg);
+}
+.ticket-14 .t-title {
+  font-family: 'Fraunces', serif;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #E84A5F;
+  margin-bottom: 10px;
+}
+.ticket-14 .t-content {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #2a2a2a;
+  padding-left: 12px;
+  border-left: 1px solid #eee;
+}
+.ticket-14 .t-note {
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  color: #888;
+  margin-top: 10px;
+}
+.ticket-14 .t-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #bbb;
+  margin-top: 8px;
+}
+
+/* --- #15 Pink BINGO variant --- */
+.ticket-15 {
+  background: #e8b4b4;
+  padding: 20px;
+  text-align: center;
+  transform: rotate(-1deg);
+}
+.ticket-15 .t-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #4a1a1a;
+  margin-bottom: 4px;
+}
+.ticket-15 .t-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: #6a3a3a;
+  margin-bottom: 12px;
+}
+.ticket-15 .t-big-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5rem;
+  line-height: 0.85;
+  color: #3a0a0a;
+}
+.ticket-15 .t-content {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  margin-top: 10px;
+  color: #4a1a1a;
+}
+.ticket-15 .t-unit {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #7a4a4a;
+  margin-top: 4px;
+}
+
+/* --- #16 Wide strip / label --- */
+.ticket-16 {
+  background: #fefcf6;
+  padding: 14px 20px;
+  border-top: 3px solid #1a1a1a;
+  border-bottom: 3px solid #1a1a1a;
+  transform: rotate(0.2deg);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.ticket-16 .t-icon {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  color: #2B7FD8;
+  flex-shrink: 0;
+}
+.ticket-16 .t-content {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  color: #2a2a2a;
+  flex: 1;
+}
+.ticket-16 .t-time {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  color: #aaa;
+  flex-shrink: 0;
+}
+
+/* --- #17 Concert poster 2 --- */
+.ticket-17 {
+  background: #1a1a1a;
+  padding: 24px 18px;
+  color: #F4D758;
+  transform: rotate(-1.3deg);
+}
+.ticket-17 .t-top {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: #888;
+  margin-bottom: 8px;
+}
+.ticket-17 .t-main {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  line-height: 0.9;
+  margin-bottom: 6px;
+}
+.ticket-17 .t-sub {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: #ccc;
+  margin-bottom: 8px;
+}
+.ticket-17 .t-content {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  color: #fefcf6;
+  line-height: 1.6;
+}
+.ticket-17 .t-bottom-line {
+  height: 2px;
+  background: #F4D758;
+  margin-top: 14px;
+  opacity: 0.5;
+}
+
+/* --- #18 Product label 2 --- */
+.ticket-18 {
+  background: #c8e6c0;
+  padding: 20px;
+  border: 2px solid #3a6a30;
+  transform: rotate(1deg);
+}
+.ticket-18 .t-brand {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  text-align: center;
+  color: #1a3a1a;
+  margin-bottom: 8px;
+}
+.ticket-18 .t-divider {
+  border: none;
+  border-top: 1px solid #3a6a30;
+  margin: 8px 0;
+}
+.ticket-18 .t-rows {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+}
+.ticket-18 .t-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  border-bottom: 1px dotted #5a8a50;
+}
+.ticket-18 .t-content {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  margin-top: 12px;
+  text-align: center;
+  color: #1a3a1a;
+  line-height: 1.6;
+}
+.ticket-18 .t-stamp {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  text-align: right;
+  margin-top: 8px;
+  color: #3a6a30;
+}
+
+/* --- #19 Library catalog 2 --- */
+.ticket-19 {
+  background: #fefcf6;
+  padding: 20px;
+  border: 1px solid #1a1a1a;
+  transform: rotate(-0.6deg);
+}
+.ticket-19 .t-header {
+  border-bottom: 2px solid #1a1a1a;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+.ticket-19 .t-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+.ticket-19 .t-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  color: #999;
+  letter-spacing: 2px;
+}
+.ticket-19 .t-entry {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px dotted #ddd;
+}
+.ticket-19 .t-entry .idx {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #aaa;
+  width: 20px;
+}
+.ticket-19 .t-entry .txt {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px;
+  flex: 1;
+}
+.ticket-19 .t-entry .yr {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #888;
+}
+.ticket-19 .t-handwritten {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  margin-top: 12px;
+  color: #2a2a2a;
+}
+
+/* --- #20 Blue countdown card --- */
+.ticket-20 {
+  background: #2B7FD8;
+  padding: 24px;
+  color: #fff;
+  text-align: center;
+  transform: rotate(0.5deg);
+}
+.ticket-20 .t-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 4px;
+  opacity: 0.6;
+}
+.ticket-20 .t-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5.5rem;
+  line-height: 0.85;
+  margin: 8px 0;
+}
+.ticket-20 .t-unit {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+.ticket-20 .t-content {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  margin-top: 14px;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+.ticket-20 .t-footer {
+  margin-top: 12px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+</style>
+</head>
+<body>
+
+<h1 class="page-title">🎫 Vintage Ticket Playground — <span>选你喜欢的</span></h1>
+
+<div class="grid">
+
+<!-- #1 HAERIN-style interview -->
+<div class="card-wrap">
+<div class="card ticket-1">
+  <div class="t-title">DAILY</div>
+  <div class="t-stars">******** SHORT INTERVIEW ********</div>
+  <div class="t-row"><span class="t-label">Date:</span><span>13-May-2026 10:30:00</span></div>
+  <div class="t-row"><span class="t-label">Terminal:</span><span>Outdoor</span></div>
+  <div class="t-row"><span class="t-label">Served by:</span><span>猪宝</span></div>
+  <div class="t-content">今天跟猪宝出去走了一圈</div>
+  <div class="t-row"><span>散步时间</span><span>40 min</span></div>
+  <div class="t-row"><span>心情指数</span><span>★★★★★</span></div>
+  <div class="t-row"><span>天气</span><span>晴 26°C</span></div>
+  <div class="t-footer">THANK YOU · HAVE A NICE DAY</div>
+  <div class="t-barcode"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+</div>
+<div class="card-num">#1</div>
+</div>
+
+<!-- #2 BINGO card -->
+<div class="card-wrap">
+<div class="card ticket-2">
+  <div class="t-title">BINGO</div>
+  <div class="t-grid">
+    <div class="cell">3</div><div class="cell">17</div><div class="cell">42</div><div class="cell">56</div><div class="cell">71</div>
+    <div class="cell">8</div><div class="cell">24</div><div class="cell">38</div><div class="cell">51</div><div class="cell">68</div>
+    <div class="cell">12</div><div class="cell">29</div><div class="cell free">猫</div><div class="cell">47</div><div class="cell">63</div>
+    <div class="cell">5</div><div class="cell">19</div><div class="cell">33</div><div class="cell">54</div><div class="cell">72</div>
+    <div class="cell">14</div><div class="cell">26</div><div class="cell">40</div><div class="cell">59</div><div class="cell">65</div>
+  </div>
+  <div class="t-content">突然想做一个关于猫的小网站</div>
+  <div class="t-footer">IDEA BINGO CO. · 2026</div>
+</div>
+<div class="card-num">#2</div>
+</div>
+
+<!-- #3 OLYMPIA STADIUM style -->
+<div class="card-wrap">
+<div class="card ticket-3">
+  <div class="t-header">
+    <div>
+      <div class="t-venue">TYPOGRAPHY STUDIO</div>
+      <div class="t-date-sm">MAY 2026</div>
+    </div>
+    <div class="t-number">13</div>
+  </div>
+  <div class="t-content">看到一个很棒的字体设计</div>
+  <div class="t-price">$0.00 · ADMISSION FREE</div>
+</div>
+<div class="card-num">#3</div>
+</div>
+
+<!-- #4 Fan Club card -->
+<div class="card-wrap">
+<div class="card ticket-4">
+  <div class="t-badge">MEMBER SINCE 2026</div>
+  <div class="t-title">Jazz Dance Club</div>
+  <div class="t-content">跳了40分钟JAZZ真的很爽</div>
+  <div class="t-meta">
+    <span>NO. 0513</span>
+    <span>40 MIN SESSION</span>
+  </div>
+</div>
+<div class="card-num">#4</div>
+</div>
+
+<!-- #5 HANNI-style green interview -->
+<div class="card-wrap">
+<div class="card ticket-5">
+  <div class="t-title">MEMO</div>
+  <div class="t-subtitle">SHORT INTERVIEW · 2026.05.13</div>
+  <table class="t-table">
+    <tr><td>질문:</td><td>今天表达如何？</td></tr>
+    <tr><td>Status:</td><td>Very Clear</td></tr>
+    <tr><td>Score:</td><td>★★★★☆</td></tr>
+    <tr><td>Note:</td><td>说到重点了</td></tr>
+  </table>
+  <div class="t-content">我觉得我今天表达得很清楚</div>
+  <div class="t-footer">THANK YOU · END OF INTERVIEW</div>
+</div>
+<div class="card-num">#5</div>
+</div>
+
+<!-- #6 Beatles poster style -->
+<div class="card-wrap">
+<div class="card ticket-6">
+  <div class="t-line1">PRESENTING</div>
+  <div class="t-line2">The Daily</div>
+  <div class="t-line3">a record of things that matter</div>
+  <div class="t-line4">穿搭记录</div>
+  <div class="t-line5">想试试做一个每日穿搭记录</div>
+  <div class="t-line6">EST. MAY 2026 · PERSONAL PROJECT</div>
+</div>
+<div class="card-num">#6</div>
+</div>
+
+<!-- #7 Library card style -->
+<div class="card-wrap">
+<div class="card ticket-7">
+  <div class="t-header">
+    <div class="t-title">Not Just Record</div>
+    <div class="t-num">nº7</div>
+  </div>
+  <ul class="t-list">
+    <li><span class="item-name">控制饮食</span><span class="item-year">✓</span></li>
+    <li><span class="item-name">没有吃宵夜</span><span class="item-year">✓</span></li>
+    <li><span class="item-name">喝水 2L</span><span class="item-year">✓</span></li>
+    <li><span class="item-name">早睡（目标11pm）</span><span class="item-year">—</span></li>
+  </ul>
+  <div class="t-content">今天控制饮食没有吃宵夜！</div>
+</div>
+<div class="card-num">#7</div>
+</div>
+
+<!-- #8 Red calendar date -->
+<div class="card-wrap">
+<div class="card ticket-8">
+  <div class="t-day">TUESDAY</div>
+  <div class="t-number">13</div>
+  <div class="t-month">MAY</div>
+  <div class="t-content">读到一段话很有感触</div>
+  <div class="t-arrow">↘</div>
+</div>
+<div class="card-num">#8</div>
+</div>
+
+<!-- #9 Wine label / product label -->
+<div class="card-wrap">
+<div class="card ticket-9">
+  <div class="t-top">1/365 uds.</div>
+  <div class="t-brand">月亮观测站</div>
+  <div class="t-subtitle">Luna Observatory · est. 2026</div>
+  <div class="t-info-grid">
+    <span class="label">日期:</span><span>2026.05.13</span>
+    <span class="label">时间:</span><span>22:30</span>
+    <span class="label">月相:</span><span>满月 · Full Moon</span>
+    <span class="label">天气:</span><span>晴朗</span>
+    <span class="label">观测:</span><span>肉眼可见</span>
+  </div>
+  <div class="t-signature">今晚的月亮很圆</div>
+  <div class="t-vol"><span>VOL. 13</span><span>100% 幸福</span></div>
+</div>
+<div class="card-num">#9</div>
+</div>
+
+<!-- #10 Blue brand ticket -->
+<div class="card-wrap">
+<div class="card ticket-10">
+  <div class="t-top">PLAN AHEAD</div>
+  <div class="t-title">NEXT<br>WEEK</div>
+  <div class="t-divider"></div>
+  <div class="t-content">下周想去逛宜家</div>
+  <div class="t-bottom"><span>PRIORITY: LOW</span><span>STATUS: PENDING</span></div>
+</div>
+<div class="card-num">#10</div>
+</div>
+
+<!-- #11 Yellow minimal strip -->
+<div class="card-wrap">
+<div class="card ticket-11">
+  <div class="t-content">嘎达今天特别粘人</div>
+  <div class="t-deco">
+    <span class="dot"></span>
+    <span class="line"></span>
+    <span class="time">13:42</span>
+  </div>
+</div>
+<div class="card-num">#11</div>
+</div>
+
+<!-- #12 Black poster -->
+<div class="card-wrap">
+<div class="card ticket-12">
+  <div class="t-line1">NOW PLAYING</div>
+  <div class="t-title">×20</div>
+  <div class="t-content">这首歌循环了20遍</div>
+  <div class="t-stars">★ ★ ★ ★ ★ ★ ★ ★ ★ ★</div>
+</div>
+<div class="card-num">#12</div>
+</div>
+
+<!-- #13 Green interview 2 -->
+<div class="card-wrap">
+<div class="card ticket-13">
+  <div class="t-header">
+    <div class="t-title">RECORD</div>
+    <div class="t-no">No. 013</div>
+  </div>
+  <div class="t-fields">
+    <div class="t-field"><span class="fl">Type:</span><span>想法记录</span></div>
+    <div class="t-field"><span class="fl">Status:</span><span>已完成 ✓</span></div>
+    <div class="t-field"><span class="fl">Feeling:</span><span>成就感</span></div>
+  </div>
+  <div class="t-content">终于把那个想法写下来了</div>
+  <div class="t-check">✓ VERIFIED · FILED</div>
+</div>
+<div class="card-num">#13</div>
+</div>
+
+<!-- #14 Cream list/catalog -->
+<div class="card-wrap">
+<div class="card ticket-14">
+  <div class="t-title">Permission Slip</div>
+  <div class="t-content">允许自己今天什么都不做</div>
+  <div class="t-note">— and that's perfectly okay.</div>
+  <div class="t-date">2026.05.13 · SELF-CARE DEPT.</div>
+</div>
+<div class="card-num">#14</div>
+</div>
+
+<!-- #15 Pink BINGO / countdown -->
+<div class="card-wrap">
+<div class="card ticket-15">
+  <div class="t-title">Duration</div>
+  <div class="t-subtitle">TIME SPENT TOGETHER</div>
+  <div class="t-big-num">60</div>
+  <div class="t-unit">MINUTES</div>
+  <div class="t-content">跟朋友聊了一小时 很开心</div>
+</div>
+<div class="card-num">#15</div>
+</div>
+
+<!-- #16 Wide strip -->
+<div class="card-wrap">
+<div class="card ticket-16">
+  <div class="t-icon">💧</div>
+  <div class="t-content">明天要记得喝水</div>
+  <div class="t-time">REMINDER<br>DAILY</div>
+</div>
+<div class="card-num">#16</div>
+</div>
+
+<!-- #17 Concert poster 2 -->
+<div class="card-wrap">
+<div class="card ticket-17">
+  <div class="t-top">CRAVING ALERT</div>
+  <div class="t-main">麻辣烫</div>
+  <div class="t-sub">a sudden, powerful desire</div>
+  <div class="t-content">突然很想吃麻辣烫</div>
+  <div class="t-bottom-line"></div>
+</div>
+<div class="card-num">#17</div>
+</div>
+
+<!-- #18 Product label 2 -->
+<div class="card-wrap">
+<div class="card ticket-18">
+  <div class="t-brand">天空观察日志</div>
+  <hr class="t-divider">
+  <div class="t-rows">
+    <div class="t-row"><span>DATE</span><span>2026.05.13</span></div>
+    <div class="t-row"><span>TIME</span><span>17:45</span></div>
+    <div class="t-row"><span>COLOR</span><span>粉橙渐变</span></div>
+    <div class="t-row"><span>CLOUD</span><span>少量卷云</span></div>
+  </div>
+  <div class="t-content">今天的天空好好看</div>
+  <div class="t-stamp">— beautiful</div>
+</div>
+<div class="card-num">#18</div>
+</div>
+
+<!-- #19 Library catalog 2 -->
+<div class="card-wrap">
+<div class="card ticket-19">
+  <div class="t-header">
+    <div class="t-title">Build Log</div>
+    <div class="t-subtitle">THE PROJECT CARD</div>
+  </div>
+  <div class="t-entry"><span class="idx">01</span><span class="txt">初始化项目</span><span class="yr">✓</span></div>
+  <div class="t-entry"><span class="idx">02</span><span class="txt">搭建框架</span><span class="yr">✓</span></div>
+  <div class="t-entry"><span class="idx">03</span><span class="txt">写核心功能</span><span class="yr">✓</span></div>
+  <div class="t-entry"><span class="idx">04</span><span class="txt">测试 & 上线</span><span class="yr">→</span></div>
+  <div class="t-handwritten">做了一个很酷的小demo</div>
+</div>
+<div class="card-num">#19</div>
+</div>
+
+<!-- #20 Blue countdown / affirmation -->
+<div class="card-wrap">
+<div class="card ticket-20">
+  <div class="t-label">AFFIRMATION</div>
+  <div class="t-number">∞</div>
+  <div class="t-unit">times deserved</div>
+  <div class="t-content">我值得被好好对待</div>
+  <div class="t-footer">— always, forever —</div>
+</div>
+<div class="card-num">#20</div>
+</div>
+
+</div><!-- .grid -->
+
+</body>
+</html>
