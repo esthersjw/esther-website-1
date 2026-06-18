@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3分钟了解我的Design Skill - Esther不二</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Fraunces:ital,wght@0,700;0,900;1,400;1,700;1,900&family=Fira+Code:wght@400;500;600&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+<script src="html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<style>
+@font-face {
+  font-family: 'Huiwen Mincho';
+  src: url('HuiwenMincho.ttf') format('truetype');
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --yellow: #F4D758;
+  --blue: #2B7FD8;
+  --red: #E84A5F;
+  --cream: #fefcf6;
+  --cream-dark: #faf6eb;
+  --ink: #1A1A2E;
+  --ink-light: #4A4A5A;
+  --ink-faint: #8A8A9A;
+}
+
+body {
+  background: #e8e4de;
+  font-family: 'Noto Sans SC', -apple-system, 'PingFang SC', sans-serif;
+  color: var(--ink);
+  padding: 40px 20px;
+}
+
+/* ========== 导出栏 ========== */
+.export-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  background: var(--ink);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.export-bar button {
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.export-bar button:hover { background: #1a6abf; }
+.export-bar .hint { color: #aaa; font-size: 13px; }
+
+/* ========== 卡片容器 ========== */
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  margin-top: 80px;
+}
+
+.card {
+  width: 1080px;
+  height: 1440px;
+  position: relative;
+  overflow: hidden;
+  transform: scale(0.45);
+  transform-origin: top center;
+  margin-bottom: -792px;
+  border-radius: 4px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+}
+
+/* ========== P1 封面 ========== */
+.p-cover {
+  background: var(--cream);
+  background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  border: 28px solid var(--yellow);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 80px;
+  text-align: center;
+}
+.p-cover h1 {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 84px;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: 32px;
+}
+.p-cover h1 .hl {
+  background: #2B7FD8;
+  color: #fff;
+  padding: 4px 16px;
+  border-radius: 6px;
+  display: inline-block;
+  margin: 4px 0;
+}
+.p-cover .subtitle {
+  font-size: 44px;
+  color: var(--ink-light);
+  font-weight: 500;
+  white-space: nowrap;
+  margin-bottom: 120px;
+}
+.p-cover .author-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.p-cover .avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--yellow);
+}
+.p-cover .author-info { text-align: left; }
+.p-cover .author-name {
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.p-cover .author-desc {
+  font-size: 34px;
+  color: var(--ink-light);
+  margin-top: 6px;
+}
+
+/* ========== P2 一句话解释 ========== */
+.p-what {
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 100px 90px;
+}
+.p-what .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 200px;
+  color: var(--yellow);
+  opacity: 0.1;
+  position: absolute;
+  top: -30px; right: 60px;
+  font-weight: 900;
+}
+.p-what h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 54px;
+  color: var(--cream);
+  margin-bottom: 48px;
+}
+.p-what .big-text {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 52px;
+  font-weight: 700;
+  color: #e8e4de;
+  line-height: 1.7;
+  margin-bottom: 60px;
+}
+.p-what .big-text em {
+  color: var(--yellow);
+  font-style: normal;
+}
+.p-what .flow-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.p-what .flow-step {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 16px 28px;
+  border-radius: 12px;
+  font-size: 34px;
+  color: #e8e4de;
+  font-weight: 500;
+}
+.p-what .flow-arrow {
+  font-size: 42px;
+  color: var(--yellow);
+}
+.p-what .deco-line {
+  position: absolute;
+  bottom: 80px; left: 90px; right: 90px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--blue) 50%, var(--yellow) 75%, var(--red) 100%);
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+/* ========== P3 4种场景 ========== */
+.p-scenes {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  padding: 80px 80px;
+}
+.p-scenes .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 180px;
+  color: var(--blue);
+  opacity: 0.08;
+  position: absolute;
+  top: -20px; right: 60px;
+  font-weight: 900;
+}
+.p-scenes h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 54px;
+  margin-bottom: 60px;
+}
+.p-scenes h2::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 6px;
+  background: var(--yellow);
+  margin-top: 16px;
+  border-radius: 3px;
+}
+.p-scenes .scene-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-content: center;
+}
+.p-scenes .scene-card {
+  border-radius: 20px;
+  padding: 48px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.p-scenes .scene-card:nth-child(1) { background: linear-gradient(145deg, rgba(43,127,216,0.1), rgba(43,127,216,0.02)); }
+.p-scenes .scene-card:nth-child(2) { background: linear-gradient(145deg, rgba(244,215,88,0.18), rgba(244,215,88,0.04)); }
+.p-scenes .scene-card:nth-child(3) { background: linear-gradient(145deg, rgba(232,74,95,0.1), rgba(232,74,95,0.02)); }
+.p-scenes .scene-card:nth-child(4) { background: var(--ink); }
+.p-scenes .scene-card .emoji {
+  font-size: 52px;
+  margin-bottom: 20px;
+  display: block;
+}
+.p-scenes .scene-card h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.p-scenes .scene-card p {
+  font-size: 32px;
+  color: var(--ink-light);
+  line-height: 1.5;
+}
+.p-scenes .scene-card:nth-child(4) h3 { color: var(--cream); }
+.p-scenes .scene-card:nth-child(4) p { color: #aaa; }
+
+/* ========== P4 核心逻辑 - 流程 ========== */
+.p-logic {
+  background: var(--cream-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 80px;
+}
+.p-logic .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 180px;
+  color: var(--yellow);
+  opacity: 0.12;
+  position: absolute;
+  top: -20px; left: 60px;
+  font-weight: 900;
+}
+.p-logic h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 54px;
+  margin-bottom: 24px;
+}
+.p-logic .sub {
+  font-size: 32px;
+  color: var(--ink-light);
+  margin-bottom: 60px;
+}
+.p-logic .logic-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: center;
+}
+.p-logic .logic-block {
+  width: 100%;
+  background: #fff;
+  border-radius: 20px;
+  padding: 44px 48px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  position: relative;
+}
+.p-logic .logic-block .label {
+  font-family: 'Fira Code', monospace;
+  font-size: 24px;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.p-logic .logic-block h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.p-logic .logic-block p {
+  font-size: 32px;
+  color: var(--ink-light);
+  line-height: 1.5;
+}
+.p-logic .logic-arrow {
+  font-size: 56px;
+  color: var(--blue);
+  padding: 16px 0;
+  text-align: center;
+}
+
+/* ========== P5 7步工作流 ========== */
+.p-steps {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  padding: 72px 80px;
+}
+.p-steps .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 180px;
+  color: var(--blue);
+  opacity: 0.08;
+  position: absolute;
+  top: -20px; right: 60px;
+  font-weight: 900;
+}
+.p-steps h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 52px;
+  margin-bottom: 48px;
+}
+.p-steps h2::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 6px;
+  background: var(--yellow);
+  margin-top: 16px;
+  border-radius: 3px;
+}
+.p-steps .steps-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+.p-steps .step-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 32px;
+  border-radius: 16px;
+}
+.p-steps .step-row:nth-child(odd) { background: #fff; }
+.p-steps .step-row:nth-child(even) { background: var(--cream-dark); }
+.p-steps .step-num {
+  font-family: 'Fraunces', serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--blue);
+  opacity: 0.4;
+  flex-shrink: 0;
+  width: 60px;
+  text-align: center;
+}
+.p-steps .step-content {
+  flex: 1;
+}
+.p-steps .step-content strong {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 4px;
+}
+.p-steps .step-content span {
+  font-size: 30px;
+  color: var(--ink-light);
+}
+
+/* ========== P6 品牌三色 ========== */
+.p-colors {
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 80px;
+}
+.p-colors .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 180px;
+  color: var(--red);
+  opacity: 0.08;
+  position: absolute;
+  top: -20px; right: 60px;
+  font-weight: 900;
+}
+.p-colors h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 54px;
+  margin-bottom: 20px;
+}
+.p-colors .sub {
+  font-size: 32px;
+  color: var(--ink-light);
+  margin-bottom: 60px;
+}
+.p-colors .color-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.p-colors .color-item {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 36px 40px;
+  border-radius: 20px;
+}
+.p-colors .color-item:nth-child(1) { background: rgba(43,127,216,0.06); }
+.p-colors .color-item:nth-child(2) { background: rgba(244,215,88,0.12); }
+.p-colors .color-item:nth-child(3) { background: rgba(232,74,95,0.06); }
+.p-colors .color-swatch {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.p-colors .color-info h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.p-colors .color-info p {
+  font-size: 30px;
+  color: var(--ink-light);
+}
+.p-colors .color-info code {
+  font-family: 'Fira Code', monospace;
+  font-size: 28px;
+  color: var(--ink-faint);
+  background: rgba(0,0,0,0.04);
+  padding: 2px 10px;
+  border-radius: 4px;
+}
+.p-colors .ratio-bar {
+  margin-top: 60px;
+  height: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+}
+.p-colors .ratio-bar .rb-blue { width: 60%; background: var(--blue); }
+.p-colors .ratio-bar .rb-yellow { width: 30%; background: var(--yellow); }
+.p-colors .ratio-bar .rb-red { width: 10%; background: var(--red); }
+.p-colors .ratio-label {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 26px;
+  color: var(--ink-faint);
+  font-family: 'Fira Code', monospace;
+}
+
+/* ========== P7 字体系统 ========== */
+.p-fonts {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  padding: 80px 80px;
+}
+.p-fonts .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 180px;
+  color: var(--blue);
+  opacity: 0.08;
+  position: absolute;
+  top: -20px; right: 60px;
+  font-weight: 900;
+}
+.p-fonts h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 54px;
+  margin-bottom: 16px;
+}
+.p-fonts .sub {
+  font-size: 32px;
+  color: var(--ink-light);
+  margin-bottom: 48px;
+}
+.p-fonts .font-showcase {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 36px;
+}
+.p-fonts .font-row {
+  padding: 32px 36px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+}
+.p-fonts .font-row .font-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 24px;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.p-fonts .font-row .font-sample {
+  font-size: 40px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.p-fonts .font-row:nth-child(1) .font-sample { font-family: 'Huiwen Mincho', 'Noto Serif SC', serif; font-weight: 900; }
+.p-fonts .font-row:nth-child(2) .font-sample { font-family: 'Noto Sans SC', sans-serif; font-weight: 400; }
+.p-fonts .font-row:nth-child(3) .font-sample { font-family: 'Fraunces', serif; font-style: italic; font-size: 44px; }
+.p-fonts .font-row:nth-child(4) .font-sample { font-family: 'Caveat', cursive; font-size: 48px; }
+.p-fonts .font-row:nth-child(5) .font-sample { font-family: 'Fira Code', monospace; font-size: 34px; }
+
+/* ========== P8 文件结构 ========== */
+.p-structure {
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  padding: 80px 80px;
+}
+.p-structure .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 180px;
+  color: var(--yellow);
+  opacity: 0.08;
+  position: absolute;
+  top: -20px; right: 60px;
+  font-weight: 900;
+}
+.p-structure h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 52px;
+  color: var(--cream);
+  margin-bottom: 48px;
+}
+.p-structure .terminal {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #0d1117;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.p-structure .terminal-bar {
+  background: #21262d;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.p-structure .terminal-bar .dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+}
+.p-structure .terminal-bar .dot:nth-child(1) { background: var(--red); }
+.p-structure .terminal-bar .dot:nth-child(2) { background: var(--yellow); }
+.p-structure .terminal-bar .dot:nth-child(3) { background: #4ade80; }
+.p-structure .terminal-bar span.title {
+  flex: 1;
+  text-align: center;
+  font-family: 'Fira Code', monospace;
+  font-size: 24px;
+  color: #8b949e;
+}
+.p-structure .terminal-body {
+  flex: 1;
+  padding: 36px 40px;
+  font-family: 'Fira Code', monospace;
+  font-size: 28px;
+  line-height: 2;
+  color: #c9d1d9;
+  overflow: hidden;
+}
+.p-structure .terminal-body .dir { color: #79c0ff; font-weight: 600; }
+.p-structure .terminal-body .file { color: #c9d1d9; }
+.p-structure .terminal-body .comment { color: #8b949e; }
+.p-structure .terminal-body .indent { padding-left: 40px; }
+.p-structure .terminal-body .indent2 { padding-left: 80px; }
+
+/* ========== P9 组件库概览 ========== */
+.p-components {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  padding: 72px 80px;
+}
+.p-components .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 180px;
+  color: var(--blue);
+  opacity: 0.08;
+  position: absolute;
+  top: -20px; right: 60px;
+  font-weight: 900;
+}
+.p-components h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 52px;
+  margin-bottom: 16px;
+}
+.p-components .sub {
+  font-size: 32px;
+  color: var(--ink-light);
+  margin-bottom: 44px;
+}
+.p-components .comp-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-content: center;
+}
+.p-components .comp-item {
+  padding: 32px 28px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.p-components .comp-item .comp-icon {
+  font-size: 40px;
+  flex-shrink: 0;
+  width: 56px;
+  text-align: center;
+}
+.p-components .comp-item .comp-name {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.p-components .comp-item .comp-count {
+  font-family: 'Fira Code', monospace;
+  font-size: 24px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+
+/* ========== P10 禁忌清单 ========== */
+.p-donts {
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 72px 80px;
+}
+.p-donts .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 180px;
+  color: var(--red);
+  opacity: 0.08;
+  position: absolute;
+  top: -20px; right: 60px;
+  font-weight: 900;
+}
+.p-donts h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 52px;
+  margin-bottom: 48px;
+  color: var(--ink);
+}
+.p-donts .dont-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+}
+.p-donts .dont-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 28px 32px;
+  border-radius: 14px;
+  border: 2px solid rgba(232,74,95,0.15);
+  background: rgba(232,74,95,0.02);
+}
+.p-donts .dont-item .x-mark {
+  font-size: 36px;
+  color: var(--red);
+  font-weight: 900;
+  flex-shrink: 0;
+}
+.p-donts .dont-item .dont-text {
+  font-size: 34px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.p-donts .dont-item .dont-text em {
+  color: var(--red);
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* ========== P11 质量检查 ========== */
+.p-checklist {
+  background: var(--cream-dark);
+  display: flex;
+  flex-direction: column;
+  padding: 72px 80px;
+}
+.p-checklist .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 180px;
+  color: var(--yellow);
+  opacity: 0.12;
+  position: absolute;
+  top: -20px; left: 60px;
+  font-weight: 900;
+}
+.p-checklist h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 52px;
+  margin-bottom: 48px;
+}
+.p-checklist .check-sections {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 36px;
+}
+.p-checklist .check-group {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 36px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.p-checklist .check-group .group-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  padding: 4px 14px;
+  border-radius: 6px;
+  display: inline-block;
+}
+.p-checklist .check-group.p0 .group-label { background: rgba(232,74,95,0.1); color: var(--red); }
+.p-checklist .check-group.p1 .group-label { background: rgba(43,127,216,0.1); color: var(--blue); }
+.p-checklist .check-group.p2 .group-label { background: rgba(244,215,88,0.2); color: #9a8100; }
+.p-checklist .check-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.p-checklist .check-items .ci {
+  font-size: 30px;
+  color: var(--ink-light);
+  line-height: 1.5;
+  padding-left: 32px;
+  position: relative;
+}
+.p-checklist .check-items .ci::before {
+  content: '☐';
+  position: absolute;
+  left: 0;
+  color: var(--ink-faint);
+}
+
+/* ========== P12 Fork指南 ========== */
+.p-fork {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  padding: 80px 80px;
+}
+.p-fork .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 180px;
+  color: var(--blue);
+  opacity: 0.08;
+  position: absolute;
+  top: -20px; right: 60px;
+  font-weight: 900;
+}
+.p-fork h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 52px;
+  margin-bottom: 48px;
+}
+.p-fork h2::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 6px;
+  background: var(--yellow);
+  margin-top: 16px;
+  border-radius: 3px;
+}
+.p-fork .fork-steps {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+}
+.p-fork .fork-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding: 28px 32px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  position: relative;
+  overflow: hidden;
+}
+.p-fork .fork-step .fs-num {
+  font-family: 'Fraunces', serif;
+  font-size: 64px;
+  font-weight: 900;
+  color: var(--blue);
+  opacity: 0.2;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.p-fork .fork-step .fs-text {
+  flex: 1;
+}
+.p-fork .fork-step .fs-text strong {
+  font-size: 36px;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 6px;
+}
+.p-fork .fork-step .fs-text span {
+  font-size: 30px;
+  color: var(--ink-light);
+}
+
+/* ========== P13 核心哲学 金句页 ========== */
+.p-philosophy {
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 90px;
+  text-align: center;
+}
+.p-philosophy .quote-mark {
+  font-family: 'Fraunces', serif;
+  font-size: 240px;
+  color: var(--yellow);
+  opacity: 0.15;
+  line-height: 0.5;
+  margin-bottom: 20px;
+}
+.p-philosophy .quote-text {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 58px;
+  color: var(--cream);
+  line-height: 1.6;
+  max-width: 860px;
+  margin-bottom: 48px;
+}
+.p-philosophy .quote-text em {
+  color: var(--yellow);
+  font-style: normal;
+}
+.p-philosophy .quote-source {
+  font-family: 'Fira Code', monospace;
+  font-size: 28px;
+  color: var(--ink-faint);
+}
+.p-philosophy .deco-line {
+  position: absolute;
+  bottom: 80px; left: 90px; right: 90px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--blue) 50%, var(--yellow) 75%, var(--red) 100%);
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+/* ========== P14 自检三问 ========== */
+.p-selfcheck {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 80px;
+}
+.p-selfcheck .page-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 180px;
+  color: var(--blue);
+  opacity: 0.08;
+  position: absolute;
+  top: -20px; right: 60px;
+  font-weight: 900;
+}
+.p-selfcheck h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 52px;
+  margin-bottom: 60px;
+}
+.p-selfcheck .questions {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.p-selfcheck .q-item {
+  padding: 44px 48px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+  position: relative;
+  overflow: hidden;
+}
+.p-selfcheck .q-item .q-num {
+  position: absolute;
+  top: -10px; left: 20px;
+  font-family: 'Fraunces', serif;
+  font-size: 100px;
+  font-weight: 900;
+  opacity: 0.06;
+  color: var(--blue);
+}
+.p-selfcheck .q-item p {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.6;
+  position: relative;
+}
+
+/* ========== P-end 尾页 ========== */
+.p-end {
+  background: var(--cream);
+  background-image: linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 90px;
+  text-align: center;
+}
+.p-end .quote-mark {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 200px;
+  color: var(--blue);
+  opacity: 0.15;
+  line-height: 0.6;
+  margin-bottom: -10px;
+}
+.p-end .quote {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 58px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin-bottom: 60px;
+  max-width: 860px;
+}
+.p-end .quote .hl {
+  color: var(--blue);
+  text-decoration: underline;
+  text-decoration-color: var(--yellow);
+  text-underline-offset: 8px;
+  text-decoration-thickness: 4px;
+}
+.p-end .avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--yellow);
+  margin-bottom: 24px;
+}
+.p-end .cta {
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--blue);
+  margin-bottom: 28px;
+}
+.p-end .info-lines {
+  font-size: 30px;
+  color: var(--ink-light);
+  line-height: 1.8;
+}
+.p-end .deco-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 10px;
+  background: linear-gradient(90deg, var(--blue) 60%, var(--yellow) 80%, var(--red) 100%);
+}
+</style>
+</head>
+<body>
+
+<div class="export-bar">
+  <button onclick="exportAll()">📥 一键导出PNG</button>
+  <span class="hint">每张卡片导出为1080×1440 PNG，打包为zip下载</span>
+</div>
+
+<div class="cards-container">
+
+<!-- ===== P1 封面 ===== -->
+<div class="card p-cover" data-card="1">
+  <h1>开源！审美超好的<br>内容<span class="hl">Design Skill</span>来了</h1>
+  <p class="subtitle">可以复刻的个人品牌设计系统，<br>一键生成PPT/图文卡片</p>
+  <div class="author-row">
+    <img class="avatar" src="avatar.jpg" alt="avatar">
+    <div class="author-info">
+      <div class="author-name">Esther不二</div>
+      <div class="author-desc">在AI时代认真生活的女生</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== P2 一句话解释 ===== -->
+<div class="card p-what" data-card="2">
+  <span class="page-num">02</span>
+  <h2>它是什么</h2>
+  <div class="big-text">
+    告诉 AI 用什么颜色、字体、布局、组件，<br>以及什么<em>绝对不能用</em>。
+  </div>
+  <div class="flow-row">
+    <span class="flow-step">📝 一段文字</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">🤖 AI + 规范</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">✨ 品牌页面</span>
+  </div>
+  <div class="deco-line"></div>
+</div>
+
+<!-- ===== P3 4种场景 ===== -->
+<div class="card p-scenes" data-card="3">
+  <span class="page-num">03</span>
+  <h2>支持 4 种场景</h2>
+  <div class="scene-grid">
+    <div class="scene-card">
+      <span class="emoji">📖</span>
+      <h3>教程/介绍页</h3>
+      <p>信息清晰、步骤明确</p>
+    </div>
+    <div class="scene-card">
+      <span class="emoji">🎪</span>
+      <h3>活动页/Landing</h3>
+      <p>视觉冲击、有节奏感</p>
+    </div>
+    <div class="scene-card">
+      <span class="emoji">📱</span>
+      <h3>App型/功能型</h3>
+      <p>功能优先、交互感</p>
+    </div>
+    <div class="scene-card">
+      <span class="emoji">🖼️</span>
+      <h3>小红书图文卡片</h3>
+      <p>3:4比例、一键导出PNG</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== P4 核心逻辑 ===== -->
+<div class="card p-logic" data-card="4">
+  <span class="page-num">04</span>
+  <h2>核心逻辑</h2>
+  <p class="sub">限制AI的自由度 = 保证输出质量</p>
+  <div class="logic-flow">
+    <div class="logic-block">
+      <div class="label">Step 1 — Brain</div>
+      <h3>SKILL.md</h3>
+      <p>流程 — AI按什么步骤干活</p>
+    </div>
+    <div class="logic-arrow">↓</div>
+    <div class="logic-block">
+      <div class="label">Step 2 — Rules</div>
+      <h3>brand-dna + references</h3>
+      <p>规范 — 能用什么不能用什么</p>
+    </div>
+    <div class="logic-arrow">↓</div>
+    <div class="logic-block">
+      <div class="label">Step 3 — Start</div>
+      <h3>assets/template-*.html</h3>
+      <p>起点 — 从模板改，不从零写</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== P5 7步工作流 ===== -->
+<div class="card p-steps" data-card="5">
+  <span class="page-num">05</span>
+  <h2>7 步工作流</h2>
+  <div class="steps-list">
+    <div class="step-row">
+      <span class="step-num">1</span>
+      <div class="step-content"><strong>问 5 个问题</strong><span>类型 / 受众 / 几屏 / 素材 / 约束</span></div>
+    </div>
+    <div class="step-row">
+      <span class="step-num">2</span>
+      <div class="step-content"><strong>读规范</strong><span>brand-dna + 对应场景文件</span></div>
+    </div>
+    <div class="step-row">
+      <span class="step-num">3</span>
+      <div class="step-content"><strong>拷模板</strong><span>从 assets/ 复制对应模板骨架</span></div>
+    </div>
+    <div class="step-row">
+      <span class="step-num">4</span>
+      <div class="step-content"><strong>选布局</strong><span>从 15 种布局中选 3-5 种组合</span></div>
+    </div>
+    <div class="step-row">
+      <span class="step-num">5</span>
+      <div class="step-content"><strong>选组件</strong><span>从组件库里填充，禁止默认样式</span></div>
+    </div>
+    <div class="step-row">
+      <span class="step-num">6</span>
+      <div class="step-content"><strong>自检</strong><span>对照 checklist 逐条过，P0必须全过</span></div>
+    </div>
+    <div class="step-row">
+      <span class="step-num">7</span>
+      <div class="step-content"><strong>交付</strong><span>输出 HTML，浏览器直接打开</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== P6 品牌三色 ===== -->
+<div class="card p-colors" data-card="6">
+  <span class="page-num">06</span>
+  <h2>品牌三色</h2>
+  <p class="sub">蓝60% · 黄30% · 红10%（红永远是点缀）</p>
+  <div class="color-blocks">
+    <div class="color-item">
+      <div class="color-swatch" style="background: #2B7FD8;"></div>
+      <div class="color-info">
+        <h3>蓝 — 头发</h3>
+        <p>主色调、标题、超链接、重点标记</p>
+        <code>#2B7FD8</code>
+      </div>
+    </div>
+    <div class="color-item">
+      <div class="color-swatch" style="background: #F4D758;"></div>
+      <div class="color-info">
+        <h3>黄 — 裙子</h3>
+        <p>强调、装饰、badges、高亮</p>
+        <code>#F4D758</code>
+      </div>
+    </div>
+    <div class="color-item">
+      <div class="color-swatch" style="background: #E84A5F;"></div>
+      <div class="color-info">
+        <h3>红 — 蝴蝶结</h3>
+        <p>点缀、CTA、高亮下划线</p>
+        <code>#E84A5F</code>
+      </div>
+    </div>
+  </div>
+  <div class="ratio-bar">
+    <div class="rb-blue"></div>
+    <div class="rb-yellow"></div>
+    <div class="rb-red"></div>
+  </div>
+  <div class="ratio-label">
+    <span>60%</span>
+    <span>30%</span>
+    <span>10%</span>
+  </div>
+</div>
+
+<!-- ===== P7 字体系统 ===== -->
+<div class="card p-fonts" data-card="7">
+  <span class="page-num">07</span>
+  <h2>字体系统</h2>
+  <p class="sub">标题用衬线 · 正文用无衬线 · 字号对比极端</p>
+  <div class="font-showcase">
+    <div class="font-row">
+      <div class="font-label">中文标题 — Huiwen Mincho</div>
+      <div class="font-sample">在AI时代认真生活</div>
+    </div>
+    <div class="font-row">
+      <div class="font-label">中文正文 — Noto Sans SC</div>
+      <div class="font-sample">把审美写成操作手册</div>
+    </div>
+    <div class="font-row">
+      <div class="font-label">英文装饰 — Fraunces</div>
+      <div class="font-sample">Design with Intention</div>
+    </div>
+    <div class="font-row">
+      <div class="font-label">手写注释 — Caveat</div>
+      <div class="font-sample">Key Insight ✦ Notes here</div>
+    </div>
+    <div class="font-row">
+      <div class="font-label">代码/终端 — Fira Code</div>
+      <div class="font-sample">const skill = new DesignSystem()</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== P8 文件结构 ===== -->
+<div class="card p-structure" data-card="8">
+  <span class="page-num">08</span>
+  <h2>文件结构</h2>
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <span class="title">esther-design-system/</span>
+    </div>
+    <div class="terminal-body">
+      <div><span class="file">├── SKILL.md</span> <span class="comment">← 7步工作流（大脑）</span></div>
+      <div><span class="file">├── brand-dna.md</span> <span class="comment">← 颜色/字体/气质/禁忌</span></div>
+      <div><span class="file">├── README.md</span> <span class="comment">← 你在看的这个</span></div>
+      <div><span class="dir">├── assets/</span> <span class="comment">← 模板骨架</span></div>
+      <div class="indent"><span class="file">├── template-tutorial.html</span></div>
+      <div class="indent"><span class="file">├── template-landing.html</span></div>
+      <div class="indent"><span class="file">├── template-app.html</span></div>
+      <div class="indent"><span class="file">├── template-cards.html</span></div>
+      <div class="indent"><span class="file">└── avatar.jpg</span></div>
+      <div><span class="dir">└── references/</span> <span class="comment">← 规则和零件</span></div>
+      <div class="indent"><span class="file">├── layouts.md</span> <span class="comment">15种布局</span></div>
+      <div class="indent"><span class="file">├── components.md</span> <span class="comment">2988行组件库</span></div>
+      <div class="indent"><span class="file">├── checklist.md</span> <span class="comment">质量检查</span></div>
+      <div class="indent"><span class="file">└── scene-*.md</span> <span class="comment">4个场景规范</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== P9 组件库概览 ===== -->
+<div class="card p-components" data-card="9">
+  <span class="page-num">09</span>
+  <h2>组件库</h2>
+  <p class="sub">2988行代码 — 每个组件都是写好的 HTML+CSS，AI 直接复制进去用</p>
+  <div class="comp-grid">
+    <div class="comp-item">
+      <span class="comp-icon">🃏</span>
+      <div><div class="comp-name">卡片</div><div class="comp-count">×5 种变体</div></div>
+    </div>
+    <div class="comp-item">
+      <span class="comp-icon">💬</span>
+      <div><div class="comp-name">引用块</div><div class="comp-count">×5 种风格</div></div>
+    </div>
+    <div class="comp-item">
+      <span class="comp-icon">🖥️</span>
+      <div><div class="comp-name">代码面板</div><div class="comp-count">×4 种变体</div></div>
+    </div>
+    <div class="comp-item">
+      <span class="comp-icon">⚡</span>
+      <div><div class="comp-name">流程步骤条</div><div class="comp-count">箭头连接</div></div>
+    </div>
+    <div class="comp-item">
+      <span class="comp-icon">⚖️</span>
+      <div><div class="comp-name">Do/Don't对比</div><div class="comp-count">×4 种展现</div></div>
+    </div>
+    <div class="comp-item">
+      <span class="comp-icon">🗨️</span>
+      <div><div class="comp-name">聊天气泡</div><div class="comp-count">用户 vs AI</div></div>
+    </div>
+    <div class="comp-item">
+      <span class="comp-icon">📐</span>
+      <div><div class="comp-name">三列卡片</div><div class="comp-count">×5 种排列</div></div>
+    </div>
+    <div class="comp-item">
+      <span class="comp-icon">✨</span>
+      <div><div class="comp-name">Pull Quote</div><div class="comp-count">大字金句</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== P10 禁忌清单 ===== -->
+<div class="card p-donts" data-card="10">
+  <span class="page-num">10</span>
+  <h2>🚫 绝对禁忌</h2>
+  <div class="dont-list">
+    <div class="dont-item">
+      <span class="x-mark">✕</span>
+      <span class="dont-text"><em>蓝紫渐变</em>、cyan、neon、纯黑白</span>
+    </div>
+    <div class="dont-item">
+      <span class="x-mark">✕</span>
+      <span class="dont-text"><em>Inter / Roboto / Arial</em> 等 overused 字体</span>
+    </div>
+    <div class="dont-item">
+      <span class="x-mark">✕</span>
+      <span class="dont-text"><em>glassmorphism</em>、渐变文字、AI光效</span>
+    </div>
+    <div class="dont-item">
+      <span class="x-mark">✕</span>
+      <span class="dont-text"><em>HTML默认样式</em> — blockquote / 列表 / 表格</span>
+    </div>
+    <div class="dont-item">
+      <span class="x-mark">✕</span>
+      <span class="dont-text"><em>bounce / elastic</em> 动画、无限循环动画</span>
+    </div>
+    <div class="dont-item">
+      <span class="x-mark">✕</span>
+      <span class="dont-text">所有section居中、千篇一律卡片网格</span>
+    </div>
+    <div class="dont-item">
+      <span class="x-mark">✕</span>
+      <span class="dont-text">看起来像AI生成的<em>通用模板</em></span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== P11 质量检查 ===== -->
+<div class="card p-checklist" data-card="11">
+  <span class="page-num">11</span>
+  <h2>质量检查 Checklist</h2>
+  <div class="check-sections">
+    <div class="check-group p0">
+      <span class="group-label">P0 必须全过</span>
+      <div class="check-items">
+        <div class="ci">品牌三色比例 6:3:1</div>
+        <div class="ci">无禁忌元素（无默认HTML样式）</div>
+        <div class="ci">暖底背景 #fefcf6</div>
+        <div class="ci">衬线 + 无衬线混搭</div>
+        <div class="ci">每 section 布局不同</div>
+        <div class="ci">截图发Twitter不会被说"又是AI做的"</div>
+      </div>
+    </div>
+    <div class="check-group p1">
+      <span class="group-label">P1 应过</span>
+      <div class="check-items">
+        <div class="ci">至少一个视觉惊喜 section</div>
+        <div class="ci">字号对比极端（大的很大，小的很小）</div>
+        <div class="ci">大装饰数字/英文点缀</div>
+      </div>
+    </div>
+    <div class="check-group p2">
+      <span class="group-label">P2 加分</span>
+      <div class="check-items">
+        <div class="ci">深色面板打破节奏</div>
+        <div class="ci">装饰元素克制</div>
+        <div class="ci">prefers-reduced-motion</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== P12 Fork指南 ===== -->
+<div class="card p-fork" data-card="12">
+  <span class="page-num">12</span>
+  <h2>怎么用（Fork 指南）</h2>
+  <div class="fork-steps">
+    <div class="fork-step">
+      <span class="fs-num">1</span>
+      <div class="fs-text"><strong>Fork 这个仓库</strong><span>把整个文件夹下载到本地</span></div>
+    </div>
+    <div class="fork-step">
+      <span class="fs-num">2</span>
+      <div class="fs-text"><strong>改 brand-dna.md</strong><span>换成你的颜色、字体、气质关键词</span></div>
+    </div>
+    <div class="fork-step">
+      <span class="fs-num">3</span>
+      <div class="fs-text"><strong>换 avatar.jpg</strong><span>放上你自己的头像</span></div>
+    </div>
+    <div class="fork-step">
+      <span class="fs-num">4</span>
+      <div class="fs-text"><strong>放到 AI 能读到的地方</strong><span>Cola Skill / Claude Project / 任何支持上下文的工具</span></div>
+    </div>
+    <div class="fork-step">
+      <span class="fs-num">5</span>
+      <div class="fs-text"><strong>告诉 AI：做页面之前先读 SKILL.md</strong><span>核心是你的审美判断力，文件只是把判断写成规则</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== P13 核心金句 ===== -->
+<div class="card p-philosophy" data-card="13">
+  <div class="quote-mark">"</div>
+  <p class="quote-text">
+    核心不是这些文件本身，<br>是<em>你的审美判断力</em>。<br>文件只是把你的判断<br>写成了 AI 能执行的规则。
+  </p>
+  <p class="quote-source">— from README.md</p>
+  <div class="deco-line"></div>
+</div>
+
+<!-- ===== P14 自检三问 ===== -->
+<div class="card p-selfcheck" data-card="14">
+  <span class="page-num">14</span>
+  <h2>做完问自己三个问题</h2>
+  <div class="questions">
+    <div class="q-item">
+      <span class="q-num">01</span>
+      <p>这个页面截图发到 Twitter 上，<br>会不会被人评论<br>"又是AI做的"？</p>
+    </div>
+    <div class="q-item">
+      <span class="q-num">02</span>
+      <p>能不能一眼认出<br>这是"不二的"？</p>
+    </div>
+    <div class="q-item">
+      <span class="q-num">03</span>
+      <p>有没有哪个部分<br>让你觉得"见过很多次了"？</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 尾页 ===== -->
+<div class="card p-end" data-card="last">
+  <div class="quote-mark">"</div>
+  <p class="quote">等于把审美写成了操作手册，AI 每次帮我做页面时必须翻这本手册，不能<span class="hl">自由发挥</span>。</p>
+  <img class="avatar" src="avatar.jpg" alt="avatar">
+  <p class="cta">关注 Esther不二</p>
+  <div class="info-lines">
+    ▪️在AI时代认真生活的女生｜INTJ<br>
+    ▪️跟Agent搭档的第1年<br>
+    ▪️南大/米理建筑→AI ColaOS building<br>
+    💕关于[她]在AI时代
+  </div>
+  <div class="deco-bottom"></div>
+</div>
+
+</div><!-- cards-container -->
+
+<script>
+async function exportAll() {
+  if (typeof html2canvas === 'undefined') {
+    alert('html2canvas 未加载，请用 localhost 打开页面');
+    return;
+  }
+  if (typeof JSZip === 'undefined') {
+    alert('JSZip 加载失败，请刷新重试');
+    return;
+  }
+  const cards = document.querySelectorAll('.card');
+  const btn = document.querySelector('.export-bar button');
+  btn.textContent = '⏳ 导出中... 0/' + cards.length;
+  btn.disabled = true;
+
+  const zip = new JSZip();
+  const folder = zip.folder('design-skill-readme-cards');
+
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
+    card.style.transform = 'none';
+    card.style.marginBottom = '0';
+    card.style.borderRadius = '0';
+    card.style.boxShadow = 'none';
+
+    await new Promise(r => setTimeout(r, 200));
+
+    try {
+      const canvas = await html2canvas(card, {
+        width: 1080,
+        height: 1440,
+        scale: 1,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        logging: false
+      });
+
+      const dataUrl = canvas.toDataURL('image/png');
+      const base64 = dataUrl.split(',')[1];
+      folder.file(`card-${String(i + 1).padStart(2, '0')}.png`, base64, {base64: true});
+
+      btn.textContent = `⏳ 导出中... ${i + 1}/${cards.length}`;
+    } catch(e) {
+      console.error('Export error on card ' + (i+1), e);
+    } finally {
+      card.style.transform = 'scale(0.45)';
+      card.style.marginBottom = '-792px';
+      card.style.borderRadius = '4px';
+      card.style.boxShadow = '0 8px 40px rgba(0,0,0,0.12)';
+    }
+  }
+
+  btn.textContent = '⏳ 打包中...';
+  const blob = await zip.generateAsync({type: 'blob'});
+  const link = document.createElement('a');
+  link.download = 'design-skill-readme-cards.zip';
+  link.href = URL.createObjectURL(blob);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(link.href);
+
+  btn.textContent = '✅ 导出完成';
+  setTimeout(() => { btn.textContent = '📥 一键导出PNG'; btn.disabled = false; }, 2000);
+}
+</script>
+
+</body>
+</html>
