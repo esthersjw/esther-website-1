@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我是怎么做出自己的 Design Skill 的</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Caveat:wght@400;700&family=Fira+Code:wght@400;500&family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #2B7FD8;
+      --blue-deep: #1E5BA8;
+      --yellow: #F4D758;
+      --yellow-soft: #FFF3CD;
+      --red: #E84A5F;
+      --cream: #fefcf6;
+      --cream-dark: #faf6eb;
+      --ink: #1A1A2E;
+      --ink-light: #4A4A5A;
+      --ink-faint: #8A8A9A;
+      --dark-panel: #151821;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans SC', -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink);
+      background: var(--cream);
+    }
+
+    ::selection {
+      background: var(--yellow);
+      color: var(--ink);
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* === NAV === */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      background: rgba(254,252,246,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(26,26,26,.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: box-shadow .3s;
+    }
+    nav.scrolled {
+      box-shadow: 0 2px 20px rgba(0,0,0,.06);
+    }
+    .nav-logo {
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--blue);
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 0.85rem;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 2px;
+      background: var(--yellow);
+      transform: scaleX(0);
+      transition: transform .25s ease-out;
+    }
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+    }
+
+    /* === HERO — Layout 9: 单栏纵向中心辐射 === */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 24px 4rem;
+      text-align: center;
+      position: relative;
+    }
+    .hero-cluster {
+      position: relative;
+      width: clamp(140px, 18vw, 180px);
+      height: clamp(140px, 18vw, 180px);
+      margin-bottom: 2.5rem;
+    }
+    .hero-cluster .ring {
+      position: absolute;
+      inset: -14px;
+      border: 2px dashed rgba(43,127,216,0.25);
+      border-radius: 50%;
+      animation: heroSpin 20s linear infinite;
+    }
+    .hero-cluster .avatar-img {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 8px 32px rgba(43,127,216,0.15);
+    }
+    .hero-cluster .orbit-item {
+      position: absolute;
+      background: white;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+      z-index: 3;
+      white-space: nowrap;
+    }
+    @keyframes heroSpin { to { transform: rotate(360deg); } }
+
+    .hero .label-caps {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--ink-faint);
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-weight: 900;
+      font-size: clamp(2.2rem, 6vw, 4.2rem);
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 em {
+      color: var(--blue);
+      font-style: normal;
+    }
+    .hero .hero-sub {
+      font-size: 1.05rem;
+      color: var(--ink-light);
+      max-width: 560px;
+      line-height: 1.8;
+    }
+
+    /* === Section通用 === */
+    .section { padding: clamp(80px, 12vh, 160px) 0; }
+    .section--alt { background: var(--cream-dark); }
+
+    .section-header {
+      margin-bottom: clamp(40px, 6vw, 80px);
+    }
+    .section-number {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      color: var(--blue);
+      opacity: 0.3;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .section-title {
+      font-family: 'Noto Serif SC', serif;
+      font-weight: 900;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+    }
+
+    /* === 阶段一: Layout 2 Sticky侧栏 === */
+    .layout-sticky {
+      display: grid;
+      grid-template-columns: 0.35fr 1fr;
+      gap: clamp(40px, 6vw, 100px);
+      align-items: start;
+    }
+    .sticky-side {
+      position: sticky;
+      top: 100px;
+    }
+    .sticky-side .phase-label {
+      font-family: 'Caveat', cursive;
+      font-size: 1.3rem;
+      color: var(--blue);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .sticky-side .big-num {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(4rem, 10vw, 7rem);
+      font-weight: 900;
+      color: var(--blue);
+      opacity: 0.12;
+      line-height: 0.85;
+      display: block;
+    }
+    .content-scroll {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(24px, 3vw, 40px);
+    }
+
+    /* 手写批注引用块 */
+    .quote-handwrite {
+      position: relative;
+      padding: 28px 24px;
+      border: 2px dashed rgba(43,127,216,0.25);
+      border-radius: 12px;
+      background: white;
+    }
+    .quote-handwrite .quote-badge {
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--blue);
+      background: var(--cream);
+      padding: 0 10px;
+    }
+    .quote-handwrite .quote-title {
+      font-family: 'Caveat', cursive;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+      transform: rotate(-0.5deg);
+    }
+    .quote-handwrite .quote-desc {
+      font-size: 0.88rem;
+      color: var(--ink-light);
+      line-height: 1.8;
+    }
+
+    /* styled list（icon bullets） */
+    .styled-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .styled-list li {
+      font-size: 0.92rem;
+      color: var(--ink-light);
+      padding-left: 28px;
+      position: relative;
+      line-height: 1.7;
+    }
+    .styled-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--blue);
+      font-weight: 700;
+    }
+    .styled-list.styled-list--yellow li::before {
+      content: '✦';
+      color: var(--yellow);
+    }
+
+    /* 荧光笔高亮引用 */
+    .quote-highlight {
+      padding: 24px 28px;
+      position: relative;
+    }
+    .quote-highlight .quote-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.2rem;
+      font-weight: 900;
+      margin-bottom: 12px;
+      display: inline;
+      background: linear-gradient(to top, rgba(244,215,88,0.5) 45%, transparent 45%);
+      line-height: 1.8;
+      padding: 2px 4px;
+    }
+
+    /* === 阶段二: Layout 13 分栏对称 → 三列卡 === */
+    .phase2-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 60vh;
+      overflow: hidden;
+    }
+    .phase2-left {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(40px, 6vw, 80px);
+    }
+    .phase2-left .phase-label {
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      color: var(--ink-faint);
+      margin-bottom: 0.5rem;
+    }
+    .phase2-left h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-weight: 900;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      margin-bottom: 1rem;
+    }
+    .phase2-left .sub {
+      font-size: 0.92rem;
+      color: var(--ink-light);
+      line-height: 1.8;
+    }
+    .phase2-right {
+      display: flex;
+      align-items: center;
+      padding: clamp(40px, 6vw, 80px);
+      background: var(--cream-dark);
+    }
+
+    /* 终端引用块 */
+    .quote-terminal {
+      background: #1e1e2e;
+      border-radius: 12px;
+      overflow: hidden;
+      font-family: 'Fira Code', monospace;
+      width: 100%;
+    }
+    .quote-terminal .quote-toolbar {
+      background: #313244;
+      padding: 10px 16px;
+      display: flex;
+      gap: 6px;
+    }
+    .quote-terminal .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .quote-terminal .dot:nth-child(1) { background: var(--red); }
+    .quote-terminal .dot:nth-child(2) { background: var(--yellow); }
+    .quote-terminal .dot:nth-child(3) { background: #4ade80; }
+    .quote-terminal .quote-body {
+      padding: 20px 24px;
+    }
+    .quote-terminal .quote-prompt {
+      color: #4ade80;
+      font-size: 0.75rem;
+      margin-bottom: 12px;
+    }
+    .quote-terminal .quote-content {
+      color: #f1f5f9;
+      font-size: 0.82rem;
+      line-height: 2;
+    }
+    .quote-terminal .quote-content .kw { color: #bb9af7; }
+    .quote-terminal .quote-content .str { color: #9ece6a; }
+    .quote-terminal .quote-content .cm { color: #565f89; }
+
+    /* 大编号三列卡 10A */
+    .chair-number-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .chair-number-card {
+      position: relative;
+      background: white;
+      border-radius: 20px;
+      padding: 40px 24px 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .chair-number-card .chair-big-num {
+      position: absolute;
+      top: -15px;
+      right: -5px;
+      font-family: 'Fraunces', serif;
+      font-size: 6rem;
+      font-weight: 900;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .chair-number-card:nth-child(1) .chair-big-num { color: rgba(43,127,216,0.08); }
+    .chair-number-card:nth-child(2) .chair-big-num { color: rgba(244,215,88,0.15); }
+    .chair-number-card:nth-child(3) .chair-big-num { color: rgba(232,74,95,0.08); }
+    .chair-number-card:nth-child(4) .chair-big-num { color: rgba(43,127,216,0.08); }
+    .chair-number-card:nth-child(5) .chair-big-num { color: rgba(244,215,88,0.15); }
+    .chair-number-card h3 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .chair-number-card p {
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      line-height: 1.7;
+      position: relative;
+    }
+
+    /* === 深色面板 — Layout 6 全宽深色 === */
+    .dark-section {
+      background: var(--dark-panel);
+      color: #e2e8f0;
+      padding: clamp(80px, 12vh, 160px) 0;
+    }
+    .dark-section .quote-text {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-weight: 700;
+      line-height: 1.8;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .dark-section .quote-text em {
+      color: var(--yellow);
+      font-style: normal;
+    }
+    .dark-section .quote-attr {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.82rem;
+      opacity: 0.5;
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* === 阶段三: Layout 4 纵向Step流程线 === */
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(32px, 4vw, 56px);
+      padding-left: 60px;
+      position: relative;
+      max-width: 780px;
+    }
+    .steps-container::before {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 40px; bottom: 40px;
+      width: 2px;
+      border-left: 2px dashed var(--yellow);
+    }
+    .step-item {
+      position: relative;
+    }
+    .step-num {
+      position: absolute;
+      left: -60px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .step-item h3 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .step-item p {
+      font-size: 0.88rem;
+      color: var(--ink-light);
+      line-height: 1.8;
+    }
+
+    /* data stats */
+    .data-strip {
+      display: flex;
+      gap: clamp(24px, 4vw, 48px);
+      flex-wrap: wrap;
+      padding: 28px 32px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+    .data-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .data-item .data-num {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--blue);
+      line-height: 1;
+    }
+    .data-item .data-label {
+      font-size: 0.75rem;
+      color: var(--ink-faint);
+      margin-top: 4px;
+    }
+
+    /* === 文件结构 — macOS代码面板 5A === */
+    .code-macos {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.15);
+      max-width: 640px;
+    }
+    .code-macos .code-titlebar {
+      background: #2d2d3a;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .code-macos .code-dots { display: flex; gap: 6px; }
+    .code-macos .code-dots .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .code-macos .code-dots .dot:nth-child(1) { background: #ff5f56; }
+    .code-macos .code-dots .dot:nth-child(2) { background: #ffbd2e; }
+    .code-macos .code-dots .dot:nth-child(3) { background: #27c93f; }
+    .code-macos .code-filename {
+      flex: 1;
+      text-align: center;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: var(--ink-faint);
+    }
+    .code-macos .code-body {
+      background: #1a1b26;
+      padding: 24px;
+    }
+    .code-macos pre {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      line-height: 1.9;
+      color: #a9b1d6;
+      margin: 0;
+      overflow-x: auto;
+    }
+    .code-macos pre .dir { color: #7aa2f7; }
+    .code-macos pre .file { color: #a9b1d6; }
+    .code-macos pre .cm { color: #565f89; }
+    .code-macos pre .hl { color: #9ece6a; }
+
+    /* === Pull Quote 6 === */
+    .viral-pullquote {
+      padding: 36px 40px;
+      background: var(--cream);
+      border-radius: 16px;
+      border: 2px solid var(--yellow);
+      position: relative;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .viral-pullquote::before {
+      content: '\201C';
+      font-family: 'Fraunces', serif;
+      font-size: 5rem;
+      color: var(--yellow);
+      position: absolute;
+      top: -10px; left: 20px;
+      opacity: 0.5;
+      line-height: 1;
+    }
+    .viral-pullquote p {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      font-weight: 700;
+      line-height: 1.8;
+    }
+
+    /* === "你也可以做" — Layout 3 三等分 + 10C虚线框 === */
+    .chair-dashed-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .chair-dashed-card {
+      border: 2px dashed;
+      border-radius: 16px;
+      padding: 28px 22px;
+      position: relative;
+      background: white;
+    }
+    .chair-dashed-card:nth-child(1) { border-color: rgba(43,127,216,0.3); }
+    .chair-dashed-card:nth-child(2) { border-color: rgba(244,215,88,0.5); }
+    .chair-dashed-card:nth-child(3) { border-color: rgba(232,74,95,0.3); }
+    .chair-dashed-card:nth-child(4) { border-color: rgba(43,127,216,0.3); }
+    .chair-dashed-card:nth-child(5) { border-color: rgba(244,215,88,0.5); }
+    .chair-dashed-card .chair-label {
+      position: absolute;
+      top: -10px;
+      left: 16px;
+      font-family: 'Caveat', cursive;
+      font-size: 0.95rem;
+      font-weight: 700;
+      background: var(--cream-dark);
+      padding: 0 8px;
+    }
+    .chair-dashed-card:nth-child(1) .chair-label { color: var(--blue); }
+    .chair-dashed-card:nth-child(2) .chair-label { color: #9a8100; }
+    .chair-dashed-card:nth-child(3) .chair-label { color: var(--red); }
+    .chair-dashed-card:nth-child(4) .chair-label { color: var(--blue); }
+    .chair-dashed-card:nth-child(5) .chair-label { color: #9a8100; }
+    .chair-dashed-card h3 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      margin-top: 6px;
+    }
+    .chair-dashed-card p {
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      line-height: 1.7;
+    }
+
+    /* === 核心认知 — 杂志排版 10B === */
+    .chair-magazine-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 28px;
+    }
+    .chair-magazine-card {
+      position: relative;
+      padding: 32px 0;
+    }
+    .chair-magazine-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: var(--ink);
+      opacity: 0.1;
+    }
+    .chair-magazine-card .chair-num {
+      font-family: 'Fraunces', serif;
+      font-size: 0.75rem;
+      font-style: italic;
+      color: var(--ink-faint);
+      margin-bottom: 12px;
+    }
+    .chair-magazine-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .chair-magazine-card p {
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      line-height: 1.8;
+    }
+
+    /* === CTA === */
+    .cta-section {
+      text-align: center;
+      padding: clamp(80px, 12vh, 160px) 2rem;
+    }
+    .cta-section h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      margin-bottom: 1rem;
+    }
+    .cta-section p {
+      font-size: 1rem;
+      color: var(--ink-light);
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 36px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(43,127,216,0.3);
+    }
+
+    /* === Scroll Reveal === */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
+    .reveal-d5 { transition-delay: 0.5s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .hero-cluster .ring { animation: none; }
+    }
+
+    /* === 响应式 === */
+    @media (max-width: 900px) {
+      .hero { min-height: auto; padding: 5rem 1.5rem 3rem; }
+      .layout-sticky { grid-template-columns: 1fr; }
+      .sticky-side { position: static; }
+      .phase2-intro { grid-template-columns: 1fr; min-height: auto; }
+      .chair-number-grid { grid-template-columns: 1fr; }
+      .chair-dashed-grid { grid-template-columns: 1fr; }
+      .steps-container { padding-left: 50px; }
+      .steps-container::before { left: 17px; }
+      .step-num { left: -50px; width: 36px; height: 36px; font-size: 0.85rem; }
+      .nav-links { display: none; }
+      .cta-button { width: 100%; justify-content: center; }
+      .data-strip { gap: 16px; padding: 20px 24px; }
+    }
+
+    @media (max-width: 600px) {
+      body { font-size: 15px; }
+      .chair-magazine-grid { grid-template-columns: 1fr; }
+    }
+
+    /* footer */
+    .site-footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.78rem;
+      color: var(--ink-faint);
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    .site-footer .heart { color: var(--red); }
+  </style>
+</head>
+<body>
+
+  <!-- ====== NAV ====== -->
+  <nav>
+    <span class="nav-logo">不二's Design Skill</span>
+    <div class="nav-links">
+      <a href="#phase1">起因</a>
+      <a href="#phase2">做法</a>
+      <a href="#phase3">内容</a>
+      <a href="#result">效果</a>
+    </div>
+  </nav>
+
+  <!-- ====== HERO — Layout 9 单栏纵向中心辐射 ====== -->
+  <section class="hero">
+    <div class="hero-cluster reveal">
+      <div class="ring"></div>
+      <img class="avatar-img" src="avatar.jpg" alt="不二">
+      <span class="orbit-item" style="top: -8px; right: -20px;">brand-dna.md</span>
+      <span class="orbit-item" style="bottom: 10px; left: -30px;">components.md</span>
+      <span class="orbit-item" style="bottom: -12px; right: 10px; background: var(--yellow-soft);">✦ 2988行</span>
+    </div>
+    <span class="label-caps reveal reveal-d1">Design Engineering · 2024</span>
+    <h1 class="reveal reveal-d2">我是怎么做出<br>自己的 <em>Design Skill</em> 的</h1>
+    <p class="hero-sub reveal reveal-d3">从"每次都在跟AI纠正审美"到"AI自动输出品牌感页面"，<br>整个过程其实挺自然的。</p>
+  </section>
+
+  <!-- ====== 阶段一: 从纠正到沉淀 — Layout 2 Sticky侧栏 ====== -->
+  <section class="section" id="phase1">
+    <div class="container">
+      <div class="layout-sticky">
+        <div class="sticky-side reveal">
+          <span class="phase-label">Phase 1</span>
+          <span class="big-num">01</span>
+          <h2 class="section-title">从纠正到沉淀</h2>
+        </div>
+        <div class="content-scroll">
+          <div class="quote-handwrite reveal">
+            <span class="quote-badge">起因 ⚡</span>
+            <p class="quote-desc">我需要AI帮我做大量HTML网页（个人网站、教程页面、内容分享等），但AI每次做出来的东西都需要大量修改。</p>
+          </div>
+
+          <div class="reveal reveal-d1">
+            <h3 style="font-family:'Noto Serif SC',serif;font-size:1.05rem;font-weight:700;margin-bottom:14px;">我的习惯</h3>
+            <ul class="styled-list">
+              <li>这个板块不好看 → "你再帮我做5个方案让我选"</li>
+              <li>选完之后 → 再改细节</li>
+              <li>反复几次 → AI就积累了我的偏好</li>
+            </ul>
+          </div>
+
+          <div class="quote-highlight reveal reveal-d2">
+            <span class="quote-title">转折点：与其每次纠正，不如直接写成一个Skill。</span>
+          </div>
+
+          <div class="reveal reveal-d3">
+            <h3 style="font-family:'Noto Serif SC',serif;font-size:1.05rem;font-weight:700;margin-bottom:14px;">第一版内容（很薄）</h3>
+            <ul class="styled-list styled-list--yellow">
+              <li><code style="font-family:'Fira Code',monospace;font-size:0.82rem;background:rgba(43,127,216,0.06);padding:2px 6px;border-radius:4px;">SKILL.md</code> — 简单的触发条件和步骤</li>
+              <li><code style="font-family:'Fira Code',monospace;font-size:0.82rem;background:rgba(43,127,216,0.06);padding:2px 6px;border-radius:4px;">brand-dna.md</code> — 我的三色、字体偏好、气质关键词</li>
+              <li><code style="font-family:'Fira Code',monospace;font-size:0.82rem;background:rgba(43,127,216,0.06);padding:2px 6px;border-radius:4px;">scene-tutorial.md</code> — 教程型页面的规范</li>
+            </ul>
+          </div>
+
+          <div class="quote-handwrite reveal reveal-d4" style="border-color: rgba(244,215,88,0.4);">
+            <span class="quote-badge" style="color:#9a8100;">效果 ✦</span>
+            <p class="quote-desc">虽然单薄，但初稿已经能满足快速表达的需求，省去了大量纠正的时间。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 阶段二: 逻辑拆解与优化 — Layout 13 分栏 + Layout 3 三列 ====== -->
+  <section class="phase2-intro" id="phase2">
+    <div class="phase2-left">
+      <div>
+        <p class="phase-label reveal">Phase 2</p>
+        <h2 class="reveal reveal-d1">逻辑拆解与优化</h2>
+        <p class="sub reveal reveal-d2">看到"归藏"老师做的PPT Skill，效果很好。让Cola去拆解他那套Skill的整套逻辑和组织，再参照方法论优化我的。</p>
+      </div>
+    </div>
+    <div class="phase2-right">
+      <div class="quote-terminal reveal">
+        <div class="quote-toolbar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="quote-body">
+          <div class="quote-prompt">$ cola analyze --ref="归藏PPTSkill"</div>
+          <div class="quote-content">
+<span class="cm">// 核心思路：限制AI的自由度 = 保证输出质量</span>
+<span class="kw">布局</span> → 只能从预设骨架里选
+<span class="kw">颜色</span> → 只能从预设主题里选
+<span class="kw">做完</span> → 对照Checklist逐条过
+<span class="kw">骨架</span> → AI直接复制改内容
+
+<span class="str">// 一句话总结</span>
+<span class="str">// 不是让AI"理解规则再创作"</span>
+<span class="str">// 是让AI"拿着零件拼装"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-number">02</span>
+        <h2 class="section-title">参照方法论，我做的升级</h2>
+      </div>
+      <div class="chair-number-grid">
+        <div class="chair-number-card reveal reveal-d1">
+          <span class="chair-big-num">01</span>
+          <h3>SKILL.md 重写</h3>
+          <p>变成7步强制工作流，每一步都有明确产出</p>
+        </div>
+        <div class="chair-number-card reveal reveal-d2">
+          <span class="chair-big-num">02</span>
+          <h3>新增模板文件</h3>
+          <p>AI从模板开始改，不从零写——起点对了结果就对</p>
+        </div>
+        <div class="chair-number-card reveal reveal-d3">
+          <span class="chair-big-num">03</span>
+          <h3>新增 layouts.md</h3>
+          <p>15种布局模式，可直接粘贴的完整代码</p>
+        </div>
+        <div class="chair-number-card reveal reveal-d4">
+          <span class="chair-big-num">04</span>
+          <h3>新增 checklist.md</h3>
+          <p>质量检查清单，P0不过就打回重做</p>
+        </div>
+        <div class="chair-number-card reveal reveal-d5">
+          <span class="chair-big-num">05</span>
+          <h3>新增多场景文件</h3>
+          <p>不同类型页面有不同规范，教程/Landing/App各一份</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 金句 — Layout 6 全宽深色 ====== -->
+  <section class="dark-section">
+    <div class="container reveal">
+      <p class="quote-text">不是把审美交给AI，<br>是把审美写成AI的<em>操作手册</em></p>
+      <p class="quote-attr">— Design Skill 核心认知</p>
+    </div>
+  </section>
+
+  <!-- ====== 阶段三: 组件库深挖 — Layout 4 纵向Step ====== -->
+  <section class="section section--alt" id="phase3">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-number">03</span>
+        <h2 class="section-title">组件库深挖</h2>
+      </div>
+
+      <div class="steps-container">
+        <div class="step-item reveal">
+          <span class="step-num">1</span>
+          <h3>发现问题</h3>
+          <p>架子搭好了，但AI做出来的组件本身不够好看——默认blockquote、千篇一律的圆角卡片。</p>
+        </div>
+        <div class="step-item reveal reveal-d1">
+          <span class="step-num">2</span>
+          <h3>大量Playground</h3>
+          <p>每种组件类型让AI出10个变体，做成playground页面——引用块、卡片、代码面板……每一种都来一轮。</p>
+        </div>
+        <div class="step-item reveal reveal-d2">
+          <span class="step-num">3</span>
+          <h3>我来选</h3>
+          <p>一个个看、一个个选。选出来的存进 components.md，不选的删掉。AI负责生产，我负责判断。</p>
+        </div>
+        <div class="step-item reveal reveal-d3">
+          <span class="step-num">4</span>
+          <h3>变成标准件</h3>
+          <p>选完就是"标准件"，AI以后只用这些，不再从零发明。核心逻辑：约束产生品质。</p>
+        </div>
+      </div>
+
+      <div class="data-strip reveal" style="margin-top: clamp(40px,6vw,80px); max-width: 780px;">
+        <div class="data-item">
+          <span class="data-num">50+</span>
+          <span class="data-label">引用块变体审核</span>
+        </div>
+        <div class="data-item">
+          <span class="data-num">60+</span>
+          <span class="data-label">卡片变体审核</span>
+        </div>
+        <div class="data-item">
+          <span class="data-num">5</span>
+          <span class="data-label">最终保留的引用风格</span>
+        </div>
+        <div class="data-item">
+          <span class="data-num">2988</span>
+          <span class="data-label">components.md 总行数</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 文件结构展示 — 独立section ====== -->
+  <section class="section" id="result">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-number">04</span>
+        <h2 class="section-title">现在的完整结构</h2>
+      </div>
+
+      <div class="code-macos reveal" style="margin: 0 auto;">
+        <div class="code-titlebar">
+          <div class="code-dots">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          </div>
+          <span class="code-filename">esther-design-system/</span>
+        </div>
+        <div class="code-body">
+          <pre><span class="dir">esther-design-system/</span>
+├── <span class="hl">SKILL.md</span>              <span class="cm">← 7步工作流（大脑）</span>
+├── <span class="hl">brand-dna.md</span>          <span class="cm">← 品牌基因（底线）</span>
+├── <span class="dir">assets/</span>               <span class="cm">← 4个模板骨架（起点）</span>
+│   ├── <span class="file">template-tutorial.html</span>
+│   ├── <span class="file">template-landing.html</span>
+│   ├── <span class="file">template-app.html</span>
+│   └── <span class="file">template-cards.html</span>
+└── <span class="dir">references/</span>           <span class="cm">← 规则和零件（知识库）</span>
+    ├── <span class="hl">layouts.md</span>             <span class="cm">15种布局</span>
+    ├── <span class="hl">components.md</span>          <span class="cm">组件库（2988行）</span>
+    ├── <span class="hl">checklist.md</span>           <span class="cm">质量检查清单</span>
+    ├── <span class="file">scene-tutorial.md</span>      <span class="cm">教程场景规范</span>
+    ├── <span class="file">scene-landing.md</span>       <span class="cm">活动页场景规范</span>
+    ├── <span class="file">scene-app.md</span>           <span class="cm">App型场景规范</span>
+    └── <span class="file">scene-cards.md</span>         <span class="cm">小红书卡片场景规范</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Pull Quote ====== -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="viral-pullquote reveal">
+        <p>审美不是天赋，是可以工程化的。<br>Design Skill = 把你的判断力变成AI能读懂的规则。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 你也可以做 — Layout 3 三等分 + 10C虚线框 ====== -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-number">05</span>
+        <h2 class="section-title">你也可以做</h2>
+      </div>
+      <div class="chair-dashed-grid">
+        <div class="chair-dashed-card reveal reveal-d1">
+          <span class="chair-label">Step #1</span>
+          <h3>先做东西，不满意就选</h3>
+          <p>让AI出5个方案你来选，选几次偏好就清晰了</p>
+        </div>
+        <div class="chair-dashed-card reveal reveal-d2">
+          <span class="chair-label">Step #2</span>
+          <h3>把偏好写下来</h3>
+          <p>"不要纯黑""标题用衬线体""不要像AI" → 就是你的brand-dna</p>
+        </div>
+        <div class="chair-dashed-card reveal reveal-d3">
+          <span class="chair-label">Step #3</span>
+          <h3>让AI出选项你来选</h3>
+          <p>不要让AI替你做审美决策，出10个变体你选</p>
+        </div>
+        <div class="chair-dashed-card reveal reveal-d4">
+          <span class="chair-label">Step #4</span>
+          <h3>找好参考学方法论</h3>
+          <p>我的参考是归藏，你的参考可以是我</p>
+        </div>
+        <div class="chair-dashed-card reveal reveal-d5">
+          <span class="chair-label">Step #5</span>
+          <h3>每次不满意就加规则</h3>
+          <p>Design Skill是活的，跟着你的审美一起长</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 核心认知 — 10B杂志排版卡片 ====== -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-number">06</span>
+        <h2 class="section-title">核心认知</h2>
+      </div>
+      <div class="chair-magazine-grid">
+        <div class="chair-magazine-card reveal reveal-d1">
+          <div class="chair-num">i.</div>
+          <h3>审美可以工程化</h3>
+          <p>审美不是天赋，是可以拆解、量化、写成规则的</p>
+        </div>
+        <div class="chair-magazine-card reveal reveal-d2">
+          <div class="chair-num">ii.</div>
+          <h3>操作手册，不是交权</h3>
+          <p>不是把审美交给AI，是把审美写成AI的操作手册</p>
+        </div>
+        <div class="chair-magazine-card reveal reveal-d3">
+          <div class="chair-num">iii.</div>
+          <h3>约束保护品牌</h3>
+          <p>不是限制AI的创造力，是保护你的品牌感不被AI的"创意"稀释</p>
+        </div>
+        <div class="chair-magazine-card reveal reveal-d4">
+          <div class="chair-num">iv.</div>
+          <h3>执行 vs 判断</h3>
+          <p>AI的能力在于"执行"，你的能力在于"判断"</p>
+        </div>
+        <div class="chair-magazine-card reveal reveal-d5">
+          <div class="chair-num">v.</div>
+          <h3>判断力变规则</h3>
+          <p>Design Skill = 把你的判断力变成AI能读懂的规则</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <section class="cta-section">
+    <h2 class="reveal">开始做你自己的 Design Skill</h2>
+    <p class="reveal reveal-d1">不需要一步到位。从一条规则开始，让它跟着你的审美一起成长。</p>
+    <a href="https://github.com" class="cta-button reveal reveal-d2">看看我的 Design Skill 源码 →</a>
+  </section>
+
+  <!-- ====== Footer ====== -->
+  <footer class="site-footer">
+    <p>Made with <span class="heart">♥</span> by 不二 · Powered by Cola & Design Skill</p>
+  </footer>
+
+  <!-- ====== JS ====== -->
+  <script>
+    // Scroll Reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Nav scroll shadow
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+</body>
+</html>
