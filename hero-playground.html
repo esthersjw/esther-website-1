@@ -72,10 +72,21 @@ nav .nav-title {
 section {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 80px 24px 40px;
+}
+@media (max-height: 700px) {
+  section { min-height: auto; padding: 60px 16px 40px; }
+}
+@media (max-width: 768px) {
+  section { padding: 70px 16px 32px; }
+  .intro-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+  nav { font-size: 11px; gap: 2px; padding: 8px 8px; }
+  nav a { padding: 5px 8px; }
 }
 .section-label {
   position: absolute;
@@ -224,12 +235,17 @@ section {
   position: sticky;
   top: 60px;
   height: calc(100vh - 60px);
+  height: calc(100dvh - 60px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 2;
   pointer-events: none;
+}
+@media (max-height: 700px) {
+  #C .sticky-header { height: auto; position: relative; top: auto; }
+  #C { min-height: auto; }
 }
 #C .big-name {
   font-family: var(--font-title);
@@ -460,8 +476,8 @@ section {
 </nav>
 
 <!-- ===== 教程介绍 ===== -->
-<section id="intro" style="height:100vh;background:#fefcf6;display:flex;align-items:center;justify-content:center;padding:80px 60px 40px;overflow:hidden;">
-  <div style="max-width:1100px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
+<section id="intro" style="min-height:100vh;background:#fefcf6;display:flex;align-items:center;justify-content:center;padding:80px 60px 40px;overflow:hidden;">
+  <div class="intro-grid" style="max-width:1100px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
     <div>
       <h1 style="font-family:var(--font-title);font-size:32px;color:#222;margin-bottom:20px;line-height:1.4;">先让 AI 发散，再做决定</h1>
       <div style="font-size:17px;line-height:2;color:#444;">
