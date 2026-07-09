@@ -26,7 +26,7 @@
 
 ## 制作工具
 
-这个网站 100% 由我和 [Cola](https://colaai.com) 协作完成——我负责定调和审美决策，Cola 负责执行和发散。
+这个网站 100% 由我和 [Cola](https://cola.app) 协作完成——我负责定调和审美决策，Cola 负责执行和发散。
 
 ## License
 
