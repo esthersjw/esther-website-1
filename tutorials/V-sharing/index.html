@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>用AI成为更好的自己 · 直播分享 2026.07.17</title>
+  <title>用AI成为更好的自己 · 分享 2026.07.17</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Caveat:wght@400;700&family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -52,16 +52,50 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: center;
-      padding: 60px 2rem;
+      padding: 80px 2rem 60px;
       gap: clamp(40px, 6vw, 80px);
       max-width: 1300px;
       margin: 0 auto;
       position: relative;
     }
+    .fixed-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 2rem;
+      background: transparent;
+    }
+    .fixed-header .brand {
+      font-family: 'Noto Serif SC', serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: var(--ink);
+    }
+    .fixed-header .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--ink-light);
+    }
+    .fixed-header .header-right a {
+      color: var(--blue);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .fixed-header .header-right .code {
+      font-family: 'Fira Code', monospace;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.5px;
+    }
     .hero-nav {
-      position: absolute;
-      top: 2rem;
-      left: 2rem;
+      display: none;
     }
     .hero-nav .brand {
       font-family: 'Noto Serif SC', serif;
@@ -786,6 +820,15 @@
 </head>
 <body>
 
+  <!-- ====== Fixed Header ====== -->
+  <header class="fixed-header">
+    <span class="brand">不二 × Cola</span>
+    <div class="header-right">
+      <span>下载：<a href="https://colaos.ai">colaos.ai</a></span>
+      <span>邀请码：<span class="code">COLA-587HUNJX</span>（赠送10刀）</span>
+    </div>
+  </header>
+
   <!-- ====== 1. HERO ====== -->
   <section class="hero">
     <nav class="hero-nav">
@@ -796,7 +839,7 @@
     </div>
     <div class="hero-text">
       <span class="hero-meta reveal">直播分享 · 2026.07.17</span>
-      <h1 class="reveal reveal-d1">用AI成为<span class="hl">更好的自己</span></h1>
+      <h1 class="reveal reveal-d1">用AI成为<br><span class="hl">更好的自己</span></h1>
       <p class="hero-subtitle reveal reveal-d2">120天，一个人 + 一个AI = 一段真实的成长故事</p>
       <div class="hero-tags reveal reveal-d3">
         <span class="tag">有差异的默契</span>
@@ -804,6 +847,7 @@
         <span class="tag">肯定日记</span>
         <span class="tag">思维殿堂</span>
       </div>
+
     </div>
   </section>
 
@@ -1328,7 +1372,7 @@
         <div class="text-side">
           <p style="font-family:'Noto Serif SC',serif; font-size:clamp(1.3rem,2.5vw,1.8rem); font-weight:700; line-height:1.8; padding-left:1.5rem; border-left:4px solid var(--yellow); margin-bottom:0.75rem;">“最好的工作，是终身学习者在自由市场中的创造性表达。”</p>
           <p style="font-family:'Caveat',cursive; font-size:1.1rem; color:var(--ink-faint); padding-left:1.5rem; margin-bottom:clamp(32px,4vw,48px);">— Naval Ravikant</p>
-          <h2 style="font-family:'Noto Serif SC',serif; font-weight:900; font-size:clamp(2rem,4vw,3.2rem); margin-bottom:1rem;">用AI成为更好的自己</h2>
+          <h2 style="font-family:'Noto Serif SC',serif; font-weight:900; font-size:clamp(2rem,4vw,3.2rem); margin-bottom:1rem;">用AI成为<br>更好的自己</h2>
           <p style="font-size:1.1rem; color:var(--ink-faint);">感谢观看 · 期待你的思维殿堂</p>
         </div>
       </div>
