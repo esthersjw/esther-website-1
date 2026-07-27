@@ -1,32 +1,598 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow, noarchive">
-<title>不二 OS · Life Desk</title>
-<style>
-:root{--blue:#2458cf;--blue2:#173f9d;--sky:#8db4ff;--yellow:#f5d34f;--cream:#fff8df;--pink:#f49b9b;--red:#e75a4f;--green:#71c78c;--ink:#17234a;--white:#fffdf4;--line:rgba(23,35,74,.22);--shadow:7px 8px 0 rgba(23,35,74,.82)}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Avenir Next","Noto Sans SC",sans-serif;color:var(--ink)}body{background:var(--blue);overflow-x:hidden}.app{min-height:100vh;padding:18px 18px 34px;position:relative;background:radial-gradient(circle at 10% 12%,rgba(255,255,255,.18) 0 2px,transparent 3px),radial-gradient(circle at 83% 27%,rgba(255,255,255,.13) 0 2px,transparent 3px),var(--blue);background-size:46px 46px,65px 65px,var(--blue)}.topbar{max-width:1200px;margin:0 auto 16px;height:44px;display:flex;align-items:center;justify-content:space-between;color:var(--white);font-size:12px;letter-spacing:.05em}.window-controls{display:flex;gap:7px;align-items:center}.dot{width:12px;height:12px;border-radius:50%;display:inline-block;border:1px solid rgba(23,35,74,.4)}.dot.red{background:var(--red)}.dot.yellow{background:var(--yellow)}.dot.green{background:var(--green)}.sysname{font-weight:700}.top-actions{display:flex;gap:7px}.top-actions button,.dock button{border:2px solid var(--ink);background:var(--yellow);color:var(--ink);font-size:11px;font-weight:700;padding:6px 10px;box-shadow:3px 3px 0 var(--ink);cursor:pointer}.top-actions button:active,.dock button:active{box-shadow:none;transform:translate(3px,3px)}.screen{max-width:1200px;margin:auto;background:var(--sky);border:3px solid var(--ink);box-shadow:var(--shadow);min-height:calc(100vh - 96px);padding:20px;position:relative}.screen:before{content:"ESTHER OS  /  LIFE DESK";position:absolute;top:-28px;left:0;color:var(--white);font:700 12px "Courier New",monospace}.welcome{display:grid;grid-template-columns:1fr 260px;gap:20px;align-items:end;margin:13px 6px 23px}.terminal{font:12px "Courier New",monospace;color:var(--blue2);margin-bottom:10px}.terminal b{color:var(--red)}h1{font:900 clamp(40px,6vw,74px)/.93 "Arial Black","Noto Sans SC",sans-serif;letter-spacing:-.04em;margin:0;color:var(--ink)}.welcome p{max-width:560px;font-size:14px;line-height:1.7;margin:16px 0 0}.mascot{justify-self:end;position:relative}.mascot img{width:146px;display:block;filter:drop-shadow(5px 6px 0 var(--ink));transform:rotate(3deg)}.speech{position:absolute;right:100px;top:-15px;width:145px;background:var(--cream);border:2px solid var(--ink);padding:9px 11px;font-weight:700;font-size:12px;line-height:1.35;box-shadow:4px 4px 0 var(--ink);transform:rotate(-4deg)}.speech:after{content:"";position:absolute;right:-14px;bottom:8px;border-width:8px 0 0 15px;border-style:solid;border-color:transparent transparent transparent var(--ink)}.nav{display:flex;gap:6px;margin:0 5px 18px;flex-wrap:wrap}.nav button{border:2px solid var(--ink);background:var(--cream);color:var(--ink);padding:9px 14px;font-weight:800;font-size:12px;box-shadow:3px 3px 0 var(--ink);cursor:pointer}.nav button.active,.nav button:hover{background:var(--yellow)}.view{display:none}.view.active{display:block;animation:open .25s ease both}.main-head{margin:-20px -20px 0;height:39px}.board-tabs{display:flex;gap:6px;margin:18px 0 15px;flex-wrap:wrap}.board-tab{border:2px solid var(--ink);background:var(--cream);padding:9px 13px;font-weight:800;font-size:12px;box-shadow:3px 3px 0 var(--ink);cursor:pointer}.board-tab.active,.board-tab:hover{background:var(--yellow)}.board{display:none}.board.active{display:block}.review-tabs{margin-top:0}.review-card:nth-child(4){background:var(--yellow)}.review-card:nth-child(5){background:var(--blue);color:var(--white)}@keyframes open{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}.desk-grid{display:grid;grid-template-columns:1.18fr .82fr;gap:18px}.win{background:var(--cream);border:2px solid var(--ink);box-shadow:var(--shadow);min-width:0}.win-head{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:var(--yellow);border-bottom:2px solid var(--ink);font-size:12px;font-weight:900}.win-head span{font-family:"Courier New",monospace}.win-body{padding:18px}.label{font:800 10px "Courier New",monospace;color:var(--blue2);letter-spacing:.08em;margin-bottom:9px}.anchor h2{font-size:30px;line-height:1.08;margin:0;max-width:560px}.anchor p{font-size:14px;line-height:1.7;margin:14px 0;color:#3a4770}.arrow{display:inline-block;background:var(--pink);border:2px solid var(--ink);padding:6px 9px;font-weight:800;font-size:11px;transform:rotate(-2deg)}.btn{border:2px solid var(--ink);background:var(--blue);color:var(--white);padding:9px 12px;font-size:12px;font-weight:800;box-shadow:3px 3px 0 var(--ink);cursor:pointer}.btn.secondary{background:var(--white);color:var(--ink)}.btn:active{box-shadow:none;transform:translate(3px,3px)}.btn-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:22px}.capacity{display:grid;grid-template-columns:90px 1fr;gap:15px;align-items:center}.capacity-mark{width:82px;height:82px;border-radius:50%;display:grid;place-items:center;border:3px solid var(--ink);background:var(--green);box-shadow:5px 5px 0 var(--ink);font-size:24px;font-weight:900}.capacity.yellow .capacity-mark{background:var(--yellow)}.capacity.red .capacity-mark{background:var(--red);color:var(--white)}.capacity h3{margin:0 0 6px;font-size:20px}.capacity p{margin:0;font-size:12px;line-height:1.5}.status{display:flex;gap:5px;flex-wrap:wrap;margin-top:11px}.status button{border:1px solid var(--ink);background:transparent;padding:5px 7px;font-size:10px;cursor:pointer}.status button.active{background:var(--ink);color:var(--white)}.list{display:grid;gap:10px}.item{display:grid;grid-template-columns:10px 1fr auto;align-items:center;gap:10px;border-bottom:1px dashed var(--line);padding:4px 0 10px}.item:last-child{border-bottom:0;padding-bottom:0}.item-dot{width:9px;height:9px;border-radius:50%;background:var(--blue)}.item-dot.pink{background:var(--red)}.item-dot.green{background:var(--green)}.item strong{display:block;font-size:13px}.item small{display:block;margin-top:3px;font-size:11px;color:#536187}.tag{font:700 10px "Courier New",monospace;border:1px solid var(--line);padding:5px 7px;white-space:nowrap}.tag.hot{background:var(--pink);border-color:var(--ink)}.week{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:10px}.day{min-width:0;text-align:center;border:1px solid var(--line);padding:7px 2px;font-size:10px}.day b{display:block;font-size:12px;margin-top:5px}.day.done{background:var(--green)}.day.today{background:var(--yellow);border:2px solid var(--ink);padding:6px 1px}.note{background:var(--pink);border:2px solid var(--ink);padding:11px;font-size:11px;line-height:1.5;margin-top:12px}.tree{display:grid;grid-template-columns:1fr 290px;gap:18px}.tree-canvas{min-height:570px;background:var(--blue2);border:2px solid var(--ink);position:relative;overflow:hidden;background-image:linear-gradient(135deg,rgba(255,255,255,.08) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.08) 75%,transparent 75%);background-size:32px 32px}.tree-canvas:after{content:"MY SKILLS / REAL THINGS ONLY";position:absolute;right:15px;top:13px;color:var(--sky);font:11px "Courier New",monospace}.branch{position:absolute;height:4px;background:var(--yellow);transform-origin:left center;border:1px solid var(--ink)}.b1{width:230px;left:35%;top:50%;transform:rotate(-24deg)}.b2{width:225px;left:35%;top:51%;transform:rotate(21deg)}.b3{width:220px;left:52%;top:36%;transform:rotate(38deg)}.b4{width:220px;left:52%;top:65%;transform:rotate(-37deg)}.skill{position:absolute;width:135px;text-align:center;color:var(--white);transform:translate(-50%,-50%)}.skill-core{left:35%;top:51%}.skill-body{left:12%;top:23%}.skill-create{left:76%;top:18%}.skill-talk{left:86%;top:77%}.skill-biz{left:50%;top:84%}.skill-web{left:91%;top:43%}.skill-icon{width:68px;height:68px;margin:auto;border:3px solid var(--yellow);background:var(--cream);color:var(--blue2);display:grid;place-items:center;border-radius:50%;font-weight:900;font-size:23px;box-shadow:5px 5px 0 var(--yellow)}.skill-body .skill-icon{border-color:var(--green);box-shadow:5px 5px 0 var(--green)}.skill-biz .skill-icon,.skill-talk .skill-icon{border-color:var(--pink);box-shadow:5px 5px 0 var(--pink)}.skill-web .skill-icon{border-color:var(--sky);box-shadow:5px 5px 0 var(--sky)}.skill strong{display:block;font-size:12px;margin-top:9px}.skill small{display:block;color:var(--sky);font-size:10px;margin-top:4px}.tree-side{display:grid;align-content:start;gap:12px}.side-card{background:var(--cream);border:2px solid var(--ink);box-shadow:var(--shadow);padding:16px}.side-card h3{font-size:19px;margin:0 0 10px}.side-card p{font-size:12px;line-height:1.6;margin:0;color:#3a4770}.review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.review-card{background:var(--cream);border:2px solid var(--ink);box-shadow:var(--shadow);padding:17px;min-height:180px}.review-card:nth-child(2){background:var(--green)}.review-card:nth-child(3){background:var(--pink)}.review-card h3{font-size:19px;margin:0 0 13px}.review-card p{font-size:13px;line-height:1.7;margin:0}.dock{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3}.modal{position:fixed;inset:0;background:rgba(23,35,74,.62);display:none;place-items:center;padding:20px;z-index:5}.modal.open{display:grid}.modal-box{width:min(520px,100%);background:var(--cream);border:3px solid var(--ink);box-shadow:10px 11px 0 var(--yellow);padding:20px}.modal-box h2{margin:0 0 15px;font-size:25px}.modal-box label{font:700 10px "Courier New",monospace;display:block;margin:12px 0 5px}.modal-box input,.modal-box textarea{width:100%;border:2px solid var(--ink);padding:9px;background:var(--white);color:var(--ink)}.modal-box textarea{min-height:90px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}@media(max-width:820px){.app{padding:10px 10px 82px}.screen{padding:14px;min-height:calc(100vh - 66px)}.welcome{grid-template-columns:1fr;gap:5px}.mascot{justify-self:start;margin:10px 0 0 40px}.mascot img{width:112px}.speech{right:-105px;top:0}.desk-grid,.tree{grid-template-columns:1fr}.review-grid{grid-template-columns:1fr}.tree-canvas{min-height:570px}.screen:before{top:-24px}.topbar{margin-bottom:13px}.anchor h2{font-size:25px}.week{gap:3px}.day{font-size:9px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <title>不二人生工作台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #2B7FD8;
+      --yellow: #F4D758;
+      --red: #E84A5F;
+      --cream: #fefcf6;
+      --cream-deep: #faf6eb;
+      --ink: #1A1A2E;
+      --ink-light: #4A4A5A;
+      --ink-faint: #8A8A9A;
+      --paper: #fffefb;
+      --border: rgba(26, 26, 46, .1);
+      --blue-soft: rgba(43, 127, 216, .1);
+      --yellow-soft: rgba(244, 215, 88, .28);
+      --red-soft: rgba(232, 74, 95, .1);
+      --green: #3C8C64;
+      --green-soft: rgba(60, 140, 100, .12);
+      --radius: 8px;
+      --shadow: 0 5px 20px rgba(26, 26, 46, .06);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { color-scheme: light; }
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      font-family: 'Noto Sans SC', -apple-system, 'PingFang SC', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink);
+      background: var(--cream);
+    }
+    button, input, textarea { font: inherit; color: inherit; }
+    button { border: 0; }
+    ::selection { color: var(--ink); background: var(--yellow); }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 clamp(16px, 3vw, 34px);
+      background: rgba(254, 252, 246, .96);
+      border-bottom: 1px solid var(--border);
+    }
+    .brand { display: flex; align-items: baseline; gap: 9px; min-width: 0; }
+    .brand h1 { font: 700 1.08rem/1.2 'Noto Serif SC', serif; white-space: nowrap; }
+    .brand span { color: var(--blue); font: 600 .68rem/1 'Fraunces', serif; }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-button, .primary-button, .secondary-button {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease;
+    }
+    .icon-button { width: 36px; background: var(--yellow-soft); font-size: 1.05rem; }
+    .primary-button { padding: 8px 14px; color: var(--cream); background: var(--blue); font-weight: 600; font-size: .83rem; }
+    .secondary-button { padding: 8px 13px; border: 1px solid var(--border); background: var(--paper); font-weight: 600; font-size: .8rem; }
+    .icon-button:hover, .primary-button:hover, .secondary-button:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(43, 127, 216, .13); }
+    .icon-button:focus-visible, .primary-button:focus-visible, .secondary-button:focus-visible, .tab:focus-visible, .subtab:focus-visible, .period-button:focus-visible, .status-button:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+    .primary-tabs {
+      position: sticky;
+      top: 58px;
+      z-index: 90;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 0 clamp(16px, 3vw, 34px);
+      background: var(--cream);
+      border-bottom: 2px solid rgba(26, 26, 46, .07);
+      scrollbar-width: thin;
+      scrollbar-color: var(--yellow) transparent;
+    }
+    .tab {
+      flex: 0 0 auto;
+      padding: 13px 18px 11px;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      background: transparent;
+      color: var(--ink-light);
+      font-size: .86rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tab.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 700; }
+    .tab:hover:not(.active) { background: var(--yellow-soft); }
+
+    .app-content { width: min(1120px, 100%); margin: 0 auto; padding: clamp(24px, 4vw, 42px) clamp(16px, 3vw, 30px) 64px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .view-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+    .eyebrow { margin-bottom: 3px; color: var(--blue); font: 600 .72rem/1.3 'Fraunces', serif; }
+    .view-heading h2 { font: 900 clamp(1.45rem, 3vw, 2rem)/1.3 'Noto Serif SC', serif; }
+    .view-heading p { max-width: 520px; margin-top: 5px; color: var(--ink-light); font-size: .84rem; }
+    .week-stamp { flex: 0 0 auto; color: var(--ink-faint); font: 600 .74rem/1.4 'Fraunces', serif; }
+
+    .subtabs { display: flex; gap: 7px; overflow-x: auto; padding: 3px 0 15px; margin-bottom: 21px; scrollbar-width: thin; scrollbar-color: var(--yellow) transparent; }
+    .subtab {
+      flex: 0 0 auto;
+      padding: 8px 13px;
+      border-radius: 7px;
+      background: var(--cream-deep);
+      color: var(--ink-light);
+      cursor: pointer;
+      font-size: .8rem;
+      font-weight: 600;
+    }
+    .subtab.active { background: var(--blue); color: var(--cream); }
+    .subtab:hover:not(.active) { background: var(--yellow); color: var(--ink); }
+    .workspace-panel { display: none; }
+    .workspace-panel.active { display: block; }
+
+    .creation-layout { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(270px, .82fr); gap: clamp(18px, 3vw, 32px); align-items: start; }
+    .main-thread { padding: clamp(25px, 4vw, 42px); background: var(--paper); border-top: 40px solid var(--blue); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .main-thread .thread-label { display: block; color: var(--blue); font: 600 .72rem/1 'Fraunces', serif; }
+    .main-thread h3 { max-width: 700px; margin: 13px 0 17px; font: 900 clamp(1.55rem, 3.5vw, 2.45rem)/1.45 'Noto Serif SC', serif; }
+    .main-thread p { max-width: 650px; color: var(--ink-light); }
+    .thread-path { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 27px; }
+    .path-node { padding: 5px 9px; border-radius: 5px; background: var(--yellow-soft); font-size: .76rem; font-weight: 700; }
+    .path-arrow { color: var(--red); font-weight: 700; }
+    .insight-column { display: grid; gap: 14px; }
+    .tag-card { padding: 19px; background: var(--paper); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .card-pill { display: inline-block; padding: 3px 9px; margin-bottom: 10px; border-radius: 999px; font-size: .68rem; font-weight: 600; }
+    .card-pill.blue { color: var(--blue); background: var(--blue-soft); }
+    .card-pill.yellow { color: #776300; background: var(--yellow-soft); }
+    .card-pill.red { color: var(--red); background: var(--red-soft); }
+    .tag-card h4 { margin-bottom: 5px; font: 700 1rem/1.45 'Noto Serif SC', serif; }
+    .tag-card p { color: var(--ink-light); font-size: .8rem; }
+    .card-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 13px; color: var(--ink-faint); font-size: .7rem; }
+
+    .project-board {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(16px, 3vw, 28px);
+      padding: clamp(24px, 4vw, 42px);
+      border-radius: var(--radius);
+      background-color: var(--cream-deep);
+      background-image: radial-gradient(circle, rgba(43, 127, 216, .16) 1.1px, transparent 1.1px);
+      background-size: 26px 26px;
+    }
+    .project-board::before { content: ''; position: absolute; left: 10%; right: 10%; top: 50%; border-top: 2px dashed rgba(43, 127, 216, .24); }
+    .project-card { position: relative; min-height: 210px; padding: 25px 21px; border: 2px dashed rgba(43, 127, 216, .38); border-radius: 8px; background: var(--paper); box-shadow: 3px 4px 0 var(--yellow); }
+    .project-card:nth-child(2) { transform: translateY(20px) rotate(.5deg); border-color: rgba(244, 215, 88, .9); }
+    .project-card:nth-child(3) { transform: rotate(-.5deg); border-color: rgba(232, 74, 95, .35); }
+    .sketch-label { position: absolute; top: -11px; left: 15px; padding: 0 8px; background: var(--cream-deep); font: 600 .75rem/1.4 'Fraunces', serif; }
+    .project-card:nth-child(1) .sketch-label { color: var(--blue); }
+    .project-card:nth-child(2) .sketch-label { color: #806900; }
+    .project-card:nth-child(3) .sketch-label { color: var(--red); }
+    .project-card h3 { margin: 7px 0 8px; font: 700 1.08rem/1.4 'Noto Serif SC', serif; }
+    .project-card p { color: var(--ink-light); font-size: .81rem; }
+    .project-next { margin-top: 20px; padding-top: 12px; border-top: 1px dashed var(--border); font-size: .76rem; }
+
+    .health-layout { display: grid; grid-template-columns: minmax(245px, .72fr) minmax(0, 1.28fr); gap: clamp(18px, 3vw, 32px); }
+    .capacity-panel { padding: clamp(24px, 3vw, 34px); color: var(--cream); background: var(--blue); border-radius: var(--radius); }
+    .capacity-panel h3 { margin: 12px 0 5px; font: 700 1.28rem/1.4 'Noto Serif SC', serif; }
+    .capacity-panel p { color: rgba(254, 252, 246, .82); font-size: .82rem; }
+    .capacity-mark { width: 76px; height: 76px; display: grid; place-items: center; border-radius: 50%; background: var(--green); border: 5px solid rgba(254, 252, 246, .75); font: 700 1.6rem/1 'Fraunces', serif; }
+    .capacity-panel.yellow .capacity-mark { background: var(--yellow); color: var(--ink); }
+    .capacity-panel.red .capacity-mark { background: var(--red); }
+    .status-control { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 22px; }
+    .status-button { padding: 7px 4px; border-radius: 5px; background: rgba(254, 252, 246, .16); color: var(--cream); font-size: .7rem; cursor: pointer; }
+    .status-button.active { background: var(--yellow); color: var(--ink); font-weight: 700; }
+    .metrics { display: grid; gap: 1px; margin-top: 18px; background: rgba(254, 252, 246, .2); }
+    .metric { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; background: var(--blue); font-size: .76rem; }
+    .metric span { color: rgba(254, 252, 246, .68); }
+    .rhythm-panel { padding: clamp(22px, 3vw, 32px); background: var(--paper); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .rhythm-panel h3 { font: 700 1.08rem/1.4 'Noto Serif SC', serif; }
+    .rhythm-panel > p { margin: 4px 0 18px; color: var(--ink-faint); font-size: .76rem; }
+    .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+    .day-cell { min-width: 0; aspect-ratio: .82; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; padding: 5px; border-radius: 6px; background: var(--cream-deep); text-align: center; }
+    .day-cell span { color: var(--ink-faint); font-size: .65rem; }
+    .day-cell strong { overflow-wrap: anywhere; font-size: .72rem; }
+    .day-cell.done { background: var(--green-soft); }
+    .day-cell.today { outline: 2px solid var(--yellow); outline-offset: -2px; background: var(--yellow-soft); }
+    .rhythm-note { margin-top: 18px; padding: 12px 14px; border-radius: 6px; background: var(--red-soft); color: var(--ink-light); font-size: .78rem; }
+
+    .os-layout { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: clamp(18px, 3vw, 30px); align-items: start; }
+    .skill-canvas { position: relative; min-height: 580px; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background-color: var(--cream-deep); background-image: radial-gradient(circle, rgba(43, 127, 216, .2) 1.2px, transparent 1.2px); background-size: 28px 28px; }
+    .skill-canvas::after { content: 'REAL THINGS ONLY'; position: absolute; right: 18px; bottom: 14px; color: rgba(43, 127, 216, .22); font: 700 clamp(1.3rem, 4vw, 3rem)/1 'Fraunces', serif; }
+    .connector { position: absolute; height: 3px; background: var(--yellow); transform-origin: left; }
+    .connector.c1 { width: 34%; left: 34%; top: 49%; transform: rotate(-35deg); }
+    .connector.c2 { width: 33%; left: 34%; top: 50%; transform: rotate(29deg); }
+    .connector.c3 { width: 25%; left: 58%; top: 31%; transform: rotate(22deg); background: var(--blue); }
+    .connector.c4 { width: 25%; left: 58%; top: 68%; transform: rotate(-23deg); background: var(--red); }
+    .skill-node { position: absolute; width: 142px; transform: translate(-50%, -50%); text-align: center; z-index: 2; }
+    .skill-node.core { left: 34%; top: 50%; }
+    .skill-node.body { left: 13%; top: 25%; }
+    .skill-node.create { left: 60%; top: 26%; }
+    .skill-node.build { left: 57%; top: 72%; }
+    .skill-node.share { left: 86%; top: 40%; }
+    .skill-node.life { left: 84%; top: 73%; }
+    .node-mark { width: 64px; height: 64px; display: grid; place-items: center; margin: 0 auto 8px; border: 3px solid var(--blue); border-radius: 50%; background: var(--paper); box-shadow: 4px 4px 0 var(--yellow); font: 700 1.15rem/1 'Noto Serif SC', serif; }
+    .skill-node.body .node-mark { border-color: var(--green); }
+    .skill-node.build .node-mark, .skill-node.life .node-mark { border-color: var(--red); }
+    .skill-node strong { display: block; font-size: .79rem; }
+    .skill-node small { display: block; margin-top: 3px; color: var(--ink-faint); font-size: .64rem; }
+    .os-aside { display: grid; gap: 14px; }
+    .os-note { padding: 20px; border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); }
+    .os-note:first-child { border-top: 40px solid var(--yellow); }
+    .os-note h3 { margin-bottom: 7px; font: 700 1rem/1.45 'Noto Serif SC', serif; }
+    .os-note p { color: var(--ink-light); font-size: .78rem; }
+    .legend { display: grid; gap: 9px; }
+    .legend-row { display: flex; align-items: center; gap: 9px; font-size: .76rem; }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .legend-dot.blue { background: var(--blue); }
+    .legend-dot.yellow { background: var(--yellow); }
+    .legend-dot.red { background: var(--red); }
+
+    .review-shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: clamp(22px, 4vw, 52px); align-items: start; }
+    .period-selector { display: grid; gap: 2px; position: sticky; top: 128px; }
+    .period-button { position: relative; padding: 13px 14px 13px 39px; background: transparent; color: var(--ink-faint); text-align: left; cursor: pointer; font-size: .82rem; }
+    .period-button::before { content: ''; position: absolute; left: 13px; top: 50%; width: 9px; height: 9px; border: 2px solid var(--blue); border-radius: 50%; transform: translateY(-50%); background: var(--cream); z-index: 2; }
+    .period-button:not(:last-child)::after { content: ''; position: absolute; left: 17px; top: calc(50% + 6px); width: 2px; height: calc(100% - 3px); background: var(--yellow); }
+    .period-button.active { color: var(--blue); background: var(--blue-soft); border-radius: 6px; font-weight: 700; }
+    .period-button.active::before { background: var(--blue); box-shadow: 0 0 0 4px var(--yellow-soft); }
+    .review-panel { display: none; }
+    .review-panel.active { display: block; }
+    .review-card { position: relative; min-height: 360px; padding: clamp(27px, 4vw, 44px); overflow: hidden; border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); }
+    .review-card::after { content: attr(data-index); position: absolute; right: 16px; top: -28px; color: rgba(43, 127, 216, .06); font: 700 clamp(6rem, 15vw, 10rem)/1 'Fraunces', serif; }
+    .review-card h3 { position: relative; z-index: 1; margin-bottom: 8px; font: 900 clamp(1.4rem, 3vw, 2rem)/1.35 'Noto Serif SC', serif; }
+    .review-duration { position: relative; z-index: 1; color: var(--red); font-size: .74rem; font-weight: 600; }
+    .prompts { position: relative; z-index: 1; display: grid; gap: 0; margin: 27px 0; }
+    .prompt { display: grid; grid-template-columns: 34px 1fr; gap: 10px; padding: 15px 0; border-bottom: 1px solid var(--border); }
+    .prompt-num { color: var(--yellow); font: 700 1.35rem/1.2 'Fraunces', serif; }
+    .prompt p { font-size: .88rem; }
+
+    .modal-overlay { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(26, 26, 46, .58); }
+    .modal-overlay.active { display: flex; }
+    .modal-content { position: relative; width: min(540px, 100%); max-height: 85vh; overflow-y: auto; padding: clamp(25px, 4vw, 38px); border-radius: var(--radius); background: var(--cream); box-shadow: 0 20px 60px rgba(26, 26, 46, .22); }
+    .modal-close { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 50%; background: var(--yellow-soft); cursor: pointer; font-size: 1.15rem; }
+    .modal-content h2 { padding-right: 40px; margin-bottom: 4px; font: 700 1.28rem/1.4 'Noto Serif SC', serif; }
+    .modal-content > p { margin-bottom: 20px; color: var(--ink-light); font-size: .8rem; }
+    .field { display: grid; gap: 6px; margin-top: 14px; }
+    .field label { font-size: .74rem; font-weight: 700; }
+    .app-input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 7px; background: var(--paper); resize: vertical; }
+    textarea.app-input { min-height: 105px; }
+    .app-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
+    .saved-message { min-height: 20px; margin-top: 10px; color: var(--green); font-size: .75rem; }
+
+    @media (max-width: 900px) {
+      .creation-layout, .health-layout, .os-layout { grid-template-columns: 1fr; }
+      .project-board { grid-template-columns: 1fr; }
+      .project-board::before { display: none; }
+      .project-card:nth-child(2), .project-card:nth-child(3) { transform: none; }
+      .os-aside { grid-template-columns: 1fr 1fr; }
+      .review-shell { grid-template-columns: 1fr; }
+      .period-selector { position: static; display: flex; overflow-x: auto; border-bottom: 2px solid var(--yellow-soft); }
+      .period-button { flex: 0 0 auto; padding: 10px 13px; }
+      .period-button::before, .period-button::after { display: none; }
+    }
+    @media (max-width: 600px) {
+      body { font-size: 14px; }
+      .app-header { padding-inline: 14px; }
+      .brand span, .week-stamp, .header-actions .secondary-button { display: none; }
+      .primary-tabs { padding-inline: 8px; }
+      .tab { padding-inline: 13px; }
+      .app-content { padding: 22px 13px 50px; }
+      .view-heading { align-items: flex-start; }
+      .week-grid { gap: 3px; }
+      .day-cell { aspect-ratio: .68; }
+      .day-cell strong { font-size: .62rem; }
+      .skill-canvas { min-height: 620px; }
+      .skill-node { width: 112px; }
+      .skill-node.core { left: 50%; top: 48%; }
+      .skill-node.body { left: 20%; top: 18%; }
+      .skill-node.create { left: 76%; top: 20%; }
+      .skill-node.build { left: 24%; top: 77%; }
+      .skill-node.share { left: 78%; top: 55%; }
+      .skill-node.life { left: 72%; top: 84%; }
+      .connector { display: none; }
+      .os-aside { grid-template-columns: 1fr; }
+      .modal-overlay { align-items: flex-end; padding: 0; }
+      .modal-content { width: 100%; max-height: 92vh; border-radius: 8px 8px 0 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
 </head>
 <body>
-<div class="app">
-  <header class="topbar"><div class="window-controls"><i class="dot red"></i><i class="dot yellow"></i><i class="dot green"></i><span class="sysname">esther@universe ~ life-desk</span></div><div class="top-actions"><button onclick="openModal('note')">✦ 写点什么</button><button onclick="resetDemo()">↻ 重置</button></div></header>
-  <main class="screen">
-    <section class="welcome"><div><div class="terminal">$ <b>launch</b> personal-life-system --mode gentle</div><h1>把生活<br>放回手里。</h1><p>不二的人生工作台。身体决定今天能装多少，自媒体把真实生活送出去，商业化慢慢长出来。其他窗口，先最小化。</p></div><div class="mascot"><div class="speech">今天不用赢完全部人生。</div><img src="https://raw.githubusercontent.com/esthersjw/esther-website-1/main/esther-sticker.png" alt="Esther sticker"></div></section>
-    <nav class="nav"><button class="active" data-view="desk">01 本周工作台</button><button data-view="tree">02 我的 OS</button><button data-view="review">03 周期复盘</button></nav>
-    <section class="view active" id="desk"><div class="win-head main-head"><span>this_week / personal-desk</span><span>2026.07.27 — 08.02　— □ ×</span></div><div class="board-tabs"><button class="board-tab active" data-board="create">创作与影响力</button><button class="board-tab" data-board="build">Build 与生活项目</button><button class="board-tab" data-board="body">身体与容量</button></div><div class="board active" id="board-create"><div class="desk-grid"><div><article class="win anchor"><div class="win-head"><span>weekly_anchor.txt</span><span>— □ ×</span></div><div class="win-body"><div class="label">THIS WEEK'S MAIN THREAD</div><h2>把真实的生活，变成一条愿意被看见的内容。</h2><p>本周只选一个创作主轴。商业化与影响力是内容产生的外部结果，不另外开一堆平行项目。</p><div class="btn-row"><span class="arrow">真实实践 → 内容 → 关系</span><button class="btn" onclick="openModal('anchor')">改主轴</button></div></div></article></div><article class="win"><div class="win-head"><span>content_queue.txt</span><span>— □ ×</span></div><div class="win-body"><div class="label">本周内容队列</div><div class="list"><div class="item"><i class="item-dot pink"></i><div><strong>装修内容</strong><small>从真实生活取材 · 下一步：确定一个切口</small></div><span class="tag hot">推进中</span></div><div class="item"><i class="item-dot"></i><div><strong>AI 小白分享</strong><small>已有素材 · 等待整理</small></div><span class="tag">准备中</span></div><div class="item"><i class="item-dot green"></i><div><strong>影响力 / 商业机会</strong><small>记录有效对话、培训和合作信号</small></div><span class="tag">观察</span></div></div><button class="btn secondary" style="margin-top:17px" onclick="openModal('project')">＋ 加一件</button></div></article></div></div></div><div class="board" id="board-build"><div class="desk-grid"><article class="win"><div class="win-head"><span>builds_and_life.txt</span><span>— □ ×</span></div><div class="win-body"><div class="label">本周只看真实用途</div><div class="list"><div class="item"><i class="item-dot pink"></i><div><strong>装修现实项目</strong><small>生活项目 · 预算、进度、决定</small></div><span class="tag hot">现实中</span></div><div class="item"><i class="item-dot"></i><div><strong>装修指挥官</strong><small>Build · 只在装修真实需要时推进</small></div><span class="tag">辅助</span></div><div class="item"><i class="item-dot green"></i><div><strong>个人网页</strong><small>承接作品与影响力 · 有用途再更新</small></div><span class="tag">不抢跑</span></div></div></div></article><article class="win anchor"><div class="win-head"><span>build_rule.txt</span><span>— □ ×</span></div><div class="win-body"><div class="label">BUILD RULE</div><h2>先解决真实问题，再把它做漂亮。</h2><p>Build 不是独立 KPI。它只有在真实使用、内容表达、案例沉淀或商业承接中至少成立一项时，才值得继续。</p><span class="arrow">小实验 → 使用 → 复用</span></div></article></div></div><div class="board" id="board-body"><div class="desk-grid"><article class="win"><div class="win-head"><span>body_status.exe</span><span>— □ ×</span></div><div class="win-body"><div class="label">身体是总开关</div><div class="capacity" id="capacity"><div class="capacity-mark" id="capacityMark">绿</div><div><h3 id="capacityTitle">可以推进</h3><p id="capacityText">有力气做一点重要的事，也给生活留一点空白。</p></div></div><div class="status"><button data-status="green" class="active" onclick="setStatus('green')">绿 · 可以</button><button data-status="yellow" onclick="setStatus('yellow')">黄 · 减负</button><button data-status="red" onclick="setStatus('red')">红 · 必要</button></div><ul style="padding:0;margin:18px 0 0;list-style:none;font-size:12px;line-height:2;border-top:1px dashed var(--line);padding-top:12px"><li>睡眠　<strong>01:00 → 09:00</strong></li><li>运动　<strong>本周 2 / 3 次</strong></li><li>进食　<strong>11:00 – 19:00</strong></li><li>本周　<strong>拳击 / 理疗 / 出行</strong></li></ul></div></article><article class="win"><div class="win-head"><span>week_rhythm.log</span><span>— □ ×</span></div><div class="win-body"><div class="label">这周的身体节奏</div><div class="week"><div class="day done">一<b>已过</b></div><div class="day today">二<b>拳击</b></div><div class="day">三<b>理疗</b></div><div class="day">四<b>拳击</b></div><div class="day">五<b>续药</b></div><div class="day">六<b>深圳</b></div><div class="day">日<b>留白</b></div></div><div class="note">第三次运动看身体和出行，不为了凑数字硬塞。</div></div></article></div></div></section>
-    <section class="view" id="tree"><div class="tree"><div class="tree-canvas"><div class="branch b1"></div><div class="branch b2"></div><div class="branch b3"></div><div class="branch b4"></div><div class="skill skill-core"><div class="skill-icon">我</div><strong>系统型创作者</strong><small>当前母题</small></div><div class="skill skill-body"><div class="skill-icon">身</div><strong>身体与容量</strong><small>运行中 · 14天实验</small></div><div class="skill skill-create"><div class="skill-icon">作</div><strong>自媒体表达</strong><small>已验证 · 主轴</small></div><div class="skill skill-biz"><div class="skill-icon">商</div><strong>商业化与影响力</strong><small>正在放大</small></div><div class="skill skill-talk"><div class="skill-icon">讲</div><strong>分享与培训</strong><small>有真实交付</small></div><div class="skill skill-web"><div class="skill-icon">网</div><strong>个人网页</strong><small>辅助 · 不抢跑</small></div></div><aside class="tree-side"><div class="side-card"><div class="label">SKILL TREE / RULE</div><h3>点亮真实作品。</h3><p>不点亮幻想，不用节点数量证明成长。这里记录哪些能力被真实生活证明，哪些正在试验，哪些可以暂时休眠。</p></div><div class="side-card"><div class="label">CURRENT PATH</div><h3>生活 → 内容 → 影响力</h3><p>商业化不是另一个窗口，是内容产生信任后的承接层。Build 是生产方式，网页是辅助入口。</p></div></aside></div></section>
-    <section class="view" id="review"><div class="board-tabs review-tabs"><button class="board-tab active">本日</button><button class="board-tab">本周</button><button class="board-tab">月度</button><button class="board-tab">季度</button><button class="board-tab">年度</button></div><div class="review-grid"><article class="review-card"><h3>本日 · 2 分钟</h3><p>身体是绿、黄还是红？<br>今天真实发生了什么？<br>有没有给生活留位置？</p></article><article class="review-card"><h3>本周 · 30 分钟</h3><p>什么真的推进了？<br>哪件事消耗大却没留下资产？<br>下周只选一个主轴。</p></article><article class="review-card"><h3>月度 · 60 分钟</h3><p>哪些内容带来关系或机会？<br>哪种商业形态值得再做？<br>身体和生活是否更稳定？</p></article><article class="review-card"><h3>季度 · 半天</h3><p>这一季真正形成了什么？<br>什么该停止？<br>下一季只保留什么。</p></article><article class="review-card"><h3>年度 · 半天</h3><p>我成为了什么样的人？<br>哪些作品、关系和选择值得带走？<br>下一年不再重复什么。</p></article></div><article class="win" style="margin-top:18px"><div class="win-head"><span>next_review.txt</span><span>— □ ×</span></div><div class="win-body"><div class="label">NEXT REVIEW / 2026.08.11</div><h2 style="margin:0;font-size:26px">14 天高精力基线复盘</h2><p style="line-height:1.7;font-size:13px">不比较谁更自律，只看什么组合让你更有精神、更愿意生活，也更容易结束一天。</p><button class="btn" onclick="openModal('review')">写下一条观察</button></div></article></section>
+  <header class="app-header">
+    <div class="brand"><h1>不二人生工作台</h1><span>PERSONAL LIFE SYSTEM</span></div>
+    <div class="header-actions">
+      <button class="secondary-button" type="button" data-open-modal="note">＋ 记录</button>
+      <button class="icon-button" type="button" id="resetButton" aria-label="重置本机演示数据" title="重置本机演示数据">↻</button>
+    </div>
+  </header>
+
+  <nav class="primary-tabs" aria-label="主导航">
+    <button class="tab active" type="button" data-tab="workbench" aria-selected="true">01 本周工作台</button>
+    <button class="tab" type="button" data-tab="os" aria-selected="false">02 我的 OS / 技能树</button>
+    <button class="tab" type="button" data-tab="review" aria-selected="false">03 周期复盘</button>
+  </nav>
+
+  <main class="app-content">
+    <section class="tab-content active" id="workbench">
+      <div class="view-heading">
+        <div><div class="eyebrow">THIS WEEK, NOT EVERY DAY</div><h2>本周是主操作周期</h2><p>每天只记录状态和现场，每周才做取舍、编排与推进。</p></div>
+        <span class="week-stamp">2026.07.27 — 08.02</span>
+      </div>
+      <div class="subtabs" aria-label="本周工作台分类">
+        <button class="subtab active" type="button" data-panel="create" aria-selected="true">创作与影响力</button>
+        <button class="subtab" type="button" data-panel="build" aria-selected="false">Build 与生活项目</button>
+        <button class="subtab" type="button" data-panel="health" aria-selected="false">身体与容量</button>
+      </div>
+
+      <div class="workspace-panel active" id="panel-create">
+        <div class="creation-layout">
+          <article class="main-thread">
+            <span class="thread-label">WEEKLY MAIN THREAD</span>
+            <h3 id="anchorTitle">把真实生活，变成一条愿意被看见的内容。</h3>
+            <p id="anchorBody">本周只选一个创作主轴。商业化与影响力是内容产生的外部结果，不另开一组平行 KPI。</p>
+            <div class="thread-path"><span class="path-node">真实实践</span><span class="path-arrow">→</span><span class="path-node">内容表达</span><span class="path-arrow">→</span><span class="path-node">关系与机会</span></div>
+            <button class="primary-button" type="button" data-open-modal="anchor" style="margin-top:24px">改本周主轴</button>
+          </article>
+          <div class="insight-column" id="creationItems">
+            <article class="tag-card"><span class="card-pill red">推进中</span><h4>装修内容</h4><p>从真实生活取材，本周只确定一个明确切口。</p><div class="card-meta"><span>真实现场</span><span>下一步：列 3 个问题</span></div></article>
+            <article class="tag-card"><span class="card-pill blue">准备中</span><h4>AI 小白分享</h4><p>已有素材，等待整理成一次能被普通人理解的表达。</p><div class="card-meta"><span>已有素材</span><span>下一步：归档</span></div></article>
+            <article class="tag-card"><span class="card-pill yellow">观察</span><h4>影响力信号</h4><p>记录有效对话、培训反馈和合作机会，不提前包装。</p><div class="card-meta"><span>关系资产</span><span>只记录证据</span></div></article>
+            <button class="secondary-button" type="button" data-open-modal="project">＋ 添加内容线索</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="workspace-panel" id="panel-build">
+        <div class="project-board" id="buildItems">
+          <article class="project-card"><span class="sketch-label">Life project</span><h3>装修现实项目</h3><p>预算、进度与现场决定都以真实生活可用为准。</p><div class="project-next"><strong>本周一步：</strong>确认一个卡住现场的决定</div></article>
+          <article class="project-card"><span class="sketch-label">Build</span><h3>装修指挥官</h3><p>只在装修真实需要时推进，不把做工具变成另一份工作。</p><div class="project-next"><strong>本周一步：</strong>验证一次真实使用</div></article>
+          <article class="project-card"><span class="sketch-label">Support</span><h3>个人网页</h3><p>承接作品与影响力，有真实内容和用途时再更新。</p><div class="project-next"><strong>本周一步：</strong>保持不抢跑</div></article>
+        </div>
+        <button class="primary-button" type="button" data-open-modal="build" style="margin-top:20px">＋ 添加项目</button>
+      </div>
+
+      <div class="workspace-panel" id="panel-health">
+        <div class="health-layout">
+          <section class="capacity-panel" id="capacityPanel">
+            <div class="capacity-mark" id="capacityMark">绿</div>
+            <h3 id="capacityTitle">可以推进</h3>
+            <p id="capacityText">有力气做一点重要的事，也给生活留一点空白。</p>
+            <div class="status-control" aria-label="容量状态">
+              <button class="status-button active" type="button" data-status="green">绿 · 可以</button>
+              <button class="status-button" type="button" data-status="yellow">黄 · 减负</button>
+              <button class="status-button" type="button" data-status="red">红 · 必要</button>
+            </div>
+            <div class="metrics">
+              <div class="metric"><span>睡眠</span><strong>01:00 → 09:00</strong></div>
+              <div class="metric"><span>运动</span><strong>本周 2 / 3 次</strong></div>
+              <div class="metric"><span>进食</span><strong>11:00 → 19:00</strong></div>
+            </div>
+          </section>
+          <section class="rhythm-panel">
+            <h3>一周身体节奏</h3><p>不是日程塞满程度，是身体能否跟得上。</p>
+            <div class="week-grid">
+              <div class="day-cell done"><span>周一</span><strong>已过</strong></div><div class="day-cell today"><span>周二</span><strong>拳击</strong></div><div class="day-cell"><span>周三</span><strong>理疗</strong></div><div class="day-cell"><span>周四</span><strong>拳击</strong></div><div class="day-cell"><span>周五</span><strong>续药</strong></div><div class="day-cell"><span>周六</span><strong>深圳</strong></div><div class="day-cell"><span>周日</span><strong>留白</strong></div>
+            </div>
+            <div class="rhythm-note">第三次运动看身体和出行，不为凑数字硬塞。</div>
+            <button class="secondary-button" type="button" data-open-modal="health" style="margin-top:18px">＋ 记录身体现场</button>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-content" id="os">
+      <div class="view-heading"><div><div class="eyebrow">MY OS / EVIDENCE BASED</div><h2>技能树只点亮真实作品</h2><p>不点亮幻想，也不用节点数量证明成长。</p></div></div>
+      <div class="os-layout">
+        <div class="skill-canvas" aria-label="不二的技能树">
+          <span class="connector c1"></span><span class="connector c2"></span><span class="connector c3"></span><span class="connector c4"></span>
+          <div class="skill-node core"><div class="node-mark">我</div><strong>系统型创作者</strong><small>当前母题</small></div>
+          <div class="skill-node body"><div class="node-mark">身</div><strong>身体与容量</strong><small>运行中 · 实验</small></div>
+          <div class="skill-node create"><div class="node-mark">作</div><strong>自媒体表达</strong><small>已验证 · 主轴</small></div>
+          <div class="skill-node build"><div class="node-mark">造</div><strong>Build 能力</strong><small>真实问题驱动</small></div>
+          <div class="skill-node share"><div class="node-mark">讲</div><strong>分享与培训</strong><small>有真实交付</small></div>
+          <div class="skill-node life"><div class="node-mark">活</div><strong>生活项目</strong><small>现实世界反馈</small></div>
+        </div>
+        <aside class="os-aside">
+          <section class="os-note"><h3>当前路径</h3><p>生活 → 内容 → 影响力。商业化是信任形成后的承接层，Build 是解决问题的方法。</p></section>
+          <section class="os-note legend"><div class="legend-row"><i class="legend-dot blue"></i><span>蓝：稳定主轴</span></div><div class="legend-row"><i class="legend-dot yellow"></i><span>黄：正在验证</span></div><div class="legend-row"><i class="legend-dot red"></i><span>红：现实项目</span></div></section>
+          <button class="primary-button" type="button" data-open-modal="skill">＋ 记录技能证据</button>
+        </aside>
+      </div>
+    </section>
+
+    <section class="tab-content" id="review">
+      <div class="view-heading"><div><div class="eyebrow">REVIEW BY CYCLE</div><h2>从今天的现场，走到一年的方向</h2><p>每日只做轻记录；每周做真正的工作台整理。</p></div></div>
+      <div class="review-shell">
+        <div class="period-selector" aria-label="复盘周期">
+          <button class="period-button" type="button" data-period="day">本日</button>
+          <button class="period-button active" type="button" data-period="week">本周</button>
+          <button class="period-button" type="button" data-period="month">月度</button>
+          <button class="period-button" type="button" data-period="quarter">季度</button>
+          <button class="period-button" type="button" data-period="year">年度</button>
+        </div>
+        <div>
+          <article class="review-panel" id="review-day"><div class="review-card" data-index="01"><h3>本日 · 留下现场</h3><span class="review-duration">2 分钟，不做完整工作台</span><div class="prompts"><div class="prompt"><span class="prompt-num">01</span><p>身体现在是绿、黄还是红？</p></div><div class="prompt"><span class="prompt-num">02</span><p>今天真实发生了什么？</p></div><div class="prompt"><span class="prompt-num">03</span><p>有没有给生活留位置？</p></div></div><button class="primary-button" type="button" data-open-modal="review-day">记录本日</button></div></article>
+          <article class="review-panel active" id="review-week"><div class="review-card" data-index="02"><h3>本周 · 主操作周期</h3><span class="review-duration">30 分钟，取舍与编排</span><div class="prompts"><div class="prompt"><span class="prompt-num">01</span><p>什么真的推进了，并留下了可见结果？</p></div><div class="prompt"><span class="prompt-num">02</span><p>哪件事消耗很大，却没有留下资产？</p></div><div class="prompt"><span class="prompt-num">03</span><p>下周唯一的创作或生活主轴是什么？</p></div></div><button class="primary-button" type="button" data-open-modal="review-week">开始周复盘</button></div></article>
+          <article class="review-panel" id="review-month"><div class="review-card" data-index="03"><h3>月度 · 看见模式</h3><span class="review-duration">60 分钟，聚合四周证据</span><div class="prompts"><div class="prompt"><span class="prompt-num">01</span><p>哪些内容带来了关系或机会？</p></div><div class="prompt"><span class="prompt-num">02</span><p>哪种商业形态值得再做一次？</p></div><div class="prompt"><span class="prompt-num">03</span><p>身体和生活是否更稳定？</p></div></div><button class="primary-button" type="button" data-open-modal="review-month">记录月度观察</button></div></article>
+          <article class="review-panel" id="review-quarter"><div class="review-card" data-index="04"><h3>季度 · 决定停止什么</h3><span class="review-duration">半天，做结构调整</span><div class="prompts"><div class="prompt"><span class="prompt-num">01</span><p>这一季真正形成了什么？</p></div><div class="prompt"><span class="prompt-num">02</span><p>什么应该明确停止？</p></div><div class="prompt"><span class="prompt-num">03</span><p>下一季只保留哪几个系统？</p></div></div><button class="primary-button" type="button" data-open-modal="review-quarter">记录季度判断</button></div></article>
+          <article class="review-panel" id="review-year"><div class="review-card" data-index="05"><h3>年度 · 选择带走什么</h3><span class="review-duration">半天，校准人生方向</span><div class="prompts"><div class="prompt"><span class="prompt-num">01</span><p>这一年，我成为了什么样的人？</p></div><div class="prompt"><span class="prompt-num">02</span><p>哪些作品、关系和选择值得带走？</p></div><div class="prompt"><span class="prompt-num">03</span><p>下一年不再重复什么？</p></div></div><button class="primary-button" type="button" data-open-modal="review-year">记录年度选择</button></div></article>
+        </div>
+      </div>
+    </section>
   </main>
-  <div class="dock"><button onclick="showView('desk')">⌂ 工作台</button><button onclick="showView('tree')">✦ 技能树</button><button onclick="showView('review')">◷ 复盘</button></div>
-</div>
-<div class="modal" id="modal" onclick="backdrop(event)"><div class="modal-box"><h2 id="modalTitle">写点什么</h2><label>标题</label><input id="modalInput" placeholder="例如：今天的主轴"><label>内容</label><textarea id="modalText" placeholder="写一点真实情况就好，不用写成报告。"></textarea><div class="modal-actions"><button class="btn secondary" onclick="closeModal()">取消</button><button class="btn" onclick="saveModal()">保存到本机 Demo</button></div></div></div>
-<script>
-const key='buer-life-desk-demo-v2',state=JSON.parse(localStorage.getItem(key)||'{}');let modalType='note';
-const copy={green:['绿','可以推进','有力气做一点重要的事，也给生活留一点空白。'],yellow:['黄','减少负荷','今天只保留已经承诺和真正重要的事。'],red:['红','只保留必要','今天只保留健康处理和必要生活责任。']};
-function save(){localStorage.setItem(key,JSON.stringify(state))}function setStatus(s){state.status=s;save();const c=copy[s];document.querySelector('#capacity').className='capacity '+(s==='green'?'':s);document.querySelector('#capacityMark').textContent=c[0];document.querySelector('#capacityTitle').textContent=c[1];document.querySelector('#capacityText').textContent=c[2];document.querySelectorAll('[data-status]').forEach(b=>b.classList.toggle('active',b.dataset.status===s))}function showView(v){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===v));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===v))}document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>showView(b.dataset.view));document.querySelectorAll('.board-tab[data-board]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.board-tab[data-board]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.board').forEach(x=>x.classList.toggle('active',x.id==='board-'+b.dataset.board))});function openModal(t){modalType=t;document.querySelector('#modalTitle').textContent=t==='anchor'?'换一个今天的锚点':t==='project'?'加一件正在推进的事':'写下一条观察';document.querySelector('#modalInput').value='';document.querySelector('#modalText').value='';document.querySelector('#modal').classList.add('open');document.querySelector('#modalInput').focus()}function closeModal(){document.querySelector('#modal').classList.remove('open')}function backdrop(e){if(e.target.id==='modal')closeModal()}function saveModal(){const title=document.querySelector('#modalInput').value.trim(),text=document.querySelector('#modalText').value.trim();if(title||text){state.notes=state.notes||[];state.notes.unshift({type:modalType,title,text,at:new Date().toLocaleString('zh-CN')});state.notes=state.notes.slice(0,20);save()}closeModal();alert('已保存到本机 Demo。')}if(state.status)setStatus(state.status);else setStatus('green');function resetDemo(){localStorage.removeItem(key);location.reload()}
-</script>
+
+  <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <button class="modal-close" type="button" id="modalClose" aria-label="关闭弹窗">×</button>
+      <h2 id="modalTitle">写下一条记录</h2><p id="modalHint">内容只保存在当前浏览器。</p>
+      <form id="entryForm">
+        <div class="field"><label for="entryTitle">标题</label><input class="app-input" id="entryTitle" name="title" autocomplete="off" placeholder="一句话说清楚"></div>
+        <div class="field"><label for="entryBody">内容</label><textarea class="app-input" id="entryBody" name="body" placeholder="记录真实情况，不用写成报告。"></textarea></div>
+        <div class="modal-actions"><button class="secondary-button" type="button" id="modalCancel">取消</button><button class="primary-button" type="submit">保存到本机</button></div>
+        <div class="saved-message" id="savedMessage" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+      const storageKey = 'buer-life-desk-v3';
+      const defaultState = { status: 'green', entries: [], anchor: null, activeTab: 'workbench', activePanel: 'create', activePeriod: 'week' };
+      let state;
+      try { state = { ...defaultState, ...JSON.parse(localStorage.getItem(storageKey) || '{}') }; }
+      catch (error) { state = { ...defaultState }; }
+      let modalType = 'note';
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+      const save = () => localStorage.setItem(storageKey, JSON.stringify(state));
+
+      function switchPrimary(id) {
+        state.activeTab = id;
+        $$('.tab').forEach(button => {
+          const active = button.dataset.tab === id;
+          button.classList.toggle('active', active);
+          button.setAttribute('aria-selected', String(active));
+        });
+        $$('.tab-content').forEach(panel => panel.classList.toggle('active', panel.id === id));
+        save();
+      }
+      function switchWorkspace(id) {
+        state.activePanel = id;
+        $$('.subtab').forEach(button => {
+          const active = button.dataset.panel === id;
+          button.classList.toggle('active', active);
+          button.setAttribute('aria-selected', String(active));
+        });
+        $$('.workspace-panel').forEach(panel => panel.classList.toggle('active', panel.id === `panel-${id}`));
+        save();
+      }
+      function switchPeriod(id) {
+        state.activePeriod = id;
+        $$('.period-button').forEach(button => button.classList.toggle('active', button.dataset.period === id));
+        $$('.review-panel').forEach(panel => panel.classList.toggle('active', panel.id === `review-${id}`));
+        save();
+      }
+
+      const capacityCopy = {
+        green: ['绿', '可以推进', '有力气做一点重要的事，也给生活留一点空白。'],
+        yellow: ['黄', '减少负荷', '只保留已经承诺和真正重要的事。'],
+        red: ['红', '只留必要', '只保留健康处理和必要生活责任。']
+      };
+      function setStatus(status) {
+        state.status = status;
+        const copy = capacityCopy[status];
+        $('#capacityPanel').className = `capacity-panel ${status === 'green' ? '' : status}`.trim();
+        $('#capacityMark').textContent = copy[0];
+        $('#capacityTitle').textContent = copy[1];
+        $('#capacityText').textContent = copy[2];
+        $$('.status-button').forEach(button => button.classList.toggle('active', button.dataset.status === status));
+        save();
+      }
+
+      const modalCopy = {
+        note: ['写下一条记录', '内容只保存在当前浏览器。'],
+        anchor: ['修改本周主轴', '标题会替换主轴，内容会替换主轴说明。'],
+        project: ['添加内容线索', '保存后会出现在创作与影响力区域。'],
+        build: ['添加真实项目', '先写项目，再写本周唯一下一步。'],
+        health: ['记录身体现场', '只记录，不做自律评判。'],
+        skill: ['记录技能证据', '记录真实作品、交付或生活中的验证。'],
+        'review-day': ['记录本日', '每日只留现场，不展开完整规划。'],
+        'review-week': ['开始周复盘', '本周是取舍、编排与推进的主周期。'],
+        'review-month': ['记录月度观察', '从四周证据中看见模式。'],
+        'review-quarter': ['记录季度判断', '决定形成什么，也决定停止什么。'],
+        'review-year': ['记录年度选择', '选择值得带走的人、作品与关系。']
+      };
+      function openModal(type) {
+        modalType = type;
+        const copy = modalCopy[type] || modalCopy.note;
+        $('#modalTitle').textContent = copy[0];
+        $('#modalHint').textContent = copy[1];
+        $('#entryTitle').value = type === 'anchor' && state.anchor ? state.anchor.title : '';
+        $('#entryBody').value = type === 'anchor' && state.anchor ? state.anchor.body : '';
+        $('#savedMessage').textContent = '';
+        $('#modal').classList.add('active');
+        requestAnimationFrame(() => $('#entryTitle').focus());
+      }
+      function closeModal() { $('#modal').classList.remove('active'); }
+      function makeCreationCard(entry) {
+        const article = document.createElement('article');
+        article.className = 'tag-card';
+        const pill = document.createElement('span');
+        pill.className = 'card-pill blue';
+        pill.textContent = '本机记录';
+        const heading = document.createElement('h4');
+        heading.textContent = entry.title || '未命名线索';
+        const body = document.createElement('p');
+        body.textContent = entry.body || '暂未补充内容。';
+        article.append(pill, heading, body);
+        $('#creationItems').insertBefore(article, $('#creationItems .secondary-button'));
+      }
+      function makeBuildCard(entry) {
+        const article = document.createElement('article');
+        article.className = 'project-card';
+        const label = document.createElement('span');
+        label.className = 'sketch-label';
+        label.textContent = 'Local project';
+        const heading = document.createElement('h3');
+        heading.textContent = entry.title || '未命名项目';
+        const body = document.createElement('p');
+        body.textContent = entry.body || '等待定义本周下一步。';
+        article.append(label, heading, body);
+        $('#buildItems').append(article);
+      }
+      function renderStoredEntries() {
+        if (state.anchor) {
+          $('#anchorTitle').textContent = state.anchor.title || $('#anchorTitle').textContent;
+          $('#anchorBody').textContent = state.anchor.body || $('#anchorBody').textContent;
+        }
+        state.entries.filter(entry => entry.type === 'project').slice().reverse().forEach(makeCreationCard);
+        state.entries.filter(entry => entry.type === 'build').slice().reverse().forEach(makeBuildCard);
+      }
+
+      $$('.tab').forEach(button => button.addEventListener('click', () => switchPrimary(button.dataset.tab)));
+      $$('.subtab').forEach(button => button.addEventListener('click', () => switchWorkspace(button.dataset.panel)));
+      $$('.period-button').forEach(button => button.addEventListener('click', () => switchPeriod(button.dataset.period)));
+      $$('.status-button').forEach(button => button.addEventListener('click', () => setStatus(button.dataset.status)));
+      $$('[data-open-modal]').forEach(button => button.addEventListener('click', () => openModal(button.dataset.openModal)));
+      $('#modalClose').addEventListener('click', closeModal);
+      $('#modalCancel').addEventListener('click', closeModal);
+      $('#modal').addEventListener('click', event => { if (event.target === $('#modal')) closeModal(); });
+      document.addEventListener('keydown', event => { if (event.key === 'Escape') closeModal(); });
+      $('#entryForm').addEventListener('submit', event => {
+        event.preventDefault();
+        const title = $('#entryTitle').value.trim();
+        const body = $('#entryBody').value.trim();
+        if (!title && !body) { $('#savedMessage').textContent = '至少写一点内容。'; return; }
+        if (modalType === 'anchor') {
+          state.anchor = { title, body };
+          $('#anchorTitle').textContent = title || $('#anchorTitle').textContent;
+          $('#anchorBody').textContent = body || $('#anchorBody').textContent;
+        } else {
+          const entry = { type: modalType, title, body, at: new Date().toISOString() };
+          state.entries.unshift(entry);
+          state.entries = state.entries.slice(0, 50);
+          if (modalType === 'project') makeCreationCard(entry);
+          if (modalType === 'build') makeBuildCard(entry);
+        }
+        save();
+        $('#savedMessage').textContent = '已保存到当前浏览器。';
+        setTimeout(closeModal, 550);
+      });
+      $('#resetButton').addEventListener('click', () => {
+        if (window.confirm('清除这个页面保存在本机的状态和记录？')) {
+          localStorage.removeItem(storageKey);
+          window.location.reload();
+        }
+      });
+
+      renderStoredEntries();
+      switchPrimary(state.activeTab);
+      switchWorkspace(state.activePanel);
+      switchPeriod(state.activePeriod);
+      setStatus(state.status);
+    })();
+  </script>
 </body>
 </html>
