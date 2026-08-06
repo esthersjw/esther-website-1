@@ -68,16 +68,21 @@ section {
 .bg-warm { background: var(--cream-dark); }
 
 .section-header-block {
-  margin-bottom: clamp(32px, 5vw, 56px);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 58px;
+  margin-bottom: 28px;
   position: sticky;
   top: 0;
   z-index: 50;
   background: var(--cream);
-  padding: 20px 0 16px;
+  padding: 12px 0;
   margin-left: calc(-1 * clamp(24px, 4vw, 60px));
   margin-right: calc(-1 * clamp(24px, 4vw, 60px));
   padding-left: clamp(24px, 4vw, 60px);
   padding-right: clamp(24px, 4vw, 60px);
+  border-bottom: 1px solid rgba(26, 26, 46, .12);
 }
 
 .bg-warm .section-header-block {
@@ -85,21 +90,26 @@ section {
 }
 
 .section-number {
-  font-family: 'Fraunces', serif;
-  font-style: italic;
-  font-size: clamp(1.4rem, 3vw, 2rem);
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
   color: var(--blue);
-  opacity: 0.3;
-  display: block;
-  margin-bottom: 0.25rem;
+  opacity: 1;
+  font: 500 13px/1 'Fira Code', monospace;
+  letter-spacing: .04em;
 }
 
 .section-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
-  font-weight: 900;
-  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.28rem);
   color: var(--ink);
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 /* ===== ANIMATIONS ===== */
@@ -126,17 +136,90 @@ section {
 
 /* ===== Section 04: Sticky Sidebar Layout ===== */
 .s4-top {
-  background: white;
-  border-radius: 14px;
-  padding: 40px 48px;
-  margin-bottom: 48px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  margin-bottom: clamp(56px, 7vw, 88px);
 }
-.s4-top p {
+.s4-story-head {
+  margin-bottom: clamp(40px, 6vw, 68px);
+}
+.s4-story-title {
+  color: var(--ink);
+  white-space: nowrap;
+  font: 900 48px/1.2 'Huiwen Mincho', 'Noto Serif SC', serif;
+}
+.s4-story-flow {
+  display: grid;
+  grid-template-columns: 1fr 1.16fr 1fr;
+  gap: 0;
+}
+.s4-story-act {
+  position: relative;
+  min-height: 368px;
+  overflow: hidden;
+  padding: clamp(28px, 3vw, 42px);
+}
+.s4-story-act + .s4-story-act::before {
+  content: '→';
+  position: absolute;
+  z-index: 3;
+  top: calc(50% - 22px);
+  left: -22px;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  color: var(--blue);
+  border: 2px solid var(--yellow);
+  border-radius: 50%;
+  background: var(--cream-dark);
+  font: 1.15rem/1 'Fraunces', serif;
+}
+.s4-story-past { background: rgba(232, 74, 95, .08); }
+.s4-story-cola { color: var(--cream); background: var(--blue); }
+.s4-story-cola::after {
+  content: 'CO-LA';
+  position: absolute;
+  right: -12px;
+  bottom: -42px;
+  color: rgba(254, 252, 246, .11);
+  font: 900 clamp(5.8rem, 10vw, 10rem)/1 'Fraunces', serif;
+}
+.s4-story-obsidian { background: var(--yellow-soft); }
+.s4-story-act-label {
+  display: block;
+  margin-bottom: 22px;
+  color: var(--ink-faint);
+  font: 500 12px/1 'Fira Code', monospace;
+  letter-spacing: .12em;
+}
+.s4-story-cola .s4-story-act-label { color: rgba(254, 252, 246, .62); }
+.s4-story-act h3 {
+  position: relative;
+  z-index: 1;
+  max-width: 305px;
+  margin: 0;
+  color: var(--ink);
+  font: 900 clamp(1.35rem, 2vw, 1.9rem)/1.35 'Huiwen Mincho', 'Noto Serif SC', serif;
+}
+.s4-story-cola h3 { color: var(--cream); }
+.s4-story-act p {
+  position: relative;
+  z-index: 1;
+  max-width: 310px;
+  margin: 16px 0 0;
   color: var(--ink-light);
-  font-size: 0.95rem;
+  font-size: .94rem;
   line-height: 1.8;
 }
+.s4-story-cola p { color: rgba(254, 252, 246, .85); }
+.s4-story-signoff {
+  position: absolute;
+  z-index: 2;
+  right: 26px;
+  bottom: 25px;
+  color: var(--red);
+  font: 700 1.25rem/1 'Caveat', cursive;
+}
+.s4-story-cola .s4-story-signoff { color: var(--yellow); }
 .s4-body {
   display: grid;
   grid-template-columns: 220px 1fr;
@@ -317,12 +400,131 @@ section {
   .s4-compare {
     grid-template-columns: 1fr;
   }
-  .s4-top {
-    padding: 28px 24px;
+  .s4-story-title {
+    font-size: 32px;
+  }
+  .s4-story-flow {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .s4-story-act {
+    min-height: 305px;
+  }
+  .s4-story-act + .s4-story-act::before {
+    display: none;
   }
   .s4-panels .s4-panel {
     padding: 24px 20px;
   }
+}
+
+/* ===== Large-type presentation pass ===== */
+body { font-size: 20px; line-height: 1.9; }
+.container { max-width: 1440px; }
+.section-number { font-size: 13px; }
+.section-title { font-size: clamp(1rem, 2vw, 1.28rem); }
+.s4-story-act p { font-size: 1rem; line-height: 1.85; }
+.s4-body { grid-template-columns: 270px 1fr; gap: 40px; }
+.s4-nav-item { padding: 16px 18px; font-size: 1.05rem; }
+.s4-nav-item .s4-nav-num { font-size: .95rem; }
+.s4-panels .s4-panel { padding: 44px 48px; margin-bottom: 28px; }
+.s4-panel h4 { font-size: 1.45rem; margin-bottom: 14px; }
+.s4-panel .s4-panel-num { font-size: 1rem; margin-bottom: 10px; }
+.s4-panel p, .s4-panel ul li { font-size: 1.18rem; line-height: 1.95; }
+.s4-panel ul { margin: 18px 0; }
+.s4-panel ul li { margin-bottom: 10px; padding-left: 26px; }
+.s4-panel ul li::before { font-size: 1rem; }
+.s4-table { font-size: 1.1rem; }
+.s4-table th { padding: 18px 26px; font-size: .9rem; }
+.s4-table td { padding: 18px 26px; }
+.s4-col { padding: 40px; }
+.s4-col h4 { font-size: .95rem; }
+.s4-col .s4-tag { padding: 7px 15px; font-size: 1rem; }
+.s4-verdict { font-size: 1.7rem; }
+.orange-line-figure {
+  margin: 24px 0 32px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+.orange-line-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 520px;
+  object-fit: contain;
+}
+.zoomable-image {
+  cursor: zoom-in;
+}
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 5vh 5vw;
+  background: rgba(26, 26, 46, .9);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+}
+.image-lightbox.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.lightbox-stage {
+  position: relative;
+  width: min(92vw, 1440px);
+  height: min(88vh, 920px);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.lightbox-image {
+  width: auto;
+  height: auto;
+  max-width: 88vw;
+  max-height: 78vh;
+  object-fit: contain;
+  transform: scale(1);
+  transform-origin: center;
+  cursor: grab;
+  user-select: none;
+  transition: transform .15s ease;
+}
+.lightbox-image.is-dragging { cursor: grabbing; transition: none; }
+.lightbox-toolbar {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 1;
+  display: flex;
+  gap: 8px;
+}
+.lightbox-button {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 50%;
+  background: rgba(26,26,46,.72);
+  color: #fff;
+  font: 500 1.2rem/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  cursor: pointer;
+}
+.lightbox-button:hover { background: var(--blue); }
+.lightbox-button:focus-visible { outline: 2px solid var(--yellow); outline-offset: 3px; }
+@media (max-width: 900px) {
+  body { font-size: 18px; }
+  .s4-story-title { font-size: 20px; }
+  .s4-story-act { min-height: 310px; }
+  .s4-panels .s4-panel { padding: 32px 26px; }
+  .s4-panel h4 { font-size: 1.3rem; }
+  .s4-panel p, .s4-panel ul li { font-size: 1.08rem; }
+  .s4-table { font-size: .98rem; }
+  .s4-table-wrap { overflow-x: auto; }
 }
 </style>
 <link rel="icon" type="image/png" href="../../favicon.png">
@@ -338,9 +540,31 @@ section {
       <h2 class="section-title">我的系统:Cola + Obsidian</h2>
     </div>
 
-    <!-- 整体思路 -->
+    <!-- 内容工作流开场：方向一 / 三幕故事 -->
     <div class="s4-top reveal">
-      <p>Obsidian 是我的大脑外挂--所有内容的底稿、素材、数据、排期都在这里。Cola 是我的协作者--调研、讨论、设计、分析全靠它。</p>
+      <div class="s4-story-head">
+        <h3 class="s4-story-title">How to用Agent协助做自媒体</h3>
+      </div>
+      <div class="s4-story-flow">
+        <article class="s4-story-act s4-story-past">
+          <span class="s4-story-act-label">BEFORE</span>
+          <h3>信息散在<br>很多地方</h3>
+          <p>找过往资料、写脚本、生成图片、排期发布，都要在不同软件之间来回切换。做完一条内容，很多东西也没能留下来。</p>
+          <span class="s4-story-signoff">from scratch</span>
+        </article>
+        <article class="s4-story-act s4-story-cola">
+          <span class="s4-story-act-label">NOW · MY AI PARTNER</span>
+          <h3>Cola 和我一起<br>把事情做出来</h3>
+          <p>它是我的 AI 拍档，帮我调研、讨论、整理、写和改内容、生成图片、做设计，把内容工作里的执行向前推进。</p>
+          <span class="s4-story-signoff">make it happen</span>
+        </article>
+        <article class="s4-story-act s4-story-obsidian">
+          <span class="s4-story-act-label">KEEP</span>
+          <h3>Obsidian 让成果<br>慢慢积累</h3>
+          <p>底稿、素材、数据、排期和复盘都沉淀为我的自媒体知识库，也成为 Cola 下一次理解我、继续协作的上下文。</p>
+          <span class="s4-story-signoff">keep growing</span>
+        </article>
+      </div>
     </div>
 
     <!-- Sticky侧栏 + 场景面板 -->
@@ -358,7 +582,10 @@ section {
         <div class="s4-panel reveal" id="s4-p1">
           <div class="s4-panel-num">Scene 01</div>
           <h4>深度调研 + 多轮对话 → 内容产出</h4>
-          <p><strong>流程:</strong></p>
+          <figure class="orange-line-figure">
+            <img src="0806 Cola+Obsidian-橙线配图/01-深度调研.png" alt="小橙从庞大的研究资料中整理出清晰内容">
+          </figure>
+          <p><strong>流程:</strong></p
           <ul>
             <li>我有一个选题方向</li>
             <li>先让Cola帮我做深度调研--全网数据、文化背景、争议点、别人怎么讲的</li>
@@ -369,14 +596,17 @@ section {
           </ul>
           <p><strong>核心：</strong>Cola不是帮我写稿，是帮我想清楚。最终表达的观点一定是从我嘴里说出来的。</p>
           <div style="display: flex; gap: 16px; margin-top: 20px;">
-            <img src="./scene01-img1.jpg" alt="场景一示例1" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
-            <img src="./scene01-img2.jpg" alt="场景一示例2" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
+            <img src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/scene01-img1.jpg" alt="场景一示例1" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+            <img src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/scene01-img2.jpg" alt="场景一示例2" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
           </div>
         </div>
         <div class="s4-panel reveal" id="s4-p2">
           <div class="s4-panel-num">Scene 02</div>
           <h4>Design Skill -- 一套完整的视觉产出系统</h4>
-          <p><strong>能做什么:</strong></p>
+          <figure class="orange-line-figure">
+            <img src="0806 Cola+Obsidian-橙线配图/02-Design-Skill.png" alt="小橙在视觉产出系统中搭建多个内容界面">
+          </figure>
+          <p><strong>能做什么:</strong></p
           <ul>
             <li>3:4小红书图文卡片(单张/系列)</li>
             <li>教程类HTML网页(Sticky侧栏、步骤流程、动效)</li>
@@ -392,7 +622,7 @@ section {
             <li>选完替换进正式文件,最终导出PNG或直接推GitHub上线</li>
           </ul>
           <p><strong>核心:</strong>强化你的视觉认知,并降低你在展示环节所花费的时间。</p>
-          <p style="margin-top: 12px;"><strong>Github仓库：</strong><a href="https://github.com/esthersjw/esther-design-system" target="_blank" style="color: var(--blue); text-decoration: none; font-family: 'Fira Code', monospace; font-size: 14px;">esthersjw/esther-design-system</a></p>
+          <p style="margin-top: 12px;"><strong>Design Skill：</strong><a href="https://go.colaskill.com/esther" target="_blank" rel="noopener" style="color: var(--blue); text-decoration: none; font-family: 'Fira Code', monospace; font-size: 14px;">go.colaskill.com/esther</a></p>
           <!-- Design Skill 切换看板 -->
           <div class="s4-showcase" style="margin-top: 24px;">
             <div class="s4-showcase-tabs" style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
@@ -402,17 +632,20 @@ section {
               <button class="s4-tab" data-target="sf-cards" style="padding: 6px 16px; border-radius: 20px; border: 1.5px solid var(--blue); background: transparent; color: var(--blue); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;">小红书卡片</button>
             </div>
             <div class="s4-showcase-frame" style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.06); height: 480px; position: relative; background: #fff;">
-              <iframe id="sf-tutorial" src="./demo-skill-tutorial.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 1; transition: opacity 0.3s;"></iframe>
-              <iframe id="sf-dashboard" src="./demo-personal-dashboard.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; transition: opacity 0.3s;"></iframe>
-              <iframe id="sf-design" src="./demo-design-skill.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; transition: opacity 0.3s;"></iframe>
-              <iframe id="sf-cards" src="./demo-design-skill-cards.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; transition: opacity 0.3s;"></iframe>
+              <iframe id="sf-tutorial" src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/demo-skill-tutorial.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 1; transition: opacity 0.3s;"></iframe>
+              <iframe id="sf-dashboard" src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/demo-personal-dashboard.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; transition: opacity 0.3s;"></iframe>
+              <iframe id="sf-design" src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/demo-design-skill.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; transition: opacity 0.3s;"></iframe>
+              <iframe id="sf-cards" src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/demo-design-skill-cards.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; transition: opacity 0.3s;"></iframe>
             </div>
           </div>
         </div>
         <div class="s4-panel reveal" id="s4-p3">
           <div class="s4-panel-num">Scene 03</div>
           <h4>已发内容库管理 + 月度数据分析</h4>
-          <p><strong>流程:</strong></p>
+          <figure class="orange-line-figure">
+            <img src="0806 Cola+Obsidian-橙线配图/03-内容库管理.png" alt="小橙把内容卡片放入内容库并发现规律">
+          </figure>
+          <p><strong>流程:</strong></p
           <ul>
             <li>Obsidian里维护一个内容库表格</li>
             <li>每个月批量通过语音输入法告诉Cola这个月发了哪些东西--包括当时的心情、想法、耗时、数据情况</li>
@@ -427,13 +660,16 @@ section {
             <li>Cola负责发现规律,并追踪每个月的变化</li>
           </ul>
           <div style="display: flex; gap: 16px; margin-top: 20px;">
-            <img src="./scene03-img1.png" alt="场景三示例1" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
-            <img src="./scene03-img2.jpg" alt="场景三示例2" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
+            <img src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/scene03-img1.png" alt="场景三示例1" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
+            <img src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/scene03-img2.jpg" alt="场景三示例2" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
           </div>
         </div>
         <div class="s4-panel reveal" id="s4-p4">
           <div class="s4-panel-num">Scene 04</div>
           <h4>广告排期 + 定时提醒</h4>
+          <figure class="orange-line-figure">
+            <img src="0806 Cola+Obsidian-橙线配图/04-广告排期.png" alt="小橙在广告排期日历中设置提醒">
+          </figure>
           <p>这个场景解决的问题:商单越来越多之后,很容易忘记哪个品牌什么时候要发、哪个款项还没结算。手动记太容易漏,需要一个自动化的管理和提醒系统。</p>
           <p><strong>流程:</strong></p>
           <ul>
@@ -475,13 +711,16 @@ section {
             </table>
           </div>
           <div style="display: flex; gap: 16px; margin-top: 16px;">
-            <img src="./scene04-img1.png" alt="广告排期提醒" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
-            <img src="./scene04-img2.jpg" alt="广告排期示例" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
+            <img src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/scene04-img1.png" alt="广告排期提醒" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
+            <img src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/scene04-img2.jpg" alt="广告排期示例" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
           </div>
         </div>
         <div class="s4-panel reveal" id="s4-p5">
           <div class="s4-panel-num">Scene 05</div>
           <h4>选题拆解 + 内容系列化</h4>
+          <figure class="orange-line-figure">
+            <img src="0806 Cola+Obsidian-橙线配图/05-选题拆解.png" alt="小橙把一份长内容拆成多个选题方向">
+          </figure>
           <p>这个场景解决的问题:有时候有一个很好的素材(一篇文章、一次访谈、一个灵感),但不知道怎么把它变成多条内容。需要一个"拆解→选方向→批量产出"的链路。</p>
           <p><strong>两种入口:</strong></p>
           <ul>
@@ -495,12 +734,12 @@ section {
             <li>录了一场直播 → Cola出逐字稿 → 标注了哪些段落适合做切片 → 我选了其中5段做成短视频</li>
           </ul>
           <div style="display: flex; gap: 16px; margin-top: 20px;">
-            <img src="./scene05-img3.jpg" alt="场景五示例3" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
-            <img src="./scene05-img4.jpg" alt="场景五示例4" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
+            <img src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/scene05-img3.jpg" alt="场景五示例3" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
+            <img src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/scene05-img4.jpg" alt="场景五示例4" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
           </div>
           <div style="display: flex; gap: 16px; margin-top: 16px;">
-            <img src="./scene05-img1.png" alt="场景五示例1" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
-            <img src="./scene05-img2.jpg" alt="场景五示例2" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
+            <img src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/scene05-img1.png" alt="场景五示例1" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
+            <img src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/scene05-img2.jpg" alt="场景五示例2" style="max-width: 48%; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);" loading="lazy">
           </div>
           <!-- 创始人说图文切换 -->
           <div style="margin-top: 24px;">
@@ -509,14 +748,17 @@ section {
               <button class="s5-tab" data-target="s5f-02" style="padding: 6px 16px; border-radius: 20px; border: 1.5px solid var(--blue); background: transparent; color: var(--blue); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;">创始人说 #02</button>
             </div>
             <div style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.06); height: 480px; position: relative; background: #fff;">
-              <iframe id="s5f-01" src="./demo-founder-01.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 1; transition: opacity 0.3s;"></iframe>
-              <iframe id="s5f-02" src="./demo-founder-02.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; transition: opacity 0.3s;"></iframe>
+              <iframe id="s5f-01" src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/demo-founder-01.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 1; transition: opacity 0.3s;"></iframe>
+              <iframe id="s5f-02" src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/demo-founder-02.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; transition: opacity 0.3s;"></iframe>
             </div>
           </div>
         </div>
         <div class="s4-panel reveal" id="s4-p6">
           <div class="s4-panel-num">Scene 06</div>
           <h4>一鱼多吃 -- 一份内容多平台变体</h4>
+          <figure class="orange-line-figure">
+            <img src="0806 Cola+Obsidian-橙线配图/06-一鱼多吃.png" alt="小橙把一份内容连接到多个发布载体">
+          </figure>
           <p><strong>同一份素材,不同平台/不同载体:</strong></p>
           <ul>
             <li><strong>逐字稿 → 图文卡片:</strong>录完口播后,让Cola把核心观点抽出来做成3:4小红书图文</li>
@@ -532,8 +774,8 @@ section {
               <button class="s6-tab" data-target="s6f-readme" style="padding: 6px 16px; border-radius: 20px; border: 1.5px solid var(--blue); background: transparent; color: var(--blue); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;">Design Skill Readme</button>
             </div>
             <div style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.06); height: 480px; position: relative; background: #fff;">
-              <iframe id="s6f-cards" src="./demo-design-skill-cards.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 1; transition: opacity 0.3s;"></iframe>
-              <iframe id="s6f-readme" src="./demo-readme-tutorial.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; transition: opacity 0.3s;"></iframe>
+              <iframe id="s6f-cards" src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/demo-design-skill-cards.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 1; transition: opacity 0.3s;"></iframe>
+              <iframe id="s6f-readme" src="https://hiesther.me/tutorials/cola+ob%E8%87%AA%E5%AA%92%E4%BD%93%E5%88%86%E4%BA%AB/demo-readme-tutorial.html" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; opacity: 0; pointer-events: none; transition: opacity 0.3s;"></iframe>
             </div>
           </div>
         </div>
@@ -567,6 +809,18 @@ section {
 
   </div>
 </section>
+
+<div class="image-lightbox" id="imageLightbox" hidden aria-hidden="true">
+  <div class="lightbox-stage" role="dialog" aria-modal="true" aria-label="图片预览">
+    <div class="lightbox-toolbar">
+      <button class="lightbox-button" id="zoomOut" type="button" aria-label="缩小" title="缩小">−</button>
+      <button class="lightbox-button" id="zoomReset" type="button" aria-label="还原大小" title="还原大小">1:1</button>
+      <button class="lightbox-button" id="zoomIn" type="button" aria-label="放大" title="放大">+</button>
+      <button class="lightbox-button" id="lightboxClose" type="button" aria-label="关闭图片预览" title="关闭">×</button>
+    </div>
+    <img class="lightbox-image" id="lightboxImage" alt="">
+  </div>
+</div>
 
 <script>
 // Scroll reveal with IntersectionObserver
@@ -653,6 +907,97 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         }
       });
     });
+  });
+})();
+
+// === Image lightbox with zoom controls ===
+(function() {
+  const lightbox = document.getElementById('imageLightbox');
+  const lightboxImage = document.getElementById('lightboxImage');
+  const closeButton = document.getElementById('lightboxClose');
+  const zoomIn = document.getElementById('zoomIn');
+  const zoomOut = document.getElementById('zoomOut');
+  const zoomReset = document.getElementById('zoomReset');
+  const zoomableImages = document.querySelectorAll('img:not(.lightbox-image)');
+  let scale = 1;
+  let offsetX = 0;
+  let offsetY = 0;
+  let dragging = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+
+  const render = () => {
+    lightboxImage.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+  };
+
+  const setScale = (nextScale) => {
+    scale = Math.min(4, Math.max(1, nextScale));
+    if (scale === 1) { offsetX = 0; offsetY = 0; }
+    render();
+  };
+
+  const close = () => {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    window.setTimeout(() => { lightbox.hidden = true; }, 220);
+  };
+
+  zoomableImages.forEach(image => {
+    image.classList.add('zoomable-image');
+    image.addEventListener('click', () => {
+      lightboxImage.src = image.currentSrc || image.src;
+      lightboxImage.alt = image.alt || '图片预览';
+      scale = 1;
+      offsetX = 0;
+      offsetY = 0;
+      render();
+      lightbox.hidden = false;
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => lightbox.classList.add('is-open'));
+    });
+  });
+
+  closeButton.addEventListener('click', close);
+  zoomIn.addEventListener('click', () => setScale(scale + .25));
+  zoomOut.addEventListener('click', () => setScale(scale - .25));
+  zoomReset.addEventListener('click', () => setScale(1));
+  lightbox.addEventListener('click', (event) => {
+    // Any click outside the image itself closes the preview, including empty stage space.
+    if (event.target !== lightboxImage && !event.target.closest('.lightbox-toolbar')) close();
+  });
+  lightbox.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    setScale(scale + (event.deltaY < 0 ? .15 : -.15));
+  }, { passive: false });
+  lightboxImage.addEventListener('pointerdown', (event) => {
+    if (scale === 1) return;
+    dragging = true;
+    dragStartX = event.clientX - offsetX;
+    dragStartY = event.clientY - offsetY;
+    lightboxImage.classList.add('is-dragging');
+    lightboxImage.setPointerCapture(event.pointerId);
+  });
+  lightboxImage.addEventListener('pointermove', (event) => {
+    if (!dragging) return;
+    offsetX = event.clientX - dragStartX;
+    offsetY = event.clientY - dragStartY;
+    render();
+  });
+  const stopDragging = (event) => {
+    dragging = false;
+    lightboxImage.classList.remove('is-dragging');
+    if (lightboxImage.hasPointerCapture(event.pointerId)) lightboxImage.releasePointerCapture(event.pointerId);
+  };
+  lightboxImage.addEventListener('pointerup', stopDragging);
+  lightboxImage.addEventListener('pointercancel', stopDragging);
+  document.addEventListener('keydown', (event) => {
+    if (lightbox.hidden) return;
+    if (event.key === 'Escape') close();
+    if (event.key === '+' || event.key === '=') setScale(scale + .25);
+    if (event.key === '-') setScale(scale - .25);
+    if (event.key === '0') setScale(1);
   });
 })();
 
