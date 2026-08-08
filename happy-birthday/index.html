@@ -127,20 +127,36 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 20px;
       padding: clamp(16px, 3vw, 34px) clamp(18px, 5vw, 72px);
-      font-size: .78rem;
-      letter-spacing: .08em;
-      color: rgba(255, 253, 247, .72);
+      font-family: "LXGWWenKai", "PingFang SC", sans-serif;
+      font-size: clamp(.95rem, 1.5vw, 1.2rem);
+      letter-spacing: 0;
+      color: var(--cream);
     }
 
     .topline p { margin: 0; }
 
-    .edition {
-      font-family: "Fraunces", "Noto Serif SC", serif;
-      font-size: .9rem;
-      color: var(--yellow);
-      font-style: italic;
+    .topline-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      white-space: nowrap;
     }
+
+    .topline-links a {
+      color: var(--yellow);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(244, 215, 88, .62);
+      transition: color .2s ease, border-color .2s ease;
+    }
+
+    .topline-links a:hover {
+      color: var(--cream);
+      border-color: var(--cream);
+    }
+
+    .topline-links .dot { color: var(--red); }
 
     .book-stage {
       min-height: 0;
@@ -553,9 +569,13 @@
     }
 
     @media (max-width: 620px) {
-      .topline { padding-top: 16px; }
-      .topline p:first-child { display: none; }
-      .topline { justify-content: flex-end; }
+      .topline {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: 16px;
+      }
+      .topline-links { font-size: .88rem; }
       .book-stage { padding: 0 10px clamp(30px, 8vh, 62px); }
       .page { padding: 30px; }
       .cover { border-width: 6px; }
@@ -581,8 +601,12 @@
   </div>
   <main class="page-shell">
     <header class="topline">
-      <p>ESTHER'S BIRTHDAY NOTEBOOK · PROTOTYPE 01</p>
-      <p class="edition">a book that remembers</p>
+      <p>Happy birthday, Esther!</p>
+      <nav class="topline-links" aria-label="社交链接">
+        <a href="https://x.com/SjwEsther" target="_blank" rel="noreferrer">Twitter</a>
+        <span class="dot">·</span>
+        <a href="https://www.xiaohongshu.com/user/profile/55c6c7695894460904f87b47?m_source=pinpai" target="_blank" rel="noreferrer">小红书</a>
+      </nav>
     </header>
 
     <section class="book-stage" aria-label="可翻页的生日数字手帐原型">
