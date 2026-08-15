@@ -1774,6 +1774,19 @@ a, button, [onclick], input[type='file'], .tab-btn, .cal-cell, .cal-nav, .cal-fi
   .todo-three-day { grid-template-columns: 1fr; }
 }
 </style>
+<link rel="icon" type="image/png" href="../../favicon.png">
+<link rel="apple-touch-icon" href="../../favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="不二的个人看板">
+<meta property="og:description" content="ESTHER不二 · 在AI时代认真生活的女生 · 1 Person + AI = 1 Team">
+<meta property="og:url" content="https://hiesther.me/tutorials/personal-dashboard/">
+<meta property="og:image" content="https://hiesther.me/buer-sticker.png">
+<meta property="og:site_name" content="ESTHER不二">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="不二的个人看板">
+<meta name="twitter:description" content="ESTHER不二 · 在AI时代认真生活的女生 · 1 Person + AI = 1 Team">
+<meta name="twitter:image" content="https://hiesther.me/buer-sticker.png">
+<meta name="description" content="ESTHER不二 · 在AI时代认真生活的女生 · 1 Person + AI = 1 Team">
 </head>
 <body>
 
@@ -2112,7 +2125,7 @@ a, button, [onclick], input[type='file'], .tab-btn, .cal-cell, .cal-nav, .cal-fi
 
 <!-- Image Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <img id="lightbox-img" src="" alt="">
+  <img id="lightbox-img" src="" alt="" loading="lazy">
 </div>
 
 <script>
@@ -2362,7 +2375,7 @@ function handleMetimeImg(input) {
   if (!file) return;
   compressImage(file, 800, 0.7).then(dataUrl => {
     metimeImgData = dataUrl;
-    document.getElementById('metime-img-preview').innerHTML = `<img src="${metimeImgData}" style="max-height:60px;border-radius:6px;border:1px solid #ddd;"> <button class="btn-small" onclick="clearMetimeImg()">移除</button>`;
+    document.getElementById('metime-img-preview').innerHTML = `<img src="${metimeImgData}" style="max-height:60px;border-radius:6px;border:1px solid #ddd;" loading="lazy"> <button class="btn-small" onclick="clearMetimeImg()">移除</button>`;
   });
 }
 
@@ -2405,7 +2418,7 @@ function renderMetime() {
     const dateObj = new Date(item.ts);
     const timeStr = formatTime(item.ts);
     const dateDisplay = `${dateObj.getFullYear()}.${String(dateObj.getMonth()+1).padStart(2,'0')}.${String(dateObj.getDate()).padStart(2,'0')}`;
-    const imgHtml = item.img ? `<img class="metime-card-img" src="${item.img}" onclick="openLightboxDirect(this.src)"><button class="metime-card-del-img" onclick="event.stopPropagation();deleteMetimeImg(${i})">✕</button>` : '';
+    const imgHtml = item.img ? `<img class="metime-card-img" src="${item.img}" onclick="openLightboxDirect(this.src)" loading="lazy"><button class="metime-card-del-img" onclick="event.stopPropagation();deleteMetimeImg(${i})">✕</button>` : '';
     const w = item.width || 'md';
     return `<div class="metime-card w-${w}${item.img ? ' has-img' : ''}" draggable="true" data-idx="${i}" data-section="metime">
       <span class="drag-handle" title="拖拽排序">⋮⋮</span>
@@ -2433,7 +2446,7 @@ function handleIdeaImg(input) {
   if (!file) return;
   compressImage(file, 800, 0.7).then(dataUrl => {
     ideaImgData = dataUrl;
-    document.getElementById('idea-img-preview').innerHTML = `<img src="${ideaImgData}" style="max-height:60px;border-radius:6px;border:1px solid #ddd;"> <button class="btn-small" onclick="clearIdeaImg()">移除</button>`;
+    document.getElementById('idea-img-preview').innerHTML = `<img src="${ideaImgData}" style="max-height:60px;border-radius:6px;border:1px solid #ddd;" loading="lazy"> <button class="btn-small" onclick="clearIdeaImg()">移除</button>`;
   });
 }
 
@@ -2473,7 +2486,7 @@ function deleteIdeaImg(idx) {
 function renderIdeas() {
   const data = load(getKey('ideas'), []);
   document.getElementById('idea-grid').innerHTML = data.map((item, i) => {
-    const imgHtml = item.img ? `<img class="idea-strip-img" src="${item.img}" onclick="openLightboxDirect(this.src)"><button class="idea-strip-del-img" onclick="event.stopPropagation();deleteIdeaImg(${i})">✕</button>` : '';
+    const imgHtml = item.img ? `<img class="idea-strip-img" src="${item.img}" onclick="openLightboxDirect(this.src)" loading="lazy"><button class="idea-strip-del-img" onclick="event.stopPropagation();deleteIdeaImg(${i})">✕</button>` : '';
     const w = item.width || 'md';
     return `<div class="idea-strip w-${w}${item.img ? ' has-img' : ''}" draggable="true" data-idx="${i}" data-section="ideas">
       <span class="drag-handle" title="拖拽排序">⋮⋮</span>
@@ -2591,7 +2604,7 @@ function renderBookmarks() {
     const favicon = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=32` : '';
     return `<div class="bm-card">
       <a class="bm-link" href="${escHtml(b.url)}" target="_blank" rel="noopener noreferrer">
-        ${favicon ? `<img src="${favicon}" alt="">` : ''}
+        ${favicon ? `<img src="${favicon}" alt="" loading="lazy">` : ''}
         <div class="bm-info"><div class="bm-title">${escHtml(b.name)}</div>${b.desc ? `<div class="bm-desc">${escHtml(b.desc)}</div>` : ''}</div>
       </a>
       <button class="bm-del" onclick="event.stopPropagation();deleteBookmark(${realIdx})">✕</button>
@@ -2727,7 +2740,7 @@ function renderArchiveByDate() {
   if (metime.length) {
     html += `<div class="archive-category-title">⏰ 属于自己的时间</div>`;
     metime.forEach((a, idx) => {
-      const imgTag = a.img ? `<img src="${a.img}" style="display:block;max-width:200px;height:auto;border-radius:6px;margin-top:6px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.1);" onclick="openLightboxDirect(this.src)">` : '';
+      const imgTag = a.img ? `<img src="${a.img}" style="display:block;max-width:200px;height:auto;border-radius:6px;margin-top:6px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.1);" onclick="openLightboxDirect(this.src)" loading="lazy">` : '';
       html += `<div class="archive-buildlog-line">
         <span class="archive-buildlog-text">${escHtml(a.text)}${imgTag}</span>
         <span class="archive-buildlog-meta">${formatTime(a.ts)}</span>
@@ -2741,7 +2754,7 @@ function renderArchiveByDate() {
   if (ideas.length) {
     html += `<div class="archive-category-title">💡 灵感碎片</div>`;
     ideas.forEach((a, idx) => {
-      const imgTag = a.img ? `<img src="${a.img}" style="display:block;max-width:200px;height:auto;border-radius:6px;margin-top:6px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.1);" onclick="openLightboxDirect(this.src)">` : '';
+      const imgTag = a.img ? `<img src="${a.img}" style="display:block;max-width:200px;height:auto;border-radius:6px;margin-top:6px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.1);" onclick="openLightboxDirect(this.src)" loading="lazy">` : '';
       html += `<div class="archive-buildlog-line">
         <span class="archive-buildlog-text">${escHtml(a.text)}${imgTag}</span>
         <span class="archive-buildlog-meta">${formatTime(a.ts)}</span>
@@ -2853,7 +2866,7 @@ function renderBuildLogCard(title, dateStr, entries, editType) {
     </div>
     <div class="archive-buildlog-body">`;
   entries.forEach((e, i) => {
-    const imgTag = (e.img) ? `<img src="${e.img}" style="display:block;max-width:200px;height:auto;border-radius:6px;margin-top:6px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.1);" onclick="openLightboxDirect(this.src)">` : '';
+    const imgTag = (e.img) ? `<img src="${e.img}" style="display:block;max-width:200px;height:auto;border-radius:6px;margin-top:6px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.1);" onclick="openLightboxDirect(this.src)" loading="lazy">` : '';
     const idx = e.origIdx !== undefined ? e.origIdx : i;
     const editBtns = editType ? `<button class="archive-edit-btn" onclick="editArchiveEntry('${dateStr}','${editType}',${idx})" title="编辑">✎</button><button class="archive-del-btn" onclick="deleteArchiveEntryTopic('${dateStr}','${editType}',${idx})" title="删除">✕</button>` : '';
     html += `<div class="archive-buildlog-line">
