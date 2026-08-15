@@ -338,6 +338,10 @@ export function initializeSite() {
     });
   }
 
+  function templateWindow(tpl) {
+    return tpl.content ? tpl.content.firstElementChild : tpl.firstElementChild;
+  }
+
   function openWindow(tplId) {
     // If already open, bring to front
     var existing = surface.querySelector('.os-window[data-from="' + tplId + '"]');
@@ -345,7 +349,9 @@ export function initializeSite() {
 
     var tpl = document.getElementById(tplId);
     if (!tpl) return;
-    var win = tpl.content.firstElementChild.cloneNode(true);
+    var sourceWindow = templateWindow(tpl);
+    if (!sourceWindow) return;
+    var win = sourceWindow.cloneNode(true);
     win.dataset.from = tplId;
 
     // Build chrome: macOS traffic lights + invisible drag bar
@@ -530,26 +536,17 @@ export function initializeSite() {
     });
   });
 
+  surface.addEventListener('click', function(e) {
+    var closeAction = e.target.closest('[data-close-window]');
+    if (closeAction) closeAction.closest('.os-window').remove();
+  });
+
   // Folder icon dblclick → open iframe window on desktop
   surface.addEventListener('dblclick', function(e) {
     // Handle data-win (open template window)
     var fiWin = e.target.closest('.folder-icon[data-win]');
     if (fiWin) {
-      var winId = fiWin.dataset.win;
-      var tpl = document.getElementById(winId);
-      if (tpl) {
-        var clone = tpl.content.cloneNode(true);
-        surface.appendChild(clone);
-        var win = surface.querySelector('.os-window:last-child');
-        if (win) {
-          win.style.position = 'absolute';
-          win.style.left = '50%';
-          win.style.top = '50%';
-          win.style.transform = 'translate(-50%,-50%)';
-          win.style.zIndex = ++zTop;
-          makeDraggable(win);
-        }
-      }
+      openWindow(fiWin.dataset.win);
       return;
     }
     var fi = e.target.closest('.folder-icon[data-href]');
