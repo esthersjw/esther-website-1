@@ -19,7 +19,7 @@ html { overflow: hidden; }
 html.scroll-unlocked { overflow: auto; overflow-x: hidden; }
 
 body {
-  font-family: 'Inter', 'Noto Sans SC', sans-serif;
+  font-family: 'Noto Sans SC', sans-serif;
   -webkit-font-smoothing: antialiased;
   background: var(--cream);
   color: var(--ink);
@@ -58,7 +58,7 @@ body {
   transform: translateX(-50%) translateY(16px);
 }
 .pill-nav button {
-  font-family: 'Inter', 'Noto Sans SC', sans-serif;
+  font-family: 'Noto Sans SC', sans-serif;
   font-size: 13px;
   font-weight: 500;
   color: var(--ink-light);
@@ -185,7 +185,7 @@ body {
   color: rgba(255,255,255,0.5);
   font-size: 11px;
   margin: 0 auto;
-  font-family: 'Inter', sans-serif;
+  font-family: sans-serif;
 }
 
 .term-line {
@@ -297,6 +297,7 @@ body {
   transition: filter 0.2s;
   user-select: none;
   -webkit-user-select: none;
+  touch-action: none;
 }
 .desktop-sticker:active { cursor: grabbing; }
 .desktop-sticker:hover { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3)); }
@@ -448,6 +449,46 @@ body {
   pointer-events: none;
 }
 
+/* Birthday notebook app icon */
+.dicon-art.birthday-icon {
+  background: #FFF8F0;
+  border: 1.5px solid rgba(43,127,216,0.34);
+  box-shadow: 0 2px 6px rgba(30,91,168,0.18);
+}
+.birthday-icon::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 28px;
+  height: 30px;
+  border-radius: 3px 7px 7px 3px;
+  background: var(--blue);
+  box-shadow: inset 5px 0 0 rgba(255,255,255,0.18);
+  transform: rotate(-5deg);
+}
+.birthday-icon::after {
+  content: '✦';
+  position: absolute;
+  right: 5px;
+  top: 1px;
+  color: var(--yellow);
+  font-size: 19px;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(26,26,46,0.22);
+}
+.birthday-icon-mark {
+  position: absolute;
+  z-index: 1;
+  left: 17px;
+  top: 18px;
+  color: #FFF8F0;
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+}
+
 /* OS windows */
 .os-window {
   position: absolute;
@@ -520,6 +561,7 @@ body {
   max-height: none;
   height: calc(100% - 36px);
   overflow: hidden;
+  overscroll-behavior: contain;
 }
 /* Resize handle */
 .os-resize {
@@ -528,6 +570,7 @@ body {
   width: 16px; height: 16px;
   cursor: nwse-resize;
   z-index: 10;
+  touch-action: none;
 }
 .os-resize::after {
   content: '';
@@ -932,7 +975,7 @@ body {
   background: rgba(43, 127, 216, 0.96);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  font-family: 'Inter', 'Noto Sans SC', sans-serif;
+  font-family: 'Noto Sans SC', sans-serif;
   font-size: 12px;
   color: rgba(255,255,255,0.92);
 }
@@ -1122,7 +1165,7 @@ body {
   margin-bottom: 16px;
 }
 .workflow-subtitle {
-  font-family: 'Inter', sans-serif;
+  font-family: sans-serif;
   font-size: 14px;
   color: #999;
   letter-spacing: 2px;
@@ -1135,7 +1178,7 @@ body {
   text-align: left;
 }
 .workflow-col-title {
-  font-family: 'Inter', sans-serif;
+  font-family: sans-serif;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -1426,4 +1469,18 @@ body {
   .workflow-headline { font-size: 36px; }
   .workflow-subtitle { font-size: 11px; margin-bottom: 36px; }
   .workflow-columns { grid-template-columns: 1fr; gap: 32px; }
+
+  /* Desktop metaphor on small screens */
+  .desktop-sticker { width: 150px; left: 12px; right: auto; bottom: 16px; }
+  .dicon { width: 68px; }
+  .dicon-art { width: 42px; height: 42px; }
+  .dicon-label { font-size: 10px; }
+  .win-sayhi .services-grid { grid-template-columns: 1fr; }
+  .os-body.win-sayhi { padding: 28px 20px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .wp-star, .click-star { animation: none; }
+  .os-window { animation: none; }
 }

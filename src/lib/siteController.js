@@ -55,6 +55,7 @@ export function initializeSite() {
     animationFrameIds.add(frameId);
     return frameId;
   }
+
   'use strict';
 
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -174,9 +175,12 @@ export function initializeSite() {
   }
 
   if (isReturnVisitor) {
+    // Return visitor: terminal shows instantly (no typing), then auto zoom into desktop
     terminalData.forEach(function(item) { renderLine(item).classList.add('visible'); });
     finishIntro();
+    setTimeout(launch, 700);
   } else {
+    // First visit: full line-by-line typing intro
     var divs = [];
     var lineDelay = 0;
     terminalData.forEach(function(item) {
@@ -433,7 +437,7 @@ export function initializeSite() {
     body.className = 'os-body os-body-iframe';
     var iframe = document.createElement('iframe');
     iframe.src = url;
-    iframe.style.cssText = 'width:100%;height:100%;border:none;border-radius:0 0 10px 10px;';
+    iframe.style.cssText = 'width:100%;height:100%;border:none;border-radius:0 0 10px 10px;overscroll-behavior:contain;';
     body.appendChild(iframe);
     win.appendChild(body);
 
@@ -528,6 +532,26 @@ export function initializeSite() {
 
   // Folder icon dblclick → open iframe window on desktop
   surface.addEventListener('dblclick', function(e) {
+    // Handle data-win (open template window)
+    var fiWin = e.target.closest('.folder-icon[data-win]');
+    if (fiWin) {
+      var winId = fiWin.dataset.win;
+      var tpl = document.getElementById(winId);
+      if (tpl) {
+        var clone = tpl.content.cloneNode(true);
+        surface.appendChild(clone);
+        var win = surface.querySelector('.os-window:last-child');
+        if (win) {
+          win.style.position = 'absolute';
+          win.style.left = '50%';
+          win.style.top = '50%';
+          win.style.transform = 'translate(-50%,-50%)';
+          win.style.zIndex = ++zTop;
+          makeDraggable(win);
+        }
+      }
+      return;
+    }
     var fi = e.target.closest('.folder-icon[data-href]');
     if (!fi) return;
     var url = fi.dataset.href;
@@ -714,7 +738,7 @@ export function initializeSite() {
         titlebar.appendChild(dot);
       });
       var titleText = document.createElement('span');
-      titleText.style.cssText = 'color:rgba(255,255,255,0.5);font-size:11px;margin-left:auto;margin-right:auto;font-family:Inter,sans-serif;';
+      titleText.style.cssText = 'color:rgba(255,255,255,0.5);font-size:11px;margin-left:auto;margin-right:auto;font-family:sans-serif;';
       titleText.textContent = 'esther@universe ~ zsh';
       titlebar.appendChild(titleText);
       termArea.appendChild(titlebar);

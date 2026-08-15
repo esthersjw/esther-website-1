@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fefcf6">
+  <title>翻开这一年 | 生日数字手帐</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css">
+  <style>
+    :root {
+      --_esther-ds: "esthersjw-v1";
+      --blue: #2b7fd8;
+      --yellow: #f4d758;
+      --red: #e84a5f;
+      --cream: #fefcf6;
+      --paper: #fffdf7;
+      --ink: #1a1a2e;
+      --muted: #6d6b78;
+      --desk-shadow: rgba(26, 26, 46, .22);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { min-height: 100%; }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      color: var(--ink);
+      font-family: "Noto Sans SC", "PingFang SC", sans-serif;
+      background: var(--blue);
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--yellow); color: var(--ink); }
+
+    .starfield {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .vinyl-player {
+      position: fixed;
+      left: clamp(-52px, -3vw, -34px);
+      top: 58vh;
+      width: clamp(140px, 15vw, 220px);
+      aspect-ratio: 3 / 4;
+      transform: translateY(-50%);
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      z-index: 2;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .vinyl-player:focus-visible { outline: 2px solid var(--yellow); outline-offset: 4px; }
+    .vinyl-player:active { transform: translateY(-50%) scale(.97); }
+    .vinyl-layer {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .vinyl-record {
+      transform-origin: 42.97% 45.41%;
+      animation: vinyl-spin 4s linear infinite;
+      animation-play-state: paused;
+    }
+    .vinyl-player.is-playing .vinyl-record { animation-play-state: running; }
+    .vinyl-arm { z-index: 1; }
+    @keyframes vinyl-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @media (max-width: 700px) {
+      .vinyl-player { width: 116px; }
+    }
+
+    .wp-star {
+      position: absolute;
+      color: var(--yellow);
+      font-size: var(--size, 14px);
+      opacity: var(--op, .7);
+      --push: translate(0, 0) scale(1);
+      animation: wp-twinkle var(--dur, 3s) ease-in-out infinite, wp-wobble var(--wdur, 4s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+      transform: var(--push);
+      transition: transform .3s ease-out;
+      pointer-events: none;
+    }
+
+    .wp-star.disturbed {
+      animation-play-state: paused;
+      opacity: 1 !important;
+      transform: var(--push);
+      transition: transform .1s ease-out;
+    }
+
+    @keyframes wp-twinkle {
+      0%, 100% { opacity: var(--op, .7); }
+      50% { opacity: calc(var(--op, .7) * .25); }
+    }
+
+    @keyframes wp-wobble {
+      0%, 100% { transform: var(--push) rotate(0deg) translateX(0); }
+      25% { transform: var(--push) rotate(10deg) translateX(2px); }
+      75% { transform: var(--push) rotate(-10deg) translateX(-2px); }
+    }
+
+    .page-shell {
+      min-height: 100svh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: clamp(16px, 3vw, 34px) clamp(18px, 5vw, 72px);
+      font-family: "LXGWWenKai", "PingFang SC", sans-serif;
+      font-size: clamp(.95rem, 1.5vw, 1.2rem);
+      letter-spacing: 0;
+      color: var(--cream);
+    }
+
+    .topline p { margin: 0; }
+
+    .topline-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      white-space: nowrap;
+    }
+
+    .topline-links a {
+      color: var(--yellow);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(244, 215, 88, .62);
+      transition: color .2s ease, border-color .2s ease;
+    }
+
+    .topline-links a:hover {
+      color: var(--cream);
+      border-color: var(--cream);
+    }
+
+    .topline-links .dot { color: var(--red); }
+
+    .book-stage {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 12px 20px clamp(36px, 7vh, 78px);
+      perspective: 1600px;
+    }
+
+    #book {
+      filter: drop-shadow(0 24px 20px rgba(26, 26, 46, .16));
+    }
+
+    .page {
+      height: 100%;
+      padding: clamp(28px, 5vw, 52px);
+      background-color: var(--paper);
+      background-image:
+        linear-gradient(rgba(26, 26, 46, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26, 26, 46, .018) 1px, transparent 1px);
+      background-size: 24px 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      box-shadow: inset 0 0 32px rgba(92, 72, 35, .035);
+    }
+
+    .cover {
+      position: relative;
+      color: var(--cream);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .cover .cover-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .cover::before { display: none; }
+
+    .cover::after { display: none; }
+
+    .cover > * { position: relative; z-index: 1; }
+
+    .cover-kicker {
+      font-family: "Caveat", cursive;
+      font-size: clamp(1.2rem, 3vw, 1.75rem);
+      margin: 0;
+      color: var(--yellow);
+    }
+
+    .cover-title {
+      margin: 0;
+      font-family: "Noto Serif SC", serif;
+      font-size: clamp(2.4rem, 7vw, 4.8rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .cover-title small {
+      display: block;
+      margin-top: 14px;
+      font-family: "Fraunces", serif;
+      font-size: .33em;
+      letter-spacing: .06em;
+      font-style: italic;
+    }
+
+    .cover-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      font-size: .78rem;
+      letter-spacing: .06em;
+    }
+
+    .cover-sticker {
+      width: 66px;
+      height: 66px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--red);
+      color: var(--cream);
+      font: 600 1.1rem "Fraunces", serif;
+      transform: rotate(11deg);
+    }
+
+    .photo-page {
+      padding: 0;
+      background: #f3cf65;
+    }
+
+    .photo-page::after { display: none; }
+
+    .photo-page img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .builder-opener { position: relative; }
+    .builder-opener .builder-img {
+      position: absolute;
+      inset: 0;
+      transition: opacity .4s ease;
+    }
+    .builder-opener .builder-img[hidden] {
+      display: block !important;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .builder-opener .builder-img:not([hidden]) {
+      opacity: 1;
+    }
+    .builder-tap-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.85);
+      border: 2px solid rgba(43,127,216,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 20;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform .2s ease, box-shadow .2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .builder-tap-btn:active {
+      transform: scale(0.9);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+
+    .explorer-page .explorer-background {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .explorer-floating-star {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 3;
+      width: 384px;
+      height: 512px;
+      pointer-events: none;
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+      transition: none;
+    }
+
+    .explorer-floating-star img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .explorer-floating-star.is-dragging { z-index: 4; }
+
+    .explorer-floating-star.sticker-peek {
+      clip-path: var(--peek-clip);
+    }
+
+    .explorer-star-handle {
+      position: absolute;
+      left: 65%;
+      top: 25%;
+      z-index: 1;
+      width: 35%;
+      height: 35%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: grab;
+      touch-action: none;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+    }
+
+    .explorer-star-handle:focus-visible {
+      outline: 2px solid var(--yellow);
+      outline-offset: 3px;
+      border-radius: 50%;
+    }
+
+    .owner-lamp-page .lamp-scene {
+      position: absolute;
+      inset: 0;
+      transition: opacity .35s ease;
+    }
+
+    .owner-lamp-page .lamp-off { opacity: 0; }
+    .owner-lamp-page.is-lights-off .lamp-on { opacity: 0; }
+    .owner-lamp-page.is-lights-off .lamp-off { opacity: 1; }
+
+    .lamp-toggle {
+      position: absolute;
+      left: 58.5%;
+      top: 78.2%;
+      z-index: 3;
+      width: 12%;
+      height: 14%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      touch-action: manipulation;
+      transform: translate(-50%, -50%);
+    }
+
+    .lamp-toggle:focus-visible {
+      outline: 2px solid var(--yellow);
+      outline-offset: 3px;
+      border-radius: 50%;
+    }
+
+    .title-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: left;
+      font-family: "LXGWWenKai", "PingFang SC", sans-serif;
+    }
+
+    .blue-tape {
+      width: 80px;
+      height: 21px;
+      position: absolute;
+      top: 26px;
+      right: 30px;
+      background: rgba(43, 127, 216, .72);
+      transform: rotate(5deg);
+    }
+
+    .letter-greeting {
+      font-size: clamp(1.8rem, 3.5vw, 2.1rem);
+      line-height: 1;
+      color: var(--blue);
+      transform: rotate(-2deg);
+      margin-bottom: 34px;
+    }
+
+    .letter-body {
+      font-size: clamp(.85rem, 1.4vw, .94rem);
+      line-height: 2.3;
+      color: var(--ink);
+    }
+
+    .letter-body .highlight {
+      background: linear-gradient(transparent 58%, rgba(244,215,88,.45) 58%);
+      padding: 0 3px;
+    }
+
+    .letter-closing {
+      margin-top: 38px;
+      font-size: clamp(.85rem, 1.4vw, .94rem);
+      line-height: 2.3;
+      color: var(--ink);
+    }
+
+    .paper-page { display: flex; flex-direction: column; }
+
+    .page-number {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font: 600 .72rem "Fraunces", serif;
+      color: var(--muted);
+      letter-spacing: .08em;
+    }
+
+    .paper-page h3 {
+      margin: auto 0;
+      font: 900 clamp(1.7rem, 4vw, 3rem)/1.22 "Noto Serif SC", serif;
+      color: var(--ink);
+    }
+
+    .paper-page h3 em {
+      font-family: "Fraunces", serif;
+      font-style: italic;
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    .placeholder-stack {
+      position: absolute;
+      left: clamp(28px, 5vw, 52px);
+      right: clamp(28px, 5vw, 52px);
+      bottom: clamp(31px, 5vw, 52px);
+      display: flex;
+      gap: 9px;
+      align-items: end;
+    }
+
+    .placeholder {
+      background: rgba(254, 252, 246, .96);
+      border: 1px solid rgba(26, 26, 46, .11);
+      box-shadow: 5px 5px 0 rgba(26, 26, 46, .07);
+    }
+
+    .placeholder.one { width: 38%; height: 78px; transform: rotate(-4deg); }
+    .placeholder.two { width: 29%; height: 96px; transform: rotate(4deg); background: #f4d758; }
+    .placeholder.three { width: 25%; height: 66px; transform: rotate(-1deg); background: #e84a5f; }
+
+    .marker-page { justify-content: space-between; }
+
+    .marker-page .marker-date {
+      display: inline-block;
+      align-self: flex-start;
+      background: var(--yellow);
+      padding: 7px 12px;
+      transform: rotate(-2deg);
+      font-size: .8rem;
+      font-weight: 700;
+    }
+
+    .marker-page h3 { margin: 0; }
+
+    .marker-page .hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.8;
+    }
+
+    .tape-mark {
+      position: absolute;
+      width: 88px;
+      height: 23px;
+      right: 33px;
+      bottom: 36px;
+      background: rgba(232, 74, 95, .78);
+      transform: rotate(-12deg);
+    }
+
+    .end-page {
+      background-color: #f8f0d8;
+      background-image: linear-gradient(45deg, rgba(43,127,216,.08) 25%, transparent 25% 75%, rgba(43,127,216,.08) 75%);
+      background-size: 18px 18px;
+      display: grid;
+      place-content: center;
+      text-align: center;
+    }
+
+    .end-page p { margin: 0; font: 600 clamp(1.6rem, 3vw, 2.4rem)/1.2 "Caveat", cursive; color: var(--blue); }
+    .end-page small { margin-top: 16px; color: var(--muted); }
+
+    .outro-photo-page {
+      padding: 0;
+      background: #1d5396;
+    }
+
+    .outro-photo-page::after { display: none; }
+
+    .outro-photo-page img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .outro-photo-page p {
+      position: absolute;
+      right: 8%;
+      bottom: 9%;
+      z-index: 1;
+      margin: 0;
+      color: rgba(255, 253, 247, .96);
+      font: 600 clamp(1.3rem, 3vw, 2rem)/1 "Caveat", cursive;
+      transform: rotate(-4deg);
+      text-shadow: 0 1px 7px rgba(26, 26, 46, .26);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 620px) {
+      .topline {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: 16px;
+      }
+      .topline-links { font-size: .88rem; }
+      .book-stage { padding: 0 10px clamp(30px, 8vh, 62px); }
+      .page { padding: 30px; }
+      .cover { border-width: 6px; }
+      .cover-footer { font-size: .67rem; }
+      .cover-sticker { width: 53px; height: 53px; font-size: .92rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="starfield" id="starfield" aria-hidden="true"></div>
+  <button class="vinyl-player" id="vinylPlayer" type="button" aria-label="播放音乐" aria-pressed="false">
+    <img class="vinyl-layer vinyl-record" src="黑胶唱片层-参考位置.png" alt="">
+    <img class="vinyl-layer vinyl-arm" src="唱臂层-参考位置.png" alt="">
+  </button>
+  <audio id="vinylAudio" preload="metadata" src="First%20Light.mp3"></audio>
+  <div class="explorer-floating-star" id="explorerFloatingStar" aria-hidden="true" hidden>
+    <img src="Explorer-星星女孩-透明-柔边.png" alt="女孩在星空中举着一颗星星">
+    <button class="explorer-star-handle" type="button" aria-label="拖动星星" title="拖动星星"></button>
+  </div>
+  <main class="page-shell">
+    <header class="topline">
+      <p>Happy birthday, Esther!</p>
+      <nav class="topline-links" aria-label="社交链接">
+        <a href="https://x.com/SjwEsther" target="_blank" rel="noreferrer">Twitter</a>
+        <span class="dot">·</span>
+        <a href="https://www.xiaohongshu.com/user/profile/55c6c7695894460904f87b47?m_source=pinpai" target="_blank" rel="noreferrer">小红书</a>
+      </nav>
+    </header>
+
+    <section class="book-stage" aria-label="可翻页的生日数字手帐原型">
+      <div id="book">
+        <article class="page cover" data-density="hard">
+          <img class="cover-bg" src="最后一页-星星女孩.png" alt="星星里的女孩">
+        </article>
+
+        <article class="page photo-page">
+          <img src="第一页-咖啡角.png" alt="蓝发女孩在温暖的咖啡角探出窗外">
+        </article>
+
+        <article class="page title-page">
+          <div class="letter-greeting">嗨，29。</div>
+          <div class="letter-body">
+            去年你还不知道自己会变成一个 builder。<br><br>
+            但其实从画第一张建筑图纸开始，<br>
+            从搭第一个系统开始，<span class="highlight">你就是了</span>。<br><br>
+            这一年你只是终于诚实地认出了自己。
+          </div>
+          <div class="letter-closing">
+            希望今天想做的事，明天还想做就好。<br>
+            这就够了。
+          </div>
+        </article>
+
+        <article class="page photo-page builder-opener" data-chapter="builder">
+          <img class="builder-img builder-img-0" src="Builder-开场页.png" alt="女孩在蓝色水面与鱼群之间漂浮">
+          <img class="builder-img builder-img-1" src="Builder-点击后.png" alt="鱼游走后的场景" hidden>
+          <img class="builder-img builder-img-2" src="Builder-点击后2.jpg" alt="鲨鱼抱住不二" hidden>
+          <div class="builder-tap-btn" id="builderTapBtn">🐟</div>
+        </article>
+
+        <article class="page paper-page" data-chapter="builder" aria-label="Builder 章节第 2 页"></article>
+        <article class="page paper-page" data-chapter="builder" aria-label="Builder 章节第 3 页"></article>
+        <article class="page paper-page" data-chapter="builder" aria-label="Builder 章节第 4 页"></article>
+
+        <article class="page photo-page explorer-page" data-chapter="explorer">
+          <img class="explorer-background" src="Explorer-背景.png" alt="深蓝星空、小星星与地球">
+        </article>
+        <article class="page paper-page" data-chapter="explorer" aria-label="Explorer 章节第 2 页"></article>
+        <article class="page paper-page" data-chapter="explorer" aria-label="Explorer 章节第 3 页"></article>
+        <article class="page paper-page" data-chapter="explorer" aria-label="Explorer 章节第 4 页"></article>
+
+        <article class="page photo-page owner-lamp-page" data-chapter="owner">
+          <img class="lamp-scene lamp-on" src="Owner-开场页.png" alt="女孩坐在夜色山峦前的聚光灯下">
+          <img class="lamp-scene lamp-off" src="Owner-关灯页.png" alt="夜色中，女孩坐在熄灭的吊灯下">
+          <button class="lamp-toggle" type="button" aria-label="关灯" aria-pressed="false" title="关灯"></button>
+        </article>
+        <article class="page paper-page" data-chapter="owner" aria-label="Owner 章节第 2 页"></article>
+        <article class="page paper-page" data-chapter="owner" aria-label="Owner 章节第 3 页"></article>
+        <article class="page paper-page" data-chapter="owner" aria-label="Owner 章节第 4 页"></article>
+
+        <article class="page outro-photo-page" data-density="hard">
+          <img src="封面图.png" alt="女孩爬梯子触碰月亮">
+        </article>
+      </div>
+    </section>
+
+
+  </main>
+
+  <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+  <script>
+    const bookElement = document.getElementById('book');
+    const pages = bookElement.querySelectorAll('.page');
+
+    const pageFlip = new St.PageFlip(bookElement, {
+      width: 384,
+      height: 512,
+      size: 'stretch',
+      minWidth: 280,
+      maxWidth: 384,
+      minHeight: 374,
+      maxHeight: 512,
+      maxShadowOpacity: 0.32,
+      showCover: true,
+      mobileScrollSupport: false,
+      usePortrait: true,
+      flippingTime: 720,
+      drawShadow: true
+    });
+
+    pageFlip.loadFromHTML(pages);
+
+    // The vinyl rotates only while its player is active. Audio is attached once a track is chosen.
+    const vinylPlayer = document.getElementById('vinylPlayer');
+    const vinylAudio = document.getElementById('vinylAudio');
+    function setVinylPlayback(isPlaying) {
+      vinylPlayer.classList.toggle('is-playing', isPlaying);
+      vinylPlayer.setAttribute('aria-pressed', String(isPlaying));
+      vinylPlayer.setAttribute('aria-label', isPlaying ? '暂停音乐' : '播放音乐');
+    }
+    vinylPlayer.addEventListener('click', () => {
+      const isPlaying = !vinylPlayer.classList.contains('is-playing');
+      setVinylPlayback(isPlaying);
+      if (vinylAudio.currentSrc) {
+        if (isPlaying) vinylAudio.play().catch(() => setVinylPlayback(false));
+        else vinylAudio.pause();
+      }
+    });
+    vinylAudio.addEventListener('ended', () => setVinylPlayback(false));
+
+    // Builder: tap button to cycle through 3 images (same pattern as Owner lamp toggle)
+    const builderOpener = document.querySelector('.builder-opener');
+    const builderImgs = builderOpener.querySelectorAll('.builder-img');
+    const builderTapBtn = document.getElementById('builderTapBtn');
+    let builderState = 0;
+
+    // Block all propagation so StPageFlip never sees events from this button
+    ['pointerdown','pointermove','pointerup','mousedown','mousemove','mouseup','touchstart','touchmove','touchend','click','dblclick'].forEach(evt => {
+      builderTapBtn.addEventListener(evt, (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      });
+    });
+    // Do the actual image switch on pointerup (fires before click)
+    let builderBtnDown = false;
+    builderTapBtn.addEventListener('pointerdown', () => { builderBtnDown = true; });
+    builderTapBtn.addEventListener('pointerup', () => {
+      if (!builderBtnDown) return;
+      builderBtnDown = false;
+      builderImgs[builderState].hidden = true;
+      builderState = (builderState + 1) % 3;
+      builderImgs[builderState].hidden = false;
+    });
+
+    // The orange ring is a page-level interaction, so it consumes its own pointer events.
+    const ownerLampPage = document.querySelector('.owner-lamp-page');
+    const lampToggle = ownerLampPage.querySelector('.lamp-toggle');
+
+    lampToggle.addEventListener('pointerdown', (event) => event.stopPropagation());
+    lampToggle.addEventListener('pointermove', (event) => event.stopPropagation());
+    lampToggle.addEventListener('pointerup', (event) => event.stopPropagation());
+    lampToggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const lightsOff = ownerLampPage.classList.toggle('is-lights-off');
+      lampToggle.setAttribute('aria-pressed', String(lightsOff));
+      lampToggle.setAttribute('aria-label', lightsOff ? '开灯' : '关灯');
+      lampToggle.title = lightsOff ? '开灯' : '关灯';
+    });
+
+    const explorerPage = document.querySelector('.explorer-page');
+    const explorerFloatingStar = document.getElementById('explorerFloatingStar');
+    const explorerStarHandle = explorerFloatingStar.querySelector('.explorer-star-handle');
+    const explorerPageIndex = 7;
+    const explorerState = {
+      x: 0, y: 0, startX: 0, startY: 0,
+      width: 0, height: 0,
+      placed: false, dragging: false,
+      mode: 'page' // 'page' | 'edge' | 'free'
+    };
+
+    const setExplorerPosition = (x, y) => {
+      explorerState.x = x;
+      explorerState.y = y;
+      explorerFloatingStar.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    };
+
+    const getExplorerPageBounds = () => {
+      const bounds = explorerPage.getBoundingClientRect();
+      return bounds.width && bounds.height ? bounds : null;
+    };
+
+    const classifySticker = () => {
+      const pageBounds = getExplorerPageBounds() || explorerState.lastPageBounds;
+      if (!pageBounds) return;
+
+      // Use the star's visual center (65% left, 25% top within the sticker canvas)
+      const starCenterAbsX = explorerState.x + explorerState.width * .65;
+      const starCenterAbsY = explorerState.y + explorerState.height * .25;
+      const centerInside =
+        starCenterAbsX >= pageBounds.left && starCenterAbsX <= pageBounds.right &&
+        starCenterAbsY >= pageBounds.top && starCenterAbsY <= pageBounds.bottom;
+
+      // Check if any visible part of the star overlaps the page
+      // Approximate star bounding box: center ± 17% of canvas width, center ± 17% of canvas height
+      const starRadius = explorerState.width * .17;
+      const starLeft = starCenterAbsX - starRadius;
+      const starRight = starCenterAbsX + starRadius;
+      const starTop = starCenterAbsY - starRadius;
+      const starBottom = starCenterAbsY + starRadius;
+      const starOverlapsPage =
+        starRight > pageBounds.left && starLeft < pageBounds.right &&
+        starBottom > pageBounds.top && starTop < pageBounds.bottom;
+
+      if (centerInside) {
+        explorerState.mode = 'page';
+      } else if (starOverlapsPage) {
+        explorerState.mode = 'edge';
+      } else {
+        explorerState.mode = 'free';
+      }
+    };
+
+    const syncExplorerFloatingStar = () => {
+      const currentPage = pageFlip.getCurrentPageIndex();
+      const isExplorerOpen = currentPage === explorerPageIndex;
+      const isBefore = currentPage < explorerPageIndex;
+
+      explorerFloatingStar.classList.remove('sticker-peek');
+      explorerFloatingStar.style.removeProperty('--peek-clip');
+
+      if (!explorerState.placed) {
+        if (!isExplorerOpen) {
+          explorerFloatingStar.hidden = true;
+          return;
+        }
+        const pageBounds = getExplorerPageBounds();
+        if (!pageBounds) { explorerFloatingStar.hidden = true; return; }
+        explorerState.width = pageBounds.width;
+        explorerState.height = pageBounds.height;
+        explorerState.lastPageBounds = pageBounds;
+        explorerFloatingStar.style.width = `${pageBounds.width}px`;
+        explorerFloatingStar.style.height = `${pageBounds.height}px`;
+        setExplorerPosition(pageBounds.left, pageBounds.top);
+        explorerState.placed = true;
+        explorerFloatingStar.hidden = false;
+        explorerFloatingStar.setAttribute('aria-hidden', 'false');
+        return;
+      }
+
+      if (isExplorerOpen) {
+        explorerFloatingStar.hidden = false;
+        explorerFloatingStar.setAttribute('aria-hidden', 'false');
+        return;
+      }
+
+      if (explorerState.mode === 'free') {
+        explorerFloatingStar.hidden = false;
+        explorerFloatingStar.setAttribute('aria-hidden', 'false');
+        return;
+      }
+
+      if (explorerState.mode === 'page') {
+        explorerFloatingStar.hidden = true;
+        explorerFloatingStar.setAttribute('aria-hidden', 'true');
+        return;
+      }
+
+      // mode === 'edge': show only the part that sticks out
+      const pageBounds = getExplorerPageBounds() || explorerState.lastPageBounds;
+      if (!pageBounds) { explorerFloatingStar.hidden = true; return; }
+
+      explorerFloatingStar.hidden = false;
+      explorerFloatingStar.setAttribute('aria-hidden', 'false');
+      explorerFloatingStar.classList.add('sticker-peek');
+
+      const w = explorerState.width;
+      const h = explorerState.height;
+      const relPageLeft = (pageBounds.left - explorerState.x) / w * 100;
+      const relPageRight = (pageBounds.right - explorerState.x) / w * 100;
+      const relPageTop = (pageBounds.top - explorerState.y) / h * 100;
+      const relPageBottom = (pageBounds.bottom - explorerState.y) / h * 100;
+
+      // Build a polygon that includes only the region OUTSIDE the page bounds
+      const clips = [];
+      if (explorerState.x < pageBounds.left) clips.push(`polygon(0% 0%, ${relPageLeft}% 0%, ${relPageLeft}% 100%, 0% 100%)`);
+      if (explorerState.x + w > pageBounds.right) clips.push(`polygon(${relPageRight}% 0%, 100% 0%, 100% 100%, ${relPageRight}% 100%)`);
+      if (explorerState.y < pageBounds.top) clips.push(`polygon(0% 0%, 100% 0%, 100% ${relPageTop}%, 0% ${relPageTop}%)`);
+      if (explorerState.y + h > pageBounds.bottom) clips.push(`polygon(0% ${relPageBottom}%, 100% ${relPageBottom}%, 100% 100%, 0% 100%)`);
+
+      if (clips.length === 1) {
+        explorerFloatingStar.style.setProperty('--peek-clip', clips[0]);
+      } else if (clips.length > 1) {
+        // Rough union: just show the first overflow direction
+        explorerFloatingStar.style.setProperty('--peek-clip', clips[0]);
+      } else {
+        explorerFloatingStar.hidden = true;
+      }
+    };
+
+    const updateExplorerPosition = (x, y) => {
+      const margin = 24;
+      const clampedX = Math.min(window.innerWidth - margin, Math.max(margin - explorerState.width, x));
+      const clampedY = Math.min(window.innerHeight - margin, Math.max(margin - explorerState.height, y));
+      setExplorerPosition(clampedX, clampedY);
+    };
+
+    explorerStarHandle.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      explorerState.dragging = true;
+      explorerState.startX = event.clientX - explorerState.x;
+      explorerState.startY = event.clientY - explorerState.y;
+      explorerFloatingStar.classList.add('is-dragging');
+      explorerFloatingStar.classList.remove('sticker-peek');
+      explorerStarHandle.setPointerCapture(event.pointerId);
+    });
+
+    explorerStarHandle.addEventListener('pointermove', (event) => {
+      if (!explorerState.dragging) return;
+      event.preventDefault();
+      event.stopPropagation();
+      updateExplorerPosition(event.clientX - explorerState.startX, event.clientY - explorerState.startY);
+    });
+
+    const stopExplorerDrag = (event) => {
+      if (!explorerState.dragging) return;
+      event.stopPropagation();
+      explorerState.dragging = false;
+      explorerFloatingStar.classList.remove('is-dragging');
+      if (explorerStarHandle.hasPointerCapture(event.pointerId)) {
+        explorerStarHandle.releasePointerCapture(event.pointerId);
+      }
+      classifySticker();
+      syncExplorerFloatingStar();
+    };
+
+    explorerStarHandle.addEventListener('pointerup', stopExplorerDrag);
+    explorerStarHandle.addEventListener('pointercancel', stopExplorerDrag);
+    explorerStarHandle.addEventListener('click', (event) => event.stopPropagation());
+
+    pageFlip.on('flip', () => window.setTimeout(syncExplorerFloatingStar, 0));
+    window.addEventListener('resize', syncExplorerFloatingStar);
+    syncExplorerFloatingStar();
+
+    // StPageFlip handles mouse and touch drags from the page corners by default.
+
+    // Original hiesther.me desktop wallpaper behavior: each star twinkles,
+    // gently wobbles, and is pushed aside when the pointer gets close.
+    const starfield = document.getElementById('starfield');
+    const seed = (value) => {
+      const x = Math.sin(value * 12.9898) * 43758.5453;
+      return x - Math.floor(x);
+    };
+
+    for (let index = 1; index <= 88; index += 1) {
+      const star = document.createElement('span');
+      star.className = 'wp-star';
+      star.textContent = '✦';
+      star.style.top = `${2 + seed(index) * 94}%`;
+      star.style.left = `${2 + seed(index + 77) * 94}%`;
+      star.style.setProperty('--size', `${6 + Math.round(seed(index + 121) * 12)}px`);
+      star.style.setProperty('--op', `${.34 + seed(index + 207) * .48}`);
+      star.style.setProperty('--dur', `${2.3 + seed(index + 315) * 1.7}s`);
+      star.style.setProperty('--wdur', `${3.1 + seed(index + 429) * 2.1}s`);
+      star.style.setProperty('--delay', `${seed(index + 537) * -3}s`);
+      starfield.appendChild(star);
+    }
+
+    const wallpaperStars = starfield.querySelectorAll('.wp-star');
+    let pointerX = -9999;
+    let pointerY = -9999;
+    const disturbanceRadius = 130;
+
+    document.addEventListener('pointermove', (event) => {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+    }, { passive: true });
+
+    const disturbStars = () => {
+      wallpaperStars.forEach((star) => {
+        const rect = star.getBoundingClientRect();
+        const deltaX = rect.left + rect.width / 2 - pointerX;
+        const deltaY = rect.top + rect.height / 2 - pointerY;
+        const distance = Math.hypot(deltaX, deltaY);
+
+        if (distance < disturbanceRadius) {
+          const force = (1 - distance / disturbanceRadius) * 20;
+          const angle = Math.atan2(deltaY, deltaX);
+          const pushX = Math.cos(angle) * force;
+          const pushY = Math.sin(angle) * force;
+          const scale = 1 + (1 - distance / disturbanceRadius) * .4;
+          star.style.setProperty('--push', `translate(${pushX}px, ${pushY}px) scale(${scale})`);
+          star.classList.add('disturbed');
+        } else {
+          star.style.setProperty('--push', 'translate(0, 0) scale(1)');
+          star.classList.remove('disturbed');
+        }
+      });
+      requestAnimationFrame(disturbStars);
+    };
+
+    requestAnimationFrame(disturbStars);
+  </script>
+</body>
+</html>

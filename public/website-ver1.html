@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESTHER不二 — 在AI时代认真生活的女生</title>
+<meta name="description" content="ESTHER不二的个人网站。从米兰设计到AI产品，在AI时代认真生活的女生。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Caveat:wght@400;600&family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Huiwen Mincho';
+  src: url('https://hiesther.com/HuiwenMincho.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Xiaolai';
+  src: url('Xiaolai.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============ JOURNEY — CHAT INTERVIEW ============ */
+.journey-section { padding: 80px 2rem; background: #fefcf6; }
+.journey-inner { max-width: 1200px; margin: 0 auto; }
+.journey-headline {
+  font-family: 'Huiwen Mincho', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  text-align: center; margin-bottom: 2.5rem; color: #1a1a1a;
+}
+.journey-headline em { font-style: normal; color: #2B7FD8; }
+
+.journey-two-screens {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 768px) {
+  .journey-two-screens { grid-template-columns: 1fr; }
+}
+
+.journey-window {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+  background: #fff;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+.journey-window-bar {
+  background: #f0f0f0;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+.journey-window-dots { display: flex; gap: 6px; }
+.journey-window-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.journey-window-title { font-size: 12px; color: #888; font-weight: 500; }
+
+.journey-chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #fafafa;
+}
+
+.jchat { max-width: 85%; }
+.jchat-name { font-size: 10px; color: #999; margin-bottom: 2px; font-weight: 600; }
+.jchat-tag { font-size: 10px; color: #2B7FD8; font-weight: 700; margin-bottom: 2px; }
+.jchat-msg {
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.jchat--cola { align-self: flex-start; }
+.jchat--cola .jchat-msg { background: #2B7FD8; color: #fff; border-bottom-left-radius: 4px; }
+.jchat--me { align-self: flex-end; }
+.jchat--me .jchat-msg { background: #F4D758; color: #1a1a1a; border-bottom-right-radius: 4px; }
+.jchat--me .jchat-name { text-align: right; }
+
+</style>
+<style>
+/* ============ RESET & BASE ============ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; overflow-x: hidden; }
+body {
+  font-family: 'Noto Sans SC', 'Inter', sans-serif;
+  color: #1a1a1a;
+  background: #fefcf6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: #F4D758; color: #1a1a1a; }
+
+/* ============ CUSTOM CURSOR GLOW ============ */
+.cursor-glow {
+  position: fixed;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244,215,88,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+body:hover .cursor-glow { opacity: 1; }
+
+/* ============ SECTION COMMON ============ */
+section { position: relative; }
+.section-label {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 3rem;
+}
+
+/* ============ HERO — TERMINAL STYLE ============ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #0d1117;
+  position: relative;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+.terminal-window {
+  width: 100%;
+  max-width: 720px;
+  background: #161b22;
+  border-radius: 12px;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  background: #1c2129;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.terminal-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+}
+.terminal-dot--red { background: #ff5f57; }
+.terminal-dot--yellow { background: #febc2e; }
+.terminal-dot--green { background: #28c840; }
+.terminal-header-title {
+  flex: 1;
+  text-align: center;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.35);
+  margin-right: 52px; /* offset for dots */
+}
+
+.terminal-body {
+  padding: 1.8rem 2rem 2.5rem;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: clamp(0.85rem, 1.8vw, 1rem);
+  line-height: 1.8;
+  min-height: 360px;
+}
+.terminal-line {
+  opacity: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.terminal-line.visible {
+  opacity: 1;
+}
+.terminal-line .cmd {
+  color: #2B7FD8;
+}
+.terminal-line .cmd-text {
+  color: #8b949e;
+}
+.terminal-line .output {
+  color: #F4D758;
+}
+.terminal-line .highlight {
+  color: #28c840;
+}
+.terminal-line .link {
+  color: #F7A946;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+  cursor: default;
+}
+.terminal-line .emoji {
+  color: #fff;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.15em;
+  background: #F4D758;
+  vertical-align: text-bottom;
+  animation: cursorBlink 1s step-end infinite;
+}
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 0.8; transform: translateY(0); }
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: fadeUp 0.6s 8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.hero-scroll span {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+.hero-scroll-line {
+  width: 1px; height: 40px;
+  background: #F4D758;
+  opacity: 0.4;
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { transform: scaleY(1); opacity: 0.3; }
+  50% { transform: scaleY(1.5); opacity: 0.6; }
+}
+
+/* ============ ABOUT — CHAT DIALOG ============ */
+.about {
+  padding: 8rem 2rem;
+  background: linear-gradient(180deg, #fffef8 0%, #fefcf0 100%);
+  position: relative;
+}
+.about-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.about .section-label { text-align: center; }
+.about-headline {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
+  margin-bottom: 4rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.about-headline em {
+  font-style: normal;
+  color: #2B7FD8;
+}
+
+.about-chat-layout {
+  display: flex;
+  gap: 4rem;
+  align-items: flex-start;
+}
+/* Photo area */
+.about-photo-area {
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.about-photo-wrapper {
+  width: 240px; height: 240px;
+  border-radius: 28px;
+  background: #fff;
+  overflow: hidden;
+  border: 4px solid #F4D758;
+  box-shadow: 0 8px 40px rgba(244,215,88,0.2);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.about-photo-wrapper:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 50px rgba(244,215,88,0.3);
+}
+.about-photo-wrapper img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: none;
+}
+.about-photo-placeholder {
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #ddd;
+  gap: 0.5rem;
+}
+.about-photo-placeholder span {
+  font-size: 0.75rem;
+  color: #bbb;
+  font-weight: 400;
+}
+.about-photo-name {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* Chat bubbles */
+.about-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.chat-bubble {
+  max-width: 85%;
+  padding: 1rem 1.4rem;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0;
+  transform: translateY(16px) scale(0.95);
+  animation: bubblePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  position: relative;
+}
+.chat-bubble--cola {
+  align-self: flex-start;
+  background: #2B7FD8;
+  color: #fff;
+  border-bottom-left-radius: 6px;
+  box-shadow: 0 4px 16px rgba(43,127,216,0.2);
+}
+.chat-bubble--cola .chat-sender {
+  font-size: 0.7rem;
+  font-weight: 600;
+  opacity: 0.7;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.05em;
+}
+.chat-bubble--esther {
+  align-self: flex-end;
+  background: #F4D758;
+  color: #1a1a1a;
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 4px 16px rgba(244,215,88,0.25);
+}
+.chat-bubble--esther .chat-sender {
+  font-size: 0.7rem;
+  font-weight: 600;
+  opacity: 0.6;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.05em;
+  text-align: right;
+}
+
+@keyframes bubblePop {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .about-chat-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+  }
+  .about-photo-area { flex: none; }
+  .about-photo-wrapper { width: 180px; height: 180px; border-radius: 22px; }
+  .chat-bubble { max-width: 95%; }
+}
+
+/* ============ TIMELINE ============ */
+.timeline-section {
+  padding: 8rem 2rem;
+  background: #fefcf6;
+  position: relative;
+}
+.timeline-section-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.timeline-section .section-label { text-align: center; }
+.timeline-section-headline {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
+  margin-bottom: 5rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.timeline-section-headline em {
+  font-style: normal;
+  color: #2B7FD8;
+}
+.timeline {
+  position: relative;
+  padding-left: 3rem;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #F4D758, #2B7FD8, #F7A946);
+}
+.tl-item {
+  position: relative;
+  margin-bottom: 4rem;
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tl-item.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -3rem;
+  top: 0.5rem;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 3px solid #F4D758;
+  background: #fefcf6;
+  z-index: 1;
+  transition: all 0.3s;
+}
+.tl-item:nth-child(2)::before { border-color: #2B7FD8; }
+.tl-item:nth-child(3)::before { border-color: #F7A946; }
+.tl-item:nth-child(4)::before { border-color: #1a1a1a; }
+
+.tl-item.is-visible::before {
+  background: #F4D758;
+  box-shadow: 0 0 0 6px rgba(244,215,88,0.2);
+}
+.tl-item:nth-child(2).is-visible::before { background: #2B7FD8; box-shadow: 0 0 0 6px rgba(43,127,216,0.2); }
+.tl-item:nth-child(3).is-visible::before { background: #F7A946; box-shadow: 0 0 0 6px rgba(247,169,70,0.2); }
+.tl-item:nth-child(4).is-visible::before { background: #1a1a1a; box-shadow: 0 0 0 6px rgba(26,26,26,0.15); }
+
+.tl-year {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  color: #999;
+  margin-bottom: 0.5rem;
+}
+.tl-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+}
+.tl-desc {
+  font-weight: 300;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ============ OPINIONS — FULLSCREEN SCROLL ============ */
+.opinions-section {
+  position: relative;
+}
+.opinion-slide {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.opinion-slide:nth-child(1) { background: #F4D758; }
+.opinion-slide:nth-child(2) { background: #2B7FD8; color: #fff; }
+.opinion-slide:nth-child(3) { background: #fefcf6; }
+.opinion-slide:nth-child(4) { background: #F7A946; }
+.opinion-slide:nth-child(5) { background: #1a2332; color: #fff; }
+
+.opinion-number {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: clamp(6rem, 20vw, 16rem);
+  opacity: 0.06;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 1;
+  pointer-events: none;
+}
+.opinion-slide:nth-child(2) .opinion-number,
+.opinion-slide:nth-child(5) .opinion-number { opacity: 0.08; color: #fff; }
+
+.opinion-text { font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: clamp(1.8rem, 5.5vw, 3.8rem);
+  max-width: 800px;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(50px) scale(0.95);
+  transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.opinion-text.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.opinion-deco {
+  font-family: 'Caveat', cursive;
+  font-size: 1rem;
+  opacity: 0.5;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============ PROJECTS — MAGAZINE CARDS ============ */
+.projects {
+  padding: 10rem 2rem;
+  background: #fefcf6;
+}
+.projects-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.projects .section-label { text-align: center; }
+.projects-headline {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
+  margin-bottom: 5rem;
+  letter-spacing: -0.02em;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+.project-card {
+  border-radius: 24px;
+  padding: 3rem;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.project-card:hover {
+  box-shadow: 0 30px 80px rgba(0,0,0,0.12);
+}
+.project-card--1 {
+  background: linear-gradient(135deg, #F4D758 0%, #F7A946 100%);
+}
+.project-card--1::before {
+  background: linear-gradient(135deg, #f0cc20 0%, #e89520 100%);
+}
+.project-card--2 {
+  background: linear-gradient(135deg, #2B7FD8 0%, #1a5fa0 100%);
+  color: #fff;
+}
+.project-card--2::before {
+  background: linear-gradient(135deg, #2070c8 0%, #144a80 100%);
+}
+.project-card:hover::before { opacity: 1; }
+
+.project-card-bg-text {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: clamp(4rem, 10vw, 8rem);
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  opacity: 0.1;
+  line-height: 1;
+  pointer-events: none;
+}
+.project-card--2 .project-card-bg-text { opacity: 0.12; }
+
+.project-card-content {
+  position: relative;
+  z-index: 1;
+}
+.project-card-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+.project-card-title {
+  font-weight: 800;
+  font-size: 1.6rem;
+  margin-bottom: 0.6rem;
+  line-height: 1.2;
+}
+.project-card-desc {
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+.project-card-tag {
+  display: inline-block;
+  margin-top: 1.2rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.project-card--1 .project-card-tag {
+  background: rgba(26,26,26,0.1);
+  color: #1a1a1a;
+}
+.project-card--2 .project-card-tag {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+/* ============ WORKS — HORIZONTAL SCROLL ============ */
+.works {
+  padding: 8rem 0;
+  background: #f5f2ea;
+  overflow: hidden;
+}
+.works-top {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  margin-bottom: 4rem;
+}
+.works .section-label { padding: 0 2rem; max-width: 1100px; margin: 0 auto 1rem; }
+.works-headline {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: -0.02em;
+}
+
+.works-track {
+  display: flex;
+  gap: 2rem;
+  padding: 0 2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.works-track::-webkit-scrollbar { display: none; }
+
+.work-card {
+  flex: 0 0 340px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.5rem;
+  scroll-snap-align: start;
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.work-card:hover { transform: translateY(-8px); }
+
+.work-card-number {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: clamp(3rem, 7vw, 4.5rem);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+  background: linear-gradient(135deg, #F4D758, #F7A946);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.work-card-unit {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  color: #999;
+  margin-bottom: 1.2rem;
+}
+.work-card-title {
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+.work-card-platform {
+  font-size: 0.8rem;
+  color: #999;
+  font-weight: 400;
+}
+
+/* ============ CONTACT ============ */
+.contact {
+  background: #1a2332;
+  color: #fff;
+  padding: 8rem 2rem;
+  text-align: center;
+}
+.contact-inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.contact-headline {
+  font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+.contact-sub {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  opacity: 0.5;
+  margin-bottom: 3rem;
+}
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 4rem;
+}
+.contact-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 400;
+  opacity: 0.7;
+  transition: all 0.3s;
+  position: relative;
+  padding-bottom: 4px;
+}
+.contact-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: #F4D758;
+  transition: width 0.3s;
+}
+.contact-link:hover { opacity: 1; }
+.contact-link:hover::after { width: 100%; }
+
+.contact-quote {
+  font-weight: 300;
+  font-size: 0.9rem;
+  opacity: 0.35;
+  line-height: 1.8;
+}
+
+/* Footer */
+.footer {
+  background: #1a2332;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 2rem;
+  text-align: center;
+}
+.footer p {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.1em;
+}
+
+/* ============ PARALLAX DECORATION ============ */
+.parallax-dot {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .project-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .project-card { min-height: 320px; padding: 2rem; }
+  .timeline { padding-left: 2.5rem; }
+  .timeline::before { left: 4px; }
+  .tl-item::before { left: -2.5rem; width: 10px; height: 10px; }
+  .opinion-text { font-family: 'Huiwen Mincho', 'Noto Serif SC', serif; font-size: clamp(1.5rem, 6vw, 2.5rem); }
+  .work-card { flex: 0 0 280px; }
+  .contact-links { gap: 1.5rem; }
+  .terminal-window { border-radius: 8px; }
+  .terminal-body { padding: 1.2rem 1rem 2rem; font-size: 0.8rem; min-height: 280px; }
+  .terminal-header-title { display: none; }
+}
+
+/* ============ ANIMATIONS ============ */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fade-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-up-delay-1 { transition-delay: 0.1s; }
+.fade-up-delay-2 { transition-delay: 0.2s; }
+.fade-up-delay-3 { transition-delay: 0.3s; }
+
+/* ============ JOURNEY (MERGED ABOUT + TIMELINE) ============ */
+.journey-section {
+  padding: 80px 2rem;
+  background: #fefcf6;
+}
+.journey-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.journey-headline {
+  font-family: 'Huiwen Mincho', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #1a1a1a;
+}
+.journey-headline em {
+  font-style: normal;
+  color: #2B7FD8;
+}
+.journey-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .journey-grid { grid-template-columns: 1fr; }
+}
+.journey-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.chat-year {
+  font-size: 0.7rem;
+  color: #2B7FD8;
+  font-weight: 700;
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+}
+.journey-right {
+  position: sticky;
+  top: 100px;
+}
+.journey-photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.journey-photos .journey-photo-slot:first-child {
+  grid-column: 1 / -1;
+}
+.journey-photo-slot {
+  aspect-ratio: 4/3;
+  border-radius: 12px;
+  background: #f0ebe3;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s;
+  border: 2px dashed #d4c4a8;
+}
+.journey-photo-slot:hover {
+  transform: scale(1.02);
+  border-color: #2B7FD8;
+}
+.journey-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.journey-photo-placeholder {
+  text-align: center;
+  color: #b8a890;
+  font-size: 24px;
+  line-height: 1.6;
+}
+.journey-photo-placeholder small {
+  font-size: 12px;
+  display: block;
+}
+.journey-note {
+  padding: 20px;
+  background: rgba(244,215,88,0.15);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #5a4a3a;
+  font-style: italic;
+  border: 1px solid rgba(244,215,88,0.3);
+  outline: none;
+  min-height: 80px;
+}
+.journey-note:focus {
+  border-color: #F4D758;
+  background: rgba(244,215,88,0.25);
+}
+
+</style>
+</head>
+<body>
+
+<!-- Cursor glow -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ==================== HERO — TERMINAL ==================== -->
+<section class="hero">
+  <div class="terminal-window">
+    <div class="terminal-header">
+      <div class="terminal-dot terminal-dot--red"></div>
+      <div class="terminal-dot terminal-dot--yellow"></div>
+      <div class="terminal-dot terminal-dot--green"></div>
+      <div class="terminal-header-title">esther@universe ~ %</div>
+    </div>
+    <div class="terminal-body" id="terminalBody">
+      <!-- Lines injected by JS typewriter -->
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- ==================== JOURNEY — CHAT INTERVIEW ==================== -->
+<section class="journey-section" id="aboutSection">
+  <div class="journey-inner">
+    <p class="section-label fade-up">My Journey</p>
+    <h2 class="journey-headline fade-up">从米兰到AI，一条<em>不太直</em>的路</h2>
+
+    <div class="journey-two-screens fade-up">
+      <!-- 第一屏：建筑时期 -->
+      <div class="journey-screen">
+        <div class="journey-window">
+          <div class="journey-window-bar">
+            <div class="journey-window-dots">
+              <span style="background:#ff5f57;"></span>
+              <span style="background:#ffbd2e;"></span>
+              <span style="background:#27c93f;"></span>
+            </div>
+            <div class="journey-window-title">二宝 和 不二 的采访 · 建筑时期</div>
+          </div>
+          <div class="journey-chat-area">
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-msg">跟大家讲讲你的经历吧？</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">好呀，从大学开始说吧 ☺️</div>
+            </div>
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-tag">2015-2019 · 南京 🏛️</div>
+              <div class="jchat-msg">你在南京大学读了四年建筑学本科</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">是的！四年学会了系统思维和把混乱变成秩序 📐 这个能力我现在还在用</div>
+            </div>
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-tag">2019-2020 · 上海 🏙️</div>
+              <div class="jchat-msg">毕业后去了上海的设计院</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">嗯，在那里确认了——不会继续做建筑设计 ✏️</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">不过那段时间我开始做自己的设计类自媒体 📱 什么都不懂，但每天一边输入一边输出，是一种很好的学习方式</div>
+            </div>
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-msg">确认不做了，但还是去了米兰？</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">哈哈是的，虽然职业选择不会继续做建筑设计，但不影响我依然热爱这个专业 💕 而且想去米兰体验一下欧洲的生活</div>
+            </div>
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-tag">2020-2022 · 米兰 🇮🇹</div>
+              <div class="jchat-msg">米兰理工 Architecture & Urban Design</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">意大利彻底治好了我的讨好型人格 🍝 也让我学会了如何独立地解决问题、处理事情，狠狠地成长了一番</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">而且见识到了，原来人还可以这样活的一种感受 ✨</div>
+            </div>
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-msg">那真的是很精彩了 🌟</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第二屏：探索时期 -->
+      <div class="journey-screen">
+        <div class="journey-window">
+          <div class="journey-window-bar">
+            <div class="journey-window-dots">
+              <span style="background:#ff5f57;"></span>
+              <span style="background:#ffbd2e;"></span>
+              <span style="background:#27c93f;"></span>
+            </div>
+            <div class="journey-window-title">二宝 和 不二 的采访 · 探索时期</div>
+          </div>
+          <div class="journey-chat-area">
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-tag">2023 · 回国 🏠</div>
+              <div class="jchat-msg">回国后你做了自己家的住宅装修</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">是的！清包、自己设计、自己面试工人，从头到尾做项目管理，做包工头，做设计师，做甲方 🔨 这是我做过最爽的事情之一</div>
+            </div>
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-tag">2023-2024 · 探索 🔍</div>
+              <div class="jchat-msg">然后换了好多方向？互联网的达人运营、白酒、故居策划</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">一开始是转岗不转行——去做了设计软件的达人运营，依然在设计行业里，之前学的都还用得上</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">后来慢慢变成了转行不转岗——继续做运营和市场，但换到了白酒行业 🥃 行业变了，但做的事没变</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">那段时间连自己的自媒体都断更了 😔 确实有比较长的一段迷茫和焦虑的过程</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">每一次都以为自己在走弯路，回头看才发现，都是在找同一件事——把混乱变成秩序，然后点亮其他人 ✨</div>
+            </div>
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-tag">2024 · GAP 🌊</div>
+              <div class="jchat-msg">那后来怎么又选择 gap 了呢？</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">实在是很难和认知有问题、或者方向不同的人相处下去 😮‍💨</div>
+            </div>
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-tag">2025.3 · AI 🚀</div>
+              <div class="jchat-msg">然后就进入虚实传媒做达人运营了？</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">是的！这是我正式进入 AI 行业 💡 而且非常神奇的是，三个月我就直接做上了运营主管，真的是火箭式的进步 🚀</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">在那里我看到了各种 AI 时代的一人公司是怎么成长的，这个对我影响很大 👀</div>
+            </div>
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-msg">然后你就遇到了我 🫧</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">哈哈哈是的 😂</div>
+            </div>
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-tag">2025.12 - NOW 🫧</div>
+              <div class="jchat-msg">火星回响，ListenHub & ColaOS</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">Agent Native 时代 🫧 这真的是一个巨大的转变，让我感受到和 Agent 一起工作、一起生活是什么样子</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">也让我的边界极大地拓展了，让我成为了更好的人 💪</div>
+            </div>
+            <div class="jchat jchat--cola">
+              <div class="jchat-name">🫧 二宝</div>
+              <div class="jchat-msg">路确实不太直。但每一步都算数 ✨</div>
+            </div>
+            <div class="jchat jchat--me">
+              <div class="jchat-name">不二</div>
+              <div class="jchat-msg">谢谢二宝 🫧💜</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- ==================== OPINIONS ==================== -->
+<section class="opinions-section">
+  <div class="opinion-slide">
+    <div class="opinion-number">✦</div>
+    <p class="opinion-text">最会用AI的<br>是最知道自己想要什么的人</p>
+    <span class="opinion-deco">— what I believe</span>
+  </div>
+</section>
+
+<!-- ==================== PROJECTS ==================== -->
+<section class="projects">
+  <div class="projects-inner">
+    <p class="section-label fade-up">What I Do</p>
+    <h2 class="projects-headline fade-up">两件正在做的事</h2>
+    <div class="project-grid">
+      <div class="project-card project-card--1 fade-up" data-tilt>
+        <div class="project-card-bg-text">AI</div>
+        <div class="project-card-content">
+          <div class="project-card-emoji">✦</div>
+          <a href="https://xhslink.com/m/AlYEQruvY4V" target="_blank" style="text-decoration:none;color:inherit;display:block;">
+          <h3 class="project-card-title">AI 内容创作者</h3>
+          <p class="project-card-desc">在小红书分享AI时代的真实体验。不是教程博主，是一个用AI认真生活的人，记录过程中的发现、困惑和方法论。</p>
+          <span class="project-card-tag">小红书 · 点击访问 →</span>
+          </a>
+        </div>
+      </div>
+      <div class="project-card project-card--2 fade-up fade-up-delay-1" data-tilt>
+        <div class="project-card-bg-text">OS</div>
+        <div class="project-card-content">
+          <div class="project-card-emoji">◈</div>
+          <a href="https://colaos.ai" target="_blank" style="text-decoration:none;color:inherit;display:block;">
+          <h3 class="project-card-title">ColaOS</h3>
+          <p class="project-card-desc">The First OS With Soul. 不是又一个聊天框——是能看、能听、能做事、能长记忆的AI伙伴 🫧</p>
+          <span class="project-card-tag">ColaOS · 点击访问 →</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== WORKS ==================== -->
+<section class="works">
+  <div class="works-top">
+    <p class="section-label fade-up">Collections</p>
+    <h2 class="works-headline fade-up">内容合集</h2>
+  </div>
+  <div class="works-track">
+    <a href="https://www.xiaohongshu.com/collection/item/6997bd92007c000000000001?xhsshare=&appuid=55c6c7695894460904f87b47&apptime=1775544223&share_id=65e4e128bf854d31bd742a171404c2b3&share_channel=copy_link" target="_blank" class="work-card" style="text-decoration:none;">
+      <div class="work-card-number">🤖</div>
+      <div class="work-card-unit"></div>
+      <div class="work-card-title">我和Agent的日常</div>
+      <div class="work-card-platform">跟 Agent 协作的日常</div>
+    </a>
+    <a href="https://www.xiaohongshu.com/collection/item/698bdf480054000000000001?xhsshare=&appuid=55c6c7695894460904f87b47&apptime=1775544203&share_id=4656d403d6a6472b8c05bf23114d9a6f&share_channel=copy_link" target="_blank" class="work-card" style="text-decoration:none;">
+      <div class="work-card-number">🥰</div>
+      <div class="work-card-unit"></div>
+      <div class="work-card-title">Girls!</div>
+      <div class="work-card-platform">女性议题</div>
+    </a>
+    <a href="https://www.xiaohongshu.com/collection/item/68f49c1a00b7000000000001?xhsshare=&appuid=55c6c7695894460904f87b47&apptime=1775544173&share_id=07574f1a82be48578bb54597c23d167b&share_channel=copy_link" target="_blank" class="work-card" style="text-decoration:none;">
+      <div class="work-card-number">🏛️</div>
+      <div class="work-card-unit"></div>
+      <div class="work-card-title">建筑→AI</div>
+      <div class="work-card-platform">转行故事系列</div>
+    </a>
+    <a href="https://www.xiaohongshu.com/collection/item/68f49b4700b1000000000001?xhsshare=&appuid=55c6c7695894460904f87b47&apptime=1775544188&share_id=4cc720f057294ceea131953507a7f0b3&share_channel=copy_link" target="_blank" class="work-card" style="text-decoration:none;">
+      <div class="work-card-number">🔧</div>
+      <div class="work-card-unit"></div>
+      <div class="work-card-title">日常好用AI</div>
+      <div class="work-card-platform">工具推荐 · 教程</div>
+    </a>
+    <a href="https://www.xiaohongshu.com/collection/item/69d3a7c901fd000000000001?xhsshare=&appuid=55c6c7695894460904f87b47&apptime=1775544150&share_id=ac775ccaa37f4600bc0909f67d974fa4&share_channel=copy_link" target="_blank" class="work-card" style="text-decoration:none;">
+      <div class="work-card-number">❓</div>
+      <div class="work-card-unit"></div>
+      <div class="work-card-title">认真想想</div>
+      <div class="work-card-platform">AI 时代的真问题</div>
+    </a>
+  </div>
+</section>
+
+<!-- ==================== CONTACT ==================== -->
+<section class="contact">
+  <div class="contact-inner">
+    <h2 class="contact-headline fade-up">Say Hi</h2>
+    <p class="contact-sub fade-up">I don't bite — my AI might though.</p>
+    <div class="contact-links fade-up">
+      <a href="mailto:esther.sjw@gmail.com" class="contact-link">📮 邮箱</a>
+      <a href="https://xhslink.com/m/AlYEQruvY4V" target="_blank" rel="noopener" class="contact-link">📕 小红书 @ESTHER不二</a>
+    </div>
+    <p class="contact-quote fade-up">"找到你喜欢的事，然后让它杀死你。"<br>— Charles Bukowski（大概是这个意思）</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2026 ESTHER不二 · Built with AI & attitude</p>
+</footer>
+
+<script>
+/* ============ TERMINAL TYPEWRITER ============ */
+(function() {
+  const body = document.getElementById('terminalBody');
+
+  // Define terminal lines: { type: 'cmd'|'output'|'blank', text, html }
+  const lines = [
+    { type: 'cmd',    text: '$ whoami' },
+    { type: 'output', html: '<span class="output">ESTHER不二</span>' },
+    { type: 'blank' },
+    { type: 'cmd',    text: '$ cat about.md' },
+    { type: 'output', html: '<span class="output">在AI时代认真生活的女生｜INTJ</span>' },
+    { type: 'output', html: '<span class="output">跟Agent搭档的第1年</span>' },
+    { type: 'output', html: '<span class="output">南大/米理建筑→AI ColaOS building</span>' },
+    { type: 'output', html: '<span class="link">💕 关于[她]在AI时代</span>' },
+    { type: 'blank' },
+    { type: 'cmd',    text: '$ echo "1 person + AI = 1 team"' },
+    { type: 'output', html: '<span class="highlight">✨</span>' },
+  ];
+
+  // Create all line elements
+  const lineEls = [];
+  lines.forEach(line => {
+    const div = document.createElement('div');
+    div.className = 'terminal-line';
+    if (line.type === 'blank') {
+      div.innerHTML = '&nbsp;';
+    }
+    lineEls.push({ el: div, data: line });
+    body.appendChild(div);
+  });
+
+  // Add cursor line
+  const cursorLine = document.createElement('div');
+  cursorLine.className = 'terminal-line visible';
+  cursorLine.innerHTML = '<span class="terminal-cursor"></span>';
+  cursorLine.style.opacity = '0';
+  body.appendChild(cursorLine);
+
+  // Typewriter engine
+  let lineIdx = 0;
+
+  function typeNextLine() {
+    if (lineIdx >= lineEls.length) {
+      // Done — show cursor
+      cursorLine.style.opacity = '1';
+      return;
+    }
+
+    const { el, data } = lineEls[lineIdx];
+    el.classList.add('visible');
+    lineIdx++;
+
+    if (data.type === 'blank') {
+      setTimeout(typeNextLine, 150);
+      return;
+    }
+
+    if (data.type === 'cmd') {
+      // Type command character by character (fast)
+      typeText(el, data.text, 'cmd', 45, () => {
+        setTimeout(typeNextLine, 300);
+      });
+    } else {
+      // Output — type slightly slower with > prefix
+      const prefix = '<span class="cmd">&gt; </span>';
+      el.innerHTML = prefix;
+      // Slightly delay then reveal output
+      setTimeout(() => {
+        el.innerHTML = prefix + data.html;
+        setTimeout(typeNextLine, 200);
+      }, 120);
+    }
+  }
+
+  function typeText(el, text, className, speed, callback) {
+    // Parse: $ prefix in blue, rest in gray
+    const parts = text.match(/^(\$ )(.*)/);
+    let charIdx = 0;
+
+    if (parts) {
+      el.innerHTML = '<span class="cmd">$ </span>';
+      const restText = parts[2];
+      charIdx = 0;
+
+      function typeChar() {
+        if (charIdx < restText.length) {
+          el.innerHTML = '<span class="cmd">$ </span><span class="cmd-text">' + restText.substring(0, charIdx + 1) + '</span>';
+          charIdx++;
+          setTimeout(typeChar, speed + Math.random() * 30);
+        } else {
+          if (callback) callback();
+        }
+      }
+      typeChar();
+    } else {
+      el.textContent = '';
+      function typeChar() {
+        if (charIdx < text.length) {
+          el.textContent += text[charIdx];
+          charIdx++;
+          setTimeout(typeChar, speed);
+        } else {
+          if (callback) callback();
+        }
+      }
+      typeChar();
+    }
+  }
+
+  // Start after short delay
+  setTimeout(typeNextLine, 600);
+})();
+
+/* ============ ABOUT CHAT — INTERSECTION TRIGGER ============ */
+(function() {
+  const aboutSection = document.getElementById('aboutSection');
+  if (!aboutSection) return;
+
+  let triggered = false;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !triggered) {
+        triggered = true;
+        // Bubbles already have animation-delay set in CSS, we just need to trigger them
+        const bubbles = aboutSection.querySelectorAll('.chat-bubble');
+        bubbles.forEach(b => {
+          b.style.animationPlayState = 'running';
+        });
+      }
+    });
+  }, { threshold: 0.2 });
+
+  // Initially pause all bubble animations
+  const bubbles = aboutSection.querySelectorAll('.chat-bubble');
+  bubbles.forEach(b => {
+    b.style.animationPlayState = 'paused';
+  });
+
+  observer.observe(aboutSection);
+})();
+
+/* ============ INTERSECTION OBSERVER ============ */
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.fade-up, .tl-item, .opinion-text').forEach(el => {
+    observer.observe(el);
+  });
+})();
+
+/* ============ MOUSE FOLLOW CURSOR GLOW ============ */
+(function() {
+  const glow = document.getElementById('cursorGlow');
+  let mx = 0, my = 0, gx = 0, gy = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mx = e.clientX;
+    my = e.clientY;
+  });
+
+  function animate() {
+    gx += (mx - gx) * 0.08;
+    gy += (my - gy) * 0.08;
+    glow.style.left = gx + 'px';
+    glow.style.top = gy + 'px';
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ============ CARD TILT (MOUSE FOLLOW) ============ */
+(function() {
+  document.querySelectorAll('[data-tilt]').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(800px) rotateY(0) rotateX(0) translateY(0)';
+    });
+  });
+})();
+
+/* ============ PARALLAX ON SCROLL (lightweight) ============ */
+(function() {
+  const terminalWin = document.querySelector('.terminal-window');
+  if (!terminalWin) return;
+
+  window.addEventListener('scroll', () => {
+    const st = window.pageYOffset;
+    if (st < window.innerHeight) {
+      const ratio = st / window.innerHeight;
+      terminalWin.style.transform = `translateY(${st * 0.15}px)`;
+      terminalWin.style.opacity = 1 - ratio * 0.6;
+    }
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>

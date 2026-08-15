@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESTHER不二 · Hero 首屏方案预览</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Huiwen Mincho';
+  src: url('https://hiesther.com/HuiwenMincho.ttf') format('truetype');
+}
+
+:root {
+  --yellow: #F4D758;
+  --blue: #2B7FD8;
+  --orange: #F7A946;
+  --cream: #fefcf6;
+  --dark: #1a1a2e;
+  --font-title: 'Huiwen Mincho', 'Noto Serif SC', 'Source Han Serif SC', serif;
+  --font-body: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; overscroll-behavior: contain; }
+body {
+  font-family: var(--font-body);
+  color: #333;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+/* ===== NAV ===== */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-size: 13px;
+  font-weight: 500;
+}
+nav a {
+  text-decoration: none;
+  color: #555;
+  padding: 6px 14px;
+  border-radius: 20px;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+nav a:hover, nav a.active {
+  background: var(--yellow);
+  color: #333;
+}
+nav .nav-title {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 15px;
+  color: #222;
+  margin-right: 12px;
+}
+
+/* ===== SECTION BASE ===== */
+section {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 80px 24px 40px;
+}
+@media (max-height: 700px) {
+  section { min-height: auto; padding: 60px 16px 40px; }
+}
+@media (max-width: 768px) {
+  section { padding: 70px 16px 32px; }
+  .intro-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+  nav { font-size: 11px; gap: 2px; padding: 8px 8px; }
+  nav a { padding: 5px 8px; }
+}
+.section-label {
+  position: absolute;
+  top: 72px;
+  left: 24px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: rgba(0,0,0,0.35);
+  text-transform: uppercase;
+  z-index: 10;
+}
+.section-label.light {
+  color: rgba(255,255,255,0.4);
+}
+
+/* AVATAR placeholder */
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  user-select: none;
+}
+
+/* =====================================================
+   方案 A · 对话框式
+   ===================================================== */
+#A {
+  background: var(--yellow);
+  flex-direction: column;
+  padding: 80px 20px 40px;
+}
+#A .chat-container {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+#A .bubble {
+  max-width: 80%;
+  padding: 14px 20px;
+  border-radius: 20px;
+  font-size: 15px;
+  line-height: 1.7;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: bubbleIn 0.5s ease forwards;
+}
+#A .bubble.left {
+  align-self: flex-start;
+  background: #fff;
+  border-bottom-left-radius: 6px;
+  color: #333;
+  animation-delay: 0.3s;
+}
+#A .bubble.right {
+  align-self: flex-end;
+  background: var(--blue);
+  color: #fff;
+  border-bottom-right-radius: 6px;
+}
+#A .bubble.right:nth-child(2) { animation-delay: 0.9s; }
+#A .bubble.right:nth-child(3) { animation-delay: 1.5s; }
+#A .bubble.right:nth-child(4) { animation-delay: 2.1s; }
+#A .bubble.right:nth-child(5) { animation-delay: 2.7s; }
+#A .bubble.right:nth-child(6) { animation-delay: 3.3s; }
+@keyframes bubbleIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+#A .hero-name-a {
+  font-family: var(--font-title);
+  font-size: clamp(42px, 8vw, 72px);
+  font-weight: 900;
+  color: #222;
+  margin-top: 36px;
+  text-align: center;
+  opacity: 0;
+  animation: bubbleIn 0.8s ease 3.8s forwards;
+}
+
+/* =====================================================
+   方案 B · 左右分屏
+   ===================================================== */
+#B {
+  background: var(--cream);
+  padding: 80px 40px 40px;
+}
+#B .split-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(32px, 6vw, 80px);
+  width: 100%;
+  max-width: 1100px;
+  flex-wrap: wrap;
+}
+#B .split-left {
+  flex: 1 1 320px;
+  min-width: 280px;
+}
+#B .split-left h1 {
+  font-family: var(--font-title);
+  font-size: clamp(40px, 7vw, 68px);
+  font-weight: 900;
+  color: var(--blue);
+  line-height: 1.1;
+  margin-bottom: 28px;
+}
+#B .split-left .bio-line {
+  font-size: 15px;
+  line-height: 2;
+  color: #555;
+}
+#B .split-right {
+  flex: 0 0 auto;
+}
+#B .avatar-wrap-b {
+  width: clamp(180px, 28vw, 320px);
+  height: clamp(180px, 28vw, 320px);
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#B .avatar-wrap-b:hover {
+  transform: rotate(-6deg) scale(1.04);
+}
+#B .avatar-wrap-b .avatar-placeholder {
+  font-size: clamp(36px, 5vw, 64px);
+  box-shadow: 0 20px 60px rgba(43,127,216,0.15);
+}
+
+/* =====================================================
+   方案 C · 全屏大字 + 滚动缩小 (sticky)
+   ===================================================== */
+#C {
+  background: var(--yellow);
+  display: block;
+  min-height: 200vh;
+  padding-top: 60px;
+}
+#C .sticky-header {
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  height: calc(100dvh - 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  pointer-events: none;
+}
+@media (max-height: 700px) {
+  #C .sticky-header { height: auto; position: relative; top: auto; }
+  #C { min-height: auto; }
+}
+#C .big-name {
+  font-family: var(--font-title);
+  font-weight: 900;
+  font-size: clamp(60px, 16vw, 160px);
+  color: #222;
+  text-align: center;
+  line-height: 1;
+  transition: font-size 0.1s linear;
+  will-change: font-size, transform;
+}
+#C .c-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px 80px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+#C .c-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+#C .c-avatar {
+  width: 140px;
+  height: 140px;
+  margin-bottom: 28px;
+}
+#C .c-bio {
+  text-align: center;
+  font-size: 16px;
+  line-height: 2;
+  color: #333;
+  max-width: 400px;
+}
+
+/* =====================================================
+   方案 D · 名片翻转
+   ===================================================== */
+#D {
+  background: var(--cream);
+}
+#D .card-scene {
+  perspective: 1200px;
+  width: clamp(300px, 50vw, 440px);
+  height: clamp(420px, 55vh, 560px);
+}
+#D .card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+#D .card-scene:hover .card {
+  transform: rotateY(180deg);
+}
+#D .card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.1);
+}
+#D .card-front {
+  background: #fff;
+  border: 2px solid var(--yellow);
+}
+#D .card-front .d-avatar {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 28px;
+}
+#D .card-front h2 {
+  font-family: var(--font-title);
+  font-size: 36px;
+  font-weight: 900;
+  color: #222;
+  margin-bottom: 12px;
+}
+#D .card-front .tagline {
+  font-size: 14px;
+  color: var(--blue);
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+#D .card-back {
+  background: var(--blue);
+  color: #fff;
+  transform: rotateY(180deg);
+  text-align: center;
+}
+#D .card-back .bio-line-d {
+  font-size: 15px;
+  line-height: 2.2;
+  margin-bottom: 4px;
+}
+#D .card-back .link-btn {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 10px 28px;
+  background: var(--yellow);
+  color: #222;
+  border-radius: 24px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: transform 0.3s;
+}
+#D .card-back .link-btn:hover {
+  transform: scale(1.06);
+}
+#D .hint {
+  position: absolute;
+  bottom: 24px;
+  font-size: 12px;
+  color: rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+/* =====================================================
+   方案 E · 打字终端
+   ===================================================== */
+#E {
+  background: #0d1117;
+  flex-direction: column;
+  padding: 80px 20px 40px;
+}
+#E .terminal {
+  width: 100%;
+  max-width: 680px;
+  background: #161b22;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+}
+#E .terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  background: #21262d;
+}
+#E .terminal-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+#E .terminal-dot:nth-child(1) { background: #f85149; }
+#E .terminal-dot:nth-child(2) { background: var(--yellow); }
+#E .terminal-dot:nth-child(3) { background: #3fb950; }
+#E .terminal-bar span {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #8b949e;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+#E .terminal-body {
+  padding: 24px;
+  font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 2;
+  min-height: 320px;
+}
+#E .terminal-line {
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  overflow: hidden;
+}
+#E .terminal-line .prompt {
+  color: #3fb950;
+}
+#E .terminal-line .cmd {
+  color: var(--yellow);
+}
+#E .terminal-line .info {
+  color: var(--orange);
+}
+#E .terminal-line .highlight {
+  color: var(--yellow);
+  font-weight: 700;
+}
+#E .cursor {
+  display: inline-block;
+  width: 8px;
+  height: 17px;
+  background: var(--yellow);
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  nav { gap: 3px; padding: 10px 8px; font-size: 11px; }
+  nav a { padding: 5px 9px; }
+  nav .nav-title { font-size: 13px; margin-right: 6px; }
+  .section-label { top: 64px; font-size: 10px; }
+
+  #B .split-wrap { flex-direction: column; text-align: center; }
+  #B .split-left { min-width: unset; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-title">ESTHER不二</span>
+  <a href="#intro">💡 方法</a>
+  <a href="#A">A · 对话框</a>
+  <a href="#B">B · 左右分屏</a>
+  <a href="#C">C · 滚动大字</a>
+  <a href="#D">D · 名片翻转</a>
+  <a href="#E">E · 终端打字</a>
+</nav>
+
+<!-- ===== 教程介绍 ===== -->
+<section id="intro" style="min-height:100vh;background:#fefcf6;display:flex;align-items:center;justify-content:center;padding:80px 60px 40px;overflow:hidden;">
+  <div class="intro-grid" style="max-width:1100px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
+    <div>
+      <h1 style="font-family:var(--font-title);font-size:32px;color:#222;margin-bottom:20px;line-height:1.4;">先让 AI 发散，再做决定</h1>
+      <div style="font-size:17px;line-height:2;color:#444;">
+        <p>如果你脑子里没有一个明确的画面的话，我的方法是让 AI 先给我出 5 个方向，这样可以用最低成本快速缩小决策范围。</p>
+        <p style="margin-top:12px;">而且我不用一开始就知道自己想要什么——本质上其实是<strong>用 AI 来帮我做 Moodboard</strong>。</p>
+        <p style="margin-top:12px;">在动手写之前，先让 AI 做一轮发散性探索，是我跟 AI 协作的核心手法～ 除了设计上的发散，各个层面上的发散其实都可以。</p>
+        <p style="margin-top:20px;color:#888;font-size:15px;">↓ 下面就是 AI 给我做出来的 5 个方向，我看完之后选了 E（终端打字）作为最终方向继续深化。</p>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:14px;font-weight:600;color:#222;margin-bottom:12px;">拿我一开始让 AI 帮我发散 Hero 举例，我的提示词：</p>
+      <div style="background:#f5f3ee;border-radius:12px;padding:24px 28px;font-size:16px;line-height:2;color:#333;">
+        <p>帮我做 5 个 Hero 首屏方案，放在同一个 HTML 里，用导航栏切换。做 playground 不是成品，重点是看方向。要求：</p>
+        <ul style="margin-top:12px;padding-left:20px;">
+          <li>统一用我的配色和字体</li>
+          <li>5 个方案风格差异要大</li>
+          <li>每个方案都要有：我的名字 / 一句话介绍 / 一个主视觉 / 一个 CTA</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 方案 A ===== -->
+<section id="A">
+  <div class="section-label">方案 A · 对话框式</div>
+  <div style="display:flex;flex-direction:column;align-items:center;width:100%;">
+    <div class="chat-container">
+      <div class="bubble left">你是谁？</div>
+      <div class="bubble right">▪️ 在AI时代认真生活的女生｜INTJ</div>
+      <div class="bubble right">▪️ 跟Agent搭档的第1年</div>
+      <div class="bubble right">▪️ 南大/米理建筑→AI ColaOS building</div>
+      <div class="bubble right">💕 关于[她]在AI时代</div>
+    </div>
+    <div class="hero-name-a">ESTHER不二</div>
+  </div>
+</section>
+
+<!-- ===== 方案 B ===== -->
+<section id="B">
+  <div class="section-label">方案 B · 左右分屏</div>
+  <div class="split-wrap">
+    <div class="split-left">
+      <h1>ESTHER<br>不二</h1>
+      <div class="bio-line">▪️ 在AI时代认真生活的女生｜INTJ</div>
+      <div class="bio-line">▪️ 跟Agent搭档的第1年</div>
+      <div class="bio-line">▪️ 南大/米理建筑→AI ColaOS building</div>
+      <div class="bio-line">💕 关于[她]在AI时代</div>
+    </div>
+    <div class="split-right">
+      <div class="avatar-wrap-b">
+        <div class="avatar-placeholder">📷</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 方案 C ===== -->
+<section id="C">
+  <div class="section-label">方案 C · 全屏大字 + 滚动缩小</div>
+  <div class="sticky-header">
+    <div class="big-name" id="bigNameC">ESTHER不二</div>
+  </div>
+  <div class="c-content" id="cContent">
+    <div class="c-avatar">
+      <div class="avatar-placeholder" style="font-size:36px;">📷</div>
+    </div>
+    <div class="c-bio">
+      ▪️ 在AI时代认真生活的女生｜INTJ<br>
+      ▪️ 跟Agent搭档的第1年<br>
+      ▪️ 南大/米理建筑→AI ColaOS building<br>
+      💕 关于[她]在AI时代
+    </div>
+  </div>
+</section>
+
+<!-- ===== 方案 D ===== -->
+<section id="D">
+  <div class="section-label">方案 D · 名片翻转</div>
+  <div class="card-scene">
+    <div class="card">
+      <div class="card-face card-front">
+        <div class="d-avatar">
+          <div class="avatar-placeholder" style="font-size:36px;">📷</div>
+        </div>
+        <h2>ESTHER不二</h2>
+        <div class="tagline">1 person + AI = 1 team</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="bio-line-d">▪️ 在AI时代认真生活的女生｜INTJ</div>
+        <div class="bio-line-d">▪️ 跟Agent搭档的第1年</div>
+        <div class="bio-line-d">▪️ 南大/米理建筑→AI ColaOS building</div>
+        <div class="bio-line-d">💕 关于[她]在AI时代</div>
+        <a href="#" class="link-btn">了解更多 →</a>
+      </div>
+    </div>
+  </div>
+  <div class="hint">hover 翻转卡片</div>
+</section>
+
+<!-- ===== 方案 E ===== -->
+<section id="E">
+  <div class="section-label light">方案 E · 打字终端</div>
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <span>esther@cola ~ </span>
+    </div>
+    <div class="terminal-body" id="terminalBody"></div>
+  </div>
+</section>
+
+<script>
+/* ===== NAV ACTIVE STATE ===== */
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('nav a');
+
+function updateNav() {
+  let current = '';
+  sections.forEach(s => {
+    const top = s.offsetTop - 120;
+    if (window.scrollY >= top) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}
+window.addEventListener('scroll', updateNav, { passive: true });
+updateNav();
+
+/* ===== 方案 A: Re-trigger bubbles on scroll into view ===== */
+const sectionA = document.getElementById('A');
+let aTriggered = false;
+function checkA() {
+  const rect = sectionA.getBoundingClientRect();
+  if (rect.top < window.innerHeight * 0.7 && rect.bottom > 0) {
+    if (!aTriggered) {
+      aTriggered = true;
+      sectionA.querySelectorAll('.bubble, .hero-name-a').forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight; // reflow
+        el.style.animation = '';
+      });
+    }
+  } else {
+    aTriggered = false;
+  }
+}
+window.addEventListener('scroll', checkA, { passive: true });
+
+/* ===== 方案 C: Sticky shrink ===== */
+const sectionC = document.getElementById('C');
+const bigName = document.getElementById('bigNameC');
+const cContent = document.getElementById('cContent');
+const maxFont = Math.min(160, window.innerWidth * 0.16);
+const minFont = Math.max(32, window.innerWidth * 0.04);
+
+function updateC() {
+  const rect = sectionC.getBoundingClientRect();
+  const scrollIntoC = -rect.top;
+  const travel = window.innerHeight * 0.6;
+
+  if (scrollIntoC < 0) {
+    bigName.style.fontSize = maxFont + 'px';
+    bigName.style.transform = 'translateY(0)';
+    cContent.classList.remove('visible');
+  } else {
+    const progress = Math.min(1, scrollIntoC / travel);
+    const size = maxFont - (maxFont - minFont) * progress;
+    bigName.style.fontSize = size + 'px';
+    // Move name to top area as it shrinks
+    const yShift = -progress * (window.innerHeight * 0.3);
+    bigName.style.transform = 'translateY(' + yShift + 'px)';
+
+    if (progress > 0.7) {
+      cContent.classList.add('visible');
+    } else {
+      cContent.classList.remove('visible');
+    }
+  }
+}
+window.addEventListener('scroll', updateC, { passive: true });
+updateC();
+
+/* ===== 方案 E: Typewriter ===== */
+const terminalLines = [
+  { prompt: '$ ', cmd: 'whoami', delay: 0 },
+  { text: '', delay: 600 },
+  { text: '  <span class="highlight">ESTHER不二</span>', delay: 800 },
+  { text: '', delay: 200 },
+  { prompt: '$ ', cmd: 'cat bio.txt', delay: 400 },
+  { text: '  <span class="info">▪️ 在AI时代认真生活的女生｜INTJ</span>', delay: 300 },
+  { text: '  <span class="info">▪️ 跟Agent搭档的第1年</span>', delay: 300 },
+  { text: '  <span class="info">▪️ 南大/米理建筑→AI ColaOS building</span>', delay: 300 },
+  { text: '  <span class="info">💕 关于[她]在AI时代</span>', delay: 300 },
+  { text: '', delay: 200 },
+  { prompt: '$ ', cmd: 'echo "1 person + AI = 1 team"', delay: 400 },
+  { text: '  <span class="highlight">1 person + AI = 1 team</span>', delay: 300 },
+  { text: '', delay: 200 },
+  { prompt: '$ ', cmd: '', cursor: true, delay: 0 },
+];
+
+const termBody = document.getElementById('terminalBody');
+let eStarted = false;
+
+function typeText(element, text, speed, callback) {
+  let i = 0;
+  // Strip HTML tags for typing, but we'll use a simpler approach:
+  // type char by char, handle tags as instant
+  const chars = [];
+  let inTag = false;
+  let tagBuffer = '';
+  for (let c = 0; c < text.length; c++) {
+    if (text[c] === '<') { inTag = true; tagBuffer = '<'; continue; }
+    if (inTag) {
+      tagBuffer += text[c];
+      if (text[c] === '>') {
+        inTag = false;
+        chars.push({ type: 'tag', value: tagBuffer });
+        tagBuffer = '';
+      }
+      continue;
+    }
+    chars.push({ type: 'char', value: text[c] });
+  }
+
+  let html = '';
+  function typeNext() {
+    if (i >= chars.length) { if (callback) callback(); return; }
+    const ch = chars[i++];
+    if (ch.type === 'tag') {
+      html += ch.value;
+      element.innerHTML = html;
+      typeNext(); // tags are instant
+    } else {
+      html += ch.value;
+      element.innerHTML = html;
+      setTimeout(typeNext, speed);
+    }
+  }
+  typeNext();
+}
+
+function startTerminal() {
+  if (eStarted) return;
+  eStarted = true;
+  termBody.innerHTML = '';
+
+  let lineIdx = 0;
+  function nextLine() {
+    if (lineIdx >= terminalLines.length) return;
+    const line = terminalLines[lineIdx++];
+    const div = document.createElement('div');
+    div.className = 'terminal-line';
+    termBody.appendChild(div);
+
+    if (line.prompt !== undefined) {
+      div.innerHTML = '<span class="prompt">' + line.prompt + '</span>';
+      const cmdSpan = document.createElement('span');
+      cmdSpan.className = 'cmd';
+      div.appendChild(cmdSpan);
+
+      if (line.cursor && !line.cmd) {
+        const cur = document.createElement('span');
+        cur.className = 'cursor';
+        cur.innerHTML = '&nbsp;';
+        div.appendChild(cur);
+        return; // last line
+      }
+
+      typeText(cmdSpan, line.cmd, 50, () => {
+        setTimeout(nextLine, line.delay || 200);
+      });
+    } else {
+      div.innerHTML = line.text;
+      setTimeout(nextLine, line.delay || 200);
+    }
+
+    // auto scroll
+    termBody.scrollTop = termBody.scrollHeight;
+  }
+
+  nextLine();
+}
+
+// Trigger terminal when section E is in view
+const sectionE = document.getElementById('E');
+let eReset = true;
+function checkE() {
+  const rect = sectionE.getBoundingClientRect();
+  if (rect.top < window.innerHeight * 0.6 && rect.bottom > 0) {
+    if (eReset) {
+      eReset = false;
+      eStarted = false;
+      startTerminal();
+    }
+  } else {
+    eReset = true;
+  }
+}
+window.addEventListener('scroll', checkE, { passive: true });
+checkE();
+
+/* ===== Handle resize for section C ===== */
+window.addEventListener('resize', () => {
+  // Recalc C font limits (we keep it simple and just re-run)
+  updateC();
+});
+</script>
+</body>
+</html>
