@@ -1,8 +1,60 @@
 let hasInitialized = false;
 
 export function initializeSite() {
-  if (hasInitialized) return;
+  if (hasInitialized) return undefined;
   hasInitialized = true;
+
+  const listenerRecords = [];
+  const timeoutIds = new Set();
+  const intervalIds = new Set();
+  const animationFrameIds = new Set();
+  const originalAddEventListener = EventTarget.prototype.addEventListener;
+  const originalRemoveEventListener = EventTarget.prototype.removeEventListener;
+  const nativeSetTimeout = window.setTimeout.bind(window);
+  const nativeClearTimeout = window.clearTimeout.bind(window);
+  const nativeSetInterval = window.setInterval.bind(window);
+  const nativeClearInterval = window.clearInterval.bind(window);
+  const nativeRequestAnimationFrame = window.requestAnimationFrame.bind(window);
+  const nativeCancelAnimationFrame = window.cancelAnimationFrame.bind(window);
+
+  EventTarget.prototype.addEventListener = function(type, listener, options) {
+    listenerRecords.push([this, type, listener, options]);
+    return originalAddEventListener.call(this, type, listener, options);
+  };
+
+  function setTimeout(callback, delay, ...args) {
+    const timeoutId = nativeSetTimeout(() => {
+      timeoutIds.delete(timeoutId);
+      callback(...args);
+    }, delay);
+    timeoutIds.add(timeoutId);
+    return timeoutId;
+  }
+
+  function clearTimeout(timeoutId) {
+    timeoutIds.delete(timeoutId);
+    nativeClearTimeout(timeoutId);
+  }
+
+  function setInterval(callback, delay, ...args) {
+    const intervalId = nativeSetInterval(callback, delay, ...args);
+    intervalIds.add(intervalId);
+    return intervalId;
+  }
+
+  function clearInterval(intervalId) {
+    intervalIds.delete(intervalId);
+    nativeClearInterval(intervalId);
+  }
+
+  function requestAnimationFrame(callback) {
+    const frameId = nativeRequestAnimationFrame((timestamp) => {
+      animationFrameIds.delete(frameId);
+      callback(timestamp);
+    });
+    animationFrameIds.add(frameId);
+    return frameId;
+  }
   'use strict';
 
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -805,4 +857,17 @@ export function initializeSite() {
 
   // Init
   switchTab(currentTab());
+
+  return function disposeSite() {
+    timeoutIds.forEach((timeoutId) => nativeClearTimeout(timeoutId));
+    intervalIds.forEach((intervalId) => nativeClearInterval(intervalId));
+    animationFrameIds.forEach((frameId) => nativeCancelAnimationFrame(frameId));
+    listenerRecords.forEach(([target, type, listener, options]) => {
+      originalRemoveEventListener.call(target, type, listener, options);
+    });
+    if (EventTarget.prototype.addEventListener !== originalAddEventListener) {
+      EventTarget.prototype.addEventListener = originalAddEventListener;
+    }
+    hasInitialized = false;
+  };
 }
