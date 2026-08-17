@@ -1,28 +1,31 @@
 import React from 'react';
 
-// 卡片模板系统：从旧版 infinite-canvas 的手绘卡片类型移植而来。
-// 每种模板 = 元数据（名称/图标/默认尺寸）+ 渲染组件。
+// 卡片模板系统
+// editField: 双击用 textarea 内联编辑该字段
+// editModal: 双击重新打开创建弹窗编辑
+// 两者皆无 = 不可编辑内容（只能删除/互动）
 
 export const TEMPLATES = [
-  { id: 'washi', name: '胶带卡', icon: '📦', w: 340, h: 200, editField: 'body' },
-  { id: 'quote', name: '引用卡', icon: '❝', w: 340, h: 190, editField: 'text' },
-  { id: 'dark', name: '深色卡', icon: '🌙', w: 320, h: 200, editField: 'body' },
-  { id: 'sticky', name: '便利贴', icon: '🗒️', w: 220, h: 170, editField: 'text' },
-  { id: 'narrative', name: '叙事卡', icon: '📖', w: 400, h: 230, editField: 'text' },
-  { id: 'profile', name: '个人卡', icon: '👤', w: 380, h: 320, editField: null },
-  { id: 'timeline', name: '时间线', icon: '📍', w: 420, h: 320, editField: null },
-  { id: 'skills', name: '技能卡', icon: '🛠️', w: 480, h: 220, editField: null },
-  { id: 'opinions', name: '观点卡', icon: '✍️', w: 360, h: 270, editField: null },
-  { id: 'work', name: '作品卡', icon: '🚀', w: 320, h: 250, editField: null },
-  { id: 'ai', name: 'AI 伙伴', icon: '🤖', w: 280, h: 190, editField: 'desc' },
-  { id: 'link', name: '链接卡', icon: '🔗', w: 240, h: 160, editField: 'title' },
+  // —— 访客可创建 ——
+  { id: 'intro', name: '自我介绍卡', icon: '🪪', w: 300, h: 210, editModal: true, visitor: true },
+  { id: 'sticker', name: '贴纸卡', icon: '😆', w: 150, h: 150, editModal: true, visitor: true },
+  { id: 'polaroid', name: '拍立得卡', icon: '📸', w: 230, h: 120, editField: 'caption', visitor: true },
+  { id: 'vote', name: '投票卡', icon: '🗳️', w: 300, h: 180, visitor: true },
+  // —— 仅管理员预制 ——
+  { id: 'washi', name: '胶带卡', icon: '📦', w: 360, h: 220, editField: 'body' },
+  { id: 'profile', name: '个人卡', icon: '👤', w: 380, h: 320 },
 ];
 
 export function getTemplate(id) {
   return TEMPLATES.find((t) => t.id === id) || TEMPLATES[0];
 }
 
-// 双击编辑时，各模板可编辑的主文本字段
+export function isEditable(tplId) {
+  const t = getTemplate(tplId);
+  return t.editField != null || !!t.editModal;
+}
+
+// 内联编辑（textarea）用的主文本字段
 export function editableText(tpl, data) {
   const f = getTemplate(tpl).editField;
   if (!f) return null;
@@ -36,56 +39,130 @@ export function withEditedText(tpl, data, text) {
   return { ...data, [f]: text };
 }
 
+// 贴纸/头像可选 emoji
+export const EMOJI_CHOICES = [
+  '😀', '😂', '🥹', '😍', '🤔', '😴', '🙃', '😎',
+  '🥳', '😭', '👍', '🫶', '❤️', '🔥', '✨', '🎉',
+  '🍀', '🌙', '⭐', '🐱', '🐶', '🍉', '☕', '🚀',
+];
+
 // ---------- 模板渲染 ----------
-export default function TemplateBody({ tpl, data }) {
+export default function TemplateBody({ tpl, data, myToken, movedRef, onVote }) {
   switch (tpl) {
+    case 'intro':
+      return <IntroCard data={data} />;
+    case 'sticker':
+      return <StickerCard data={data} />;
+    case 'polaroid':
+      return <PolaroidCard data={data} />;
+    case 'vote':
+      return <VoteCard data={data} myToken={myToken} movedRef={movedRef} onVote={onVote} />;
     case 'profile':
       return <ProfileCard data={data} />;
-    case 'timeline':
-      return <TimelineCard data={data} />;
-    case 'skills':
-      return <SkillsCard data={data} />;
-    case 'opinions':
-      return <OpinionsCard data={data} />;
-    case 'work':
-      return <WorkCard data={data} />;
-    case 'ai':
-      return <AiCard data={data} />;
-    case 'link':
-      return <LinkCard data={data} />;
-    case 'dark':
-      return <DarkCard data={data} />;
     case 'washi':
-      return <WashiCard data={data} />;
-    case 'sticky':
-      return <StickyCard data={data} />;
-    case 'narrative':
-      return <NarrativeCard data={data} />;
-    case 'quote':
     default:
-      return <QuoteCard data={data} />;
+      return <WashiCard data={data} />;
   }
 }
 
-function QuoteCard({ data }) {
+// 🪪 自我介绍卡：社交电子名片
+function IntroCard({ data }) {
   return (
     <>
-      <div className="tpl-quote-mark">"</div>
-      <div className="tpl-quote-text">{data?.text}</div>
-      {data?.source && <div className="tpl-quote-source">— {data.source}</div>}
+      <div className="intro-head">
+        <span className="intro-avatar" style={{ background: data?.color || '#ffd166' }}>
+          {data?.emoji || '😀'}
+        </span>
+        <div className="intro-id">
+          <div className="intro-name">{data?.name || '神秘访客'}</div>
+          {data?.bio && <div className="intro-bio">{data.bio}</div>}
+        </div>
+      </div>
+      {data?.tags?.length > 0 && (
+        <div className="intro-tags">
+          {data.tags.map((t, i) => (
+            <span key={i} className="intro-tag">#{t}</span>
+          ))}
+        </div>
+      )}
+      {data?.link && (
+        <a
+          className="intro-link"
+          href={data.link}
+          target="_blank"
+          rel="noreferrer"
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          🔗 {linkLabel(data.link)} →
+        </a>
+      )}
     </>
   );
 }
 
-function DarkCard({ data }) {
+function linkLabel(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return '我的主页';
+  }
+}
+
+// 😆 贴纸卡
+function StickerCard({ data }) {
+  return <div className="sticker-emoji">{data?.emoji || '😆'}</div>;
+}
+
+// 📸 拍立得卡
+function PolaroidCard({ data }) {
   return (
     <>
-      {data?.title && <div className="tpl-dark-title">{data.title}</div>}
-      {data?.body && <div className="tpl-dark-body">{data.body}</div>}
+      {data?.image ? (
+        <img className="polaroid-img" src={data.image} alt={data?.caption || '拍立得'} draggable={false} />
+      ) : (
+        <div className="polaroid-empty">📷</div>
+      )}
+      <div className="polaroid-caption">{data?.caption || '…'}</div>
     </>
   );
 }
 
+// 🗳️ 投票卡：单选，点一下投票，再点取消
+function VoteCard({ data, myToken, movedRef, onVote }) {
+  const options = data?.options || [];
+  const total = options.reduce((s, o) => s + (o.votes?.length || 0), 0);
+  return (
+    <>
+      <div className="vote-q">{data?.question}</div>
+      <div className="vote-ops">
+        {options.map((op, i) => {
+          const n = op.votes?.length || 0;
+          const pct = total ? Math.round((n / total) * 100) : 0;
+          const mine = !!myToken && op.votes?.includes(myToken);
+          return (
+            <button
+              key={i}
+              className={`vote-op${mine ? ' mine' : ''}`}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (movedRef?.current) return; // 拖动卡片时不触发投票
+                onVote?.(i);
+              }}
+            >
+              <span className="vote-fill" style={{ width: `${pct}%` }} />
+              <span className="vote-op-text">{op.text}</span>
+              <span className="vote-op-n">{n}</span>
+            </button>
+          );
+        })}
+      </div>
+      <div className="vote-total">{total} 人投过 · 点选项投票</div>
+    </>
+  );
+}
+
+// 📦 胶带卡（预制装饰）
 function WashiCard({ data }) {
   return (
     <>
@@ -95,49 +172,7 @@ function WashiCard({ data }) {
   );
 }
 
-function StickyCard({ data }) {
-  return <div className="tpl-sticky-text">{data?.text}</div>;
-}
-
-function NarrativeCard({ data }) {
-  return (
-    <>
-      <div className="narrative-text">{data?.text}</div>
-      {data?.author && <div className="narrative-author">— {data.author}</div>}
-    </>
-  );
-}
-
-function AiCard({ data }) {
-  return (
-    <>
-      {data?.bubble && <div className="ai-bubble">{data.bubble}</div>}
-      <div className="ai-name">{data?.name}</div>
-      <div className="ai-desc">{data?.desc}</div>
-    </>
-  );
-}
-
-function LinkCard({ data }) {
-  return (
-    <>
-      <div className="tpl-link-icon">{data?.icon || '🔗'}</div>
-      <div className="tpl-link-title">{data?.title}</div>
-      {data?.url && (
-        <a
-          className="tpl-link-go"
-          href={data.url}
-          target="_blank"
-          rel="noreferrer"
-          onPointerDown={(e) => e.stopPropagation()}
-        >
-          去看看 →
-        </a>
-      )}
-    </>
-  );
-}
-
+// 👤 个人卡（预制：站主名片）
 function ProfileCard({ data }) {
   return (
     <>
@@ -159,88 +194,6 @@ function ProfileCard({ data }) {
               </a>
             ))}
           </div>
-        )}
-      </div>
-    </>
-  );
-}
-
-function TimelineCard({ data }) {
-  return (
-    <>
-      <div className="card-title">
-        <span className="card-title-icon">{data?.icon || '📍'}</span>
-        {data?.title}
-      </div>
-      <div className="timeline">
-        {(data?.items || []).map((it, i) => (
-          <div className="tl-item" key={i}>
-            <div className="tl-dot" />
-            <div className="tl-year">{it.year}</div>
-            <div className="tl-title">{it.title}</div>
-            {it.desc && <div className="tl-desc">{it.desc}</div>}
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-function SkillsCard({ data }) {
-  return (
-    <>
-      <div className="card-title">
-        <span className="card-title-icon">{data?.icon || '🛠️'}</span>
-        {data?.title}
-      </div>
-      <div className="skill-cloud">
-        {(data?.tags || []).map((t, i) => (
-          <span key={i} className={`skill-tag ${t.cls || ''}`}>
-            {t.text}
-          </span>
-        ))}
-      </div>
-    </>
-  );
-}
-
-function OpinionsCard({ data }) {
-  return (
-    <>
-      <div className="card-title">
-        <span className="card-title-icon">{data?.icon || '✍️'}</span>
-        {data?.title}
-      </div>
-      {(data?.items || []).map((it, i) => (
-        <div className="opinion-item" key={i}>
-          <div className="opinion-title">{it.title}</div>
-          {it.source && <div className="opinion-source">{it.source}</div>}
-        </div>
-      ))}
-    </>
-  );
-}
-
-function WorkCard({ data }) {
-  return (
-    <>
-      <div className={`work-banner ${data?.bannerCls || ''}`}>
-        <div className="work-banner-text">{data?.bannerText}</div>
-      </div>
-      <div className="work-body">
-        <div className="work-name">{data?.name}</div>
-        <div className="work-desc">{data?.desc}</div>
-        <div>
-          {(data?.tags || []).map((t, i) => (
-            <span className="work-tag" key={i}>
-              {t}
-            </span>
-          ))}
-        </div>
-        {data?.linkHref && (
-          <a className="work-link" href={data.linkHref} target="_blank" rel="noreferrer" onPointerDown={(e) => e.stopPropagation()}>
-            {data?.linkLabel || '了解更多'} →
-          </a>
         )}
       </div>
     </>

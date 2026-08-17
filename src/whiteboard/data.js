@@ -4,8 +4,8 @@
 export const ESTHER_OWNER = 'esther'; // 预制内容的所有者（管理员）
 
 export const TOKEN_KEY = 'wb.myToken';
-export const CARDS_KEY = 'wb.cards.v1';
-export const LAYOUT_KEY = 'wb.layout.v1';
+export const CARDS_KEY = 'wb.cards.v2';
+export const STROKES_KEY = 'wb.strokes.v1';
 
 export function getMyToken() {
   let token = localStorage.getItem(TOKEN_KEY);
@@ -26,6 +26,7 @@ export const WB_CONFIG = {
   SUPABASE_URL: '',
   SUPABASE_ANON_KEY: '',
   TABLE: 'wb_cards',
+  STROKES_TABLE: 'wb_strokes',
   POLL_MS: 8000,
 };
 
@@ -49,6 +50,22 @@ export function loadLocalCards() {
 export function saveLocalCards(cards) {
   try {
     localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
+  } catch {
+    /* ignore quota */
+  }
+}
+
+export function loadLocalStrokes() {
+  try {
+    return JSON.parse(localStorage.getItem(STROKES_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveLocalStrokes(strokes) {
+  try {
+    localStorage.setItem(STROKES_KEY, JSON.stringify(strokes));
   } catch {
     /* ignore quota */
   }
@@ -99,4 +116,31 @@ export async function updateRemoteCard(id, patch) {
     body: JSON.stringify(patch),
   });
   if (!res.ok) throw new Error(`update ${res.status}`);
+}
+
+// ---------- 涂鸦笔迹（Supabase） ----------
+export async function fetchRemoteStrokes() {
+  const url = `${WB_CONFIG.SUPABASE_URL}/rest/v1/${WB_CONFIG.STROKES_TABLE}?select=*&order=created_at.asc`;
+  const res = await fetch(url, { headers: sbHeaders() });
+  if (!res.ok) throw new Error(`load strokes ${res.status}`);
+  return res.json();
+}
+
+export async function postRemoteStroke(stroke) {
+  const url = `${WB_CONFIG.SUPABASE_URL}/rest/v1/${WB_CONFIG.STROKES_TABLE}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { ...sbHeaders(), Prefer: 'return=minimal' },
+    body: JSON.stringify(stroke),
+  });
+  if (!res.ok) throw new Error(`post stroke ${res.status}`);
+}
+
+export async function deleteRemoteStroke(id) {
+  const url = `${WB_CONFIG.SUPABASE_URL}/rest/v1/${WB_CONFIG.STROKES_TABLE}?id=eq.${encodeURIComponent(id)}`;
+  const res = await fetch(url, {
+    method: 'DELETE',
+    headers: { ...sbHeaders(), Prefer: 'return=minimal' },
+  });
+  if (!res.ok) throw new Error(`delete stroke ${res.status}`);
 }

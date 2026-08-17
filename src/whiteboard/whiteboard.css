@@ -1,5 +1,5 @@
 /* ============================================================
-   Shared Whiteboard — hand-drawn style (ported from infinite canvas)
+   Shared Whiteboard — hand-drawn playground style
    ============================================================ */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -64,6 +64,10 @@ body {
 .wb-tb-btn:hover { background: var(--blue-light); border-color: var(--blue); border-style: solid; }
 .wb-tb-primary { background: var(--yellow-light); border-color: rgba(255, 217, 61, 0.5); color: #9a7b00; }
 .wb-tb-primary:hover { background: var(--yellow); border-style: solid; }
+.wb-tb-doodle.active {
+  background: var(--blue); color: #fff;
+  border-style: solid; border-color: var(--blue);
+}
 .wb-tb-spacer { flex: 1; }
 .wb-zoom-pct { color: var(--blue); font-size: 11px; font-family: 'Fira Code', monospace; min-width: 44px; text-align: center; opacity: 0.6; }
 
@@ -105,10 +109,22 @@ body {
   touch-action: none;
 }
 .wb-canvas:active { cursor: grabbing; }
+.wb-canvas.drawing { cursor: crosshair; }
+.wb-canvas.drawing:active { cursor: crosshair; }
+.wb-canvas.drawing .wb-card { pointer-events: none; }
 .wb-transform {
   position: absolute; top: 0; left: 0;
   width: 0; height: 0;
   transform-origin: 0 0;
+}
+
+/* ---------- Doodle layer ---------- */
+.wb-doodles {
+  position: absolute; top: 0; left: 0;
+  width: 10px; height: 10px;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 100000;
 }
 
 /* ---------- Card base ---------- */
@@ -127,13 +143,6 @@ body {
 }
 .wb-card:hover { box-shadow: var(--card-shadow-hover); }
 .wb-card:active { cursor: grabbing; }
-.wb-card.dragging {
-  transform: scale(1.04) !important;
-  box-shadow: 0 12px 40px rgba(74, 124, 201, 0.18), 0 0 0 2px var(--blue) !important;
-  z-index: 9999 !important;
-  cursor: grabbing;
-  border-style: solid;
-}
 
 /* card actions (edit / delete) — hover reveal */
 .wb-card-actions {
@@ -158,6 +167,7 @@ body {
   background: #fffdf3;
   border: 1.5px dashed rgba(201, 172, 74, 0.45);
   box-shadow: 0 3px 10px rgba(26, 26, 46, 0.06);
+  padding: 14px 16px;
 }
 .wb-card-head { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
 .wb-card-avatar {
@@ -186,115 +196,138 @@ body {
 }
 
 /* ============================================================
-   Template styles (ported from infinite-canvas)
+   Card templates
    ============================================================ */
 
-/* tag strip */
-.wb-card-tag-strip { display: none; }
-
-/* --- quote --- */
-.card-tpl-quote {
-  width: 340px;
-  padding: 28px 28px 24px;
-  border-left: 3px solid var(--yellow);
-  position: relative;
-}
-.card-tpl-quote .tpl-quote-mark {
-  font-family: 'Caveat', cursive;
-  font-size: 72px;
-  color: var(--blue);
-  position: absolute;
-  top: 8px; left: 18px;
-  line-height: 1;
-  opacity: 0.25;
-}
-.card-tpl-quote .tpl-quote-text {
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--text);
-  margin-top: 20px;
-  margin-bottom: 12px;
-  white-space: pre-wrap;
-}
-.card-tpl-quote .tpl-quote-source {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-family: 'Inter', sans-serif;
-}
-
-/* --- dark --- */
-.card-tpl-dark {
-  width: 320px;
-  padding: 28px;
-  background: #1a2332;
-  border: 2px solid rgba(74, 124, 201, 0.3);
-}
-.card-tpl-dark .tpl-dark-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--yellow);
-  font-family: 'Caveat', cursive;
-  margin-bottom: 10px;
-}
-.card-tpl-dark .tpl-dark-body {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.82);
-  line-height: 1.7;
-  white-space: pre-wrap;
-}
-.card-tpl-dark .wb-card-act { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.7); border-color: rgba(255, 255, 255, 0.25); }
-.card-tpl-dark .wb-card-del:hover { background: rgba(220, 60, 60, 0.2); color: #ff6b6b; }
-
-/* --- sticky --- */
-.card-tpl-sticky {
-  width: 220px;
-  padding: 22px;
-  background: var(--yellow);
-  border-radius: 6px;
+/* --- 🪪 自我介绍卡 --- */
+.card-intro {
+  padding: 20px;
   border: 2px dashed var(--blue-border);
-  box-shadow: 0 3px 10px rgba(74, 124, 201, 0.1);
-  transform: rotate(-2deg);
+  background: linear-gradient(160deg, #ffffff 0%, #f6f9ff 100%);
 }
-.card-tpl-sticky .tpl-sticky-text {
+.card-intro .intro-head { display: flex; align-items: center; gap: 12px; }
+.card-intro .intro-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(74, 124, 201, 0.15);
+}
+.card-intro .intro-id { min-width: 0; }
+.card-intro .intro-name {
+  font-size: 18px; font-weight: 800; color: var(--blue);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.card-intro .intro-bio {
+  font-size: 12px; color: var(--text-sub); line-height: 1.5; margin-top: 2px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card-intro .intro-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.card-intro .intro-tag {
+  font-size: 11px; font-weight: 600; color: var(--blue);
+  background: var(--blue-light);
+  border: 1.5px dashed var(--blue-border);
+  border-radius: 20px; padding: 2px 10px;
+}
+.card-intro .intro-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 12px;
+  font-size: 12px; font-weight: 700;
+  color: #fff; background: var(--blue);
+  padding: 5px 14px; border-radius: 20px;
+  text-decoration: none;
+  max-width: 100%;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  transition: all 0.15s;
+}
+.card-intro .intro-link:hover { background: #3a6cb9; transform: translateY(-1px); }
+
+/* --- 😆 贴纸卡 --- */
+.card-sticker {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 0 !important;
+}
+.card-sticker:hover { box-shadow: none; }
+.card-sticker .sticker-emoji {
+  font-size: 84px; line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(74, 124, 201, 0.18));
+  transition: transform 0.2s;
+}
+.card-sticker:hover .sticker-emoji { transform: scale(1.12) rotate(-4deg); }
+.card-sticker .wb-card-actions { top: 0; right: 0; }
+
+/* --- 📸 拍立得卡 --- */
+.card-polaroid {
+  padding: 12px 12px 14px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  box-shadow: 0 6px 18px rgba(26, 26, 46, 0.14);
+  transform: rotate(-1.5deg);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card-polaroid:hover { transform: rotate(0deg) scale(1.03); box-shadow: 0 10px 28px rgba(26, 26, 46, 0.2); }
+.card-polaroid .polaroid-img {
+  width: 100%; display: block; border-radius: 2px;
+  background: #f0ede4;
+  pointer-events: none;
+}
+.card-polaroid .polaroid-empty {
+  width: 100%; height: 140px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; background: #f0ede4; border-radius: 2px;
+}
+.card-polaroid .polaroid-caption {
   font-family: 'Caveat', cursive;
-  font-size: 18px;
-  line-height: 1.45;
-  color: var(--text);
-  white-space: pre-wrap;
+  font-size: 19px; color: #333;
+  text-align: center; margin-top: 10px;
+  line-height: 1.3;
+  word-break: break-word;
 }
 
-/* --- narrative --- */
-.card-narrative {
-  width: 400px;
-  padding: 32px;
-  background: linear-gradient(135deg, #fffef5 0%, var(--bg) 100%);
-  border: 2px dashed rgba(255, 217, 61, 0.5);
+/* --- 🗳️ 投票卡 --- */
+.card-vote {
+  padding: 20px;
+  background: linear-gradient(160deg, #fffef5 0%, #fff 100%);
+  border: 2px dashed rgba(255, 183, 61, 0.55);
 }
-.card-narrative .narrative-text {
-  font-size: 16px;
-  line-height: 1.8;
-  color: var(--text);
+.card-vote .vote-q {
+  font-family: 'Caveat', cursive;
+  font-size: 22px; font-weight: 700; color: var(--text);
+  line-height: 1.3; margin-bottom: 12px;
+  word-break: break-word;
+}
+.card-vote .vote-ops { display: flex; flex-direction: column; gap: 8px; }
+.card-vote .vote-op {
   position: relative;
-  white-space: pre-wrap;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px;
+  border: 1.5px dashed var(--blue-border);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px; font-weight: 600; color: var(--text-sub);
+  font-family: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.15s;
 }
-.card-narrative .narrative-text::before {
-  content: '"';
-  font-family: 'Caveat', cursive;
-  font-size: 64px;
-  color: var(--yellow);
-  position: absolute;
-  top: -24px; left: -8px;
-  line-height: 1;
-  opacity: 0.65;
+.card-vote .vote-op:hover { border-color: var(--blue); border-style: solid; }
+.card-vote .vote-op.mine { border-color: var(--blue); border-style: solid; color: var(--blue); }
+.card-vote .vote-fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: var(--yellow-light);
+  transition: width 0.3s ease;
 }
-.card-narrative .narrative-author {
-  margin-top: 16px;
-  color: var(--blue);
-  font-family: 'Caveat', cursive;
-  font-size: 16px;
-}
+.card-vote .vote-op.mine .vote-fill { background: rgba(255, 217, 61, 0.4); }
+.card-vote .vote-op-text { position: relative; z-index: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card-vote .vote-op-n { position: relative; z-index: 1; font-family: 'Fira Code', monospace; font-size: 12px; }
+.card-vote .vote-total { font-size: 10px; color: var(--text-muted); margin-top: 10px; }
 
-/* --- washi tape --- */
+/* --- 📦 胶带卡 --- */
 .card-washi {
   background: #fff;
   padding: 26px 22px 24px;
@@ -332,11 +365,9 @@ body {
   color: #444;
   white-space: pre-wrap;
 }
-.card-washi .washi-body strong { color: #1e5ba8; }
 
-/* --- profile --- */
+/* --- 👤 个人卡 --- */
 .card-profile {
-  width: 380px;
   padding: 0;
   overflow: hidden;
   border: 2px dashed var(--blue-border);
@@ -350,7 +381,6 @@ body {
   width: 64px; height: 64px;
   border-radius: 50%;
   background: var(--yellow);
-  border: none;
   display: flex; align-items: center; justify-content: center;
   font-size: 30px;
   margin-bottom: 14px;
@@ -403,223 +433,44 @@ body {
 }
 .card-profile .profile-link:hover { background: var(--yellow); border-color: var(--blue); color: var(--text); }
 
-/* --- timeline --- */
-.card-timeline {
-  width: 420px;
-  padding: 28px;
-}
-.card-timeline .card-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 20px;
+/* ============================================================
+   Pen bar (draw mode)
+   ============================================================ */
+.wb-pen-bar {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
   display: flex; align-items: center; gap: 8px;
-  color: var(--blue);
-  font-family: 'Caveat', cursive;
+  background: rgba(255, 255, 255, 0.96);
+  border: 2px dashed var(--blue-border);
+  border-radius: 999px;
+  padding: 8px 14px;
+  box-shadow: 0 8px 24px rgba(26, 26, 46, 0.14);
+  z-index: 4000;
+  animation: wbPop 0.22s ease;
 }
-.card-timeline .card-title-icon { font-size: 16px; }
-.card-timeline .timeline {
-  position: relative;
-  padding-left: 28px;
-}
-.card-timeline .timeline::before {
-  content: '';
-  position: absolute; left: 7px; top: 6px; bottom: 6px;
-  width: 2px;
-  background: repeating-linear-gradient(
-    to bottom,
-    var(--blue) 0, var(--blue) 6px,
-    transparent 6px, transparent 12px
-  );
-  border-radius: 1px;
-}
-.card-timeline .tl-item { position: relative; padding-bottom: 20px; }
-.card-timeline .tl-item:last-child { padding-bottom: 0; }
-.card-timeline .tl-dot {
-  position: absolute; left: -28px; top: 3px;
-  width: 16px; height: 16px;
-  border-radius: 50%;
-  border: 2.5px solid var(--blue);
-  background: #fff;
-  z-index: 1;
-}
-.card-timeline .tl-item:first-child .tl-dot { background: var(--yellow); border-color: var(--blue); }
-.card-timeline .tl-item:last-child .tl-dot { background: var(--blue); }
-.card-timeline .tl-year {
-  font-size: 12px; font-weight: 700;
-  color: var(--yellow);
-  background: rgba(255, 217, 61, 0.15);
-  display: inline-block;
-  padding: 1px 8px;
-  border-radius: 4px;
-  font-family: 'Fira Code', monospace;
-  margin-bottom: 3px;
-}
-.card-timeline .tl-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-.card-timeline .tl-desc { font-size: 12px; color: var(--text-sub); line-height: 1.5; }
-
-/* --- skills --- */
-.card-skills {
-  width: 480px;
-  padding: 28px;
-}
-.card-skills .card-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  display: flex; align-items: center; gap: 8px;
-  color: var(--blue);
-  font-family: 'Caveat', cursive;
-}
-.card-skills .card-title-icon { font-size: 16px; }
-.card-skills .skill-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-.card-skills .skill-tag {
-  display: inline-flex; align-items: center;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
-  border: 1.5px solid var(--blue-border);
-  background: transparent;
-  color: var(--blue);
-  transition: all 0.2s;
-}
-.card-skills .skill-tag:hover { transform: translateY(-2px); box-shadow: 0 3px 10px rgba(74, 124, 201, 0.12); }
-.card-skills .skill-tag.primary { background: var(--yellow); border-color: var(--blue); color: var(--text); font-weight: 600; }
-.card-skills .skill-tag.secondary { background: var(--blue-light); border-color: var(--blue-border); color: var(--blue); }
-.card-skills .skill-tag.tertiary { background: var(--bg); border-color: var(--blue-border); color: var(--text-sub); }
-.card-skills .skill-tag.accent { background: var(--yellow-light); border-color: rgba(255, 217, 61, 0.5); color: #9a7b00; }
-
-/* --- opinions --- */
-.card-opinions {
-  width: 360px;
-  padding: 28px;
-}
-.card-opinions .card-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  display: flex; align-items: center; gap: 8px;
-  color: var(--blue);
-  font-family: 'Caveat', cursive;
-}
-.card-opinions .card-title-icon { font-size: 16px; }
-.card-opinions .opinion-item {
-  padding: 14px 0;
-  border-bottom: 1.5px dashed var(--blue-border);
-}
-.card-opinions .opinion-item:last-child { border-bottom: none; }
-.card-opinions .opinion-title {
-  font-size: 14px; font-weight: 600;
-  color: var(--text);
-  margin-bottom: 4px;
-  display: flex; align-items: flex-start; gap: 8px;
-}
-.card-opinions .opinion-title::before { content: '📝'; font-size: 14px; flex-shrink: 0; }
-.card-opinions .opinion-source {
-  font-size: 11px;
-  color: var(--text-muted);
-  font-family: 'Fira Code', monospace;
-}
-
-/* --- work --- */
-.card-work {
-  width: 320px;
-  overflow: hidden;
-  padding: 0;
-}
-.card-work .work-banner {
-  height: 90px;
+.wb-pen-label { font-size: 16px; }
+.wb-pen-sep { width: 1.5px; height: 20px; background: var(--blue-border); }
+.wb-pen-width {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid transparent;
+  background: transparent; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-  border-bottom: 2px dashed var(--blue-border);
 }
-.card-work .work-banner-text {
-  font-family: 'Caveat', cursive;
-  font-size: 26px;
-  color: var(--blue);
+.wb-pen-width span { background: var(--text); border-radius: 50%; display: block; }
+.wb-pen-width.active { border-color: var(--blue); }
+.wb-pen-tool {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid transparent;
+  background: transparent; cursor: pointer; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
 }
-.card-work .work-banner.xhs { background: linear-gradient(135deg, #ffe0e0, #fff0f0); }
-.card-work .work-banner.cola { background: linear-gradient(135deg, #dfe9f5, #eef4ff); }
-.card-work .work-banner.norush { background: linear-gradient(135deg, #d5f5e3, #eafaf1); }
-.card-work .work-banner.poem { background: linear-gradient(135deg, #ede7f6, #f3e5f5); }
-.card-work .work-body { padding: 18px 22px 22px; }
-.card-work .work-name { font-size: 15px; font-weight: 700; color: var(--blue); margin-bottom: 6px; }
-.card-work .work-desc { font-size: 13px; color: var(--text-sub); line-height: 1.6; margin-bottom: 12px; }
-.card-work .work-tag {
-  display: inline-block;
-  font-size: 11px;
-  padding: 3px 10px;
-  border-radius: 20px;
-  border: 1.5px solid var(--blue-border);
-  background: var(--blue-light);
-  color: var(--blue);
-  margin-right: 4px;
-  margin-bottom: 4px;
+.wb-pen-tool.active { border-color: var(--blue); background: var(--blue-light); }
+.wb-pen-done {
+  border: none; background: var(--blue); color: #fff;
+  border-radius: 999px; padding: 7px 14px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  font-family: inherit;
 }
-.card-work .work-link {
-  display: inline-flex; align-items: center; gap: 4px;
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--blue);
-  text-decoration: none;
-  font-weight: 600;
-}
-.card-work .work-link:hover { text-decoration: underline; }
-
-/* --- ai --- */
-.card-ai {
-  width: 280px;
-  padding: 24px;
-  background: linear-gradient(135deg, #f0f5ff 0%, var(--bg) 100%);
-  border: 2px dashed var(--blue-border);
-}
-.card-ai .ai-bubble {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: #fff;
-  padding: 10px 16px;
-  border-radius: 16px 16px 16px 4px;
-  font-size: 14px;
-  border: 1.5px dashed var(--blue-border);
-  margin-bottom: 12px;
-  color: var(--text);
-}
-.card-ai .ai-name {
-  font-size: 22px; font-weight: 700;
-  margin-bottom: 4px;
-  color: var(--blue);
-  font-family: 'Caveat', cursive;
-}
-.card-ai .ai-desc { font-size: 13px; color: var(--text-sub); line-height: 1.6; }
-
-/* --- link --- */
-.card-tpl-link {
-  width: 240px;
-  padding: 18px 20px;
-  background: var(--card-bg);
-  border: 2px dashed var(--blue-border);
-}
-.card-tpl-link .tpl-link-icon { font-size: 28px; margin-bottom: 8px; }
-.card-tpl-link .tpl-link-title {
-  font-size: 14px; font-weight: 600;
-  color: var(--text);
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-.card-tpl-link .tpl-link-go {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 5px 12px;
-  border-radius: 20px;
-  background: var(--blue);
-  text-decoration: none;
-  transition: all 0.15s;
-}
-.card-tpl-link .tpl-link-go:hover { background: #3a6cb9; transform: translateY(-1px); }
+.wb-pen-done:hover { filter: brightness(1.1); }
 
 /* ============================================================
    Modal / Picker / Toast
@@ -630,7 +481,8 @@ body {
   display: flex; align-items: center; justify-content: center;
 }
 .wb-modal {
-  width: 400px; max-width: 92vw; background: var(--bg);
+  width: 400px; max-width: 92vw; max-height: 86vh; overflow-y: auto;
+  background: var(--bg);
   border: 2px dashed var(--blue-border); border-radius: 18px;
   padding: 22px 22px 16px;
   box-shadow: 0 16px 48px rgba(26, 26, 46, 0.18);
@@ -653,7 +505,7 @@ body {
   border: 2px solid transparent; padding: 0;
 }
 .wb-color.active { border-color: var(--blue); transform: scale(1.12); }
-.wb-modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.wb-modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
 .wb-modal-cancel, .wb-modal-send {
   border-radius: 10px; padding: 8px 16px; font-size: 13px; font-weight: 600;
   cursor: pointer; font-family: inherit; border: none;
@@ -663,6 +515,49 @@ body {
 .wb-modal-send:disabled { opacity: 0.5; cursor: not-allowed; }
 .wb-modal-send:hover:not(:disabled) { filter: brightness(1.08); }
 .wb-modal-status { font-size: 12px; color: #b08500; margin-top: 10px; min-height: 14px; }
+
+/* emoji picker rows */
+.wb-emoji-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.wb-emoji-grid { max-height: 168px; overflow-y: auto; }
+.wb-emoji {
+  width: 38px; height: 38px; font-size: 20px;
+  border-radius: 10px; border: 1.5px dashed var(--blue-border);
+  background: #fff; cursor: pointer;
+  transition: all 0.15s;
+}
+.wb-emoji:hover { transform: scale(1.1); }
+.wb-emoji.active { border-color: var(--blue); border-style: solid; background: var(--blue-light); }
+
+/* polaroid upload */
+.wb-upload {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 120px;
+  border: 2px dashed var(--blue-border); border-radius: 12px;
+  background: #fff; cursor: pointer;
+  font-size: 13px; color: var(--text-sub);
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: all 0.15s;
+}
+.wb-upload:hover { border-color: var(--blue); background: var(--blue-light); }
+.wb-upload-preview { max-width: 100%; max-height: 220px; display: block; }
+
+/* vote options editor */
+.wb-vote-opt-row { display: flex; align-items: center; gap: 6px; }
+.wb-vote-opt-row .wb-modal-input { flex: 1; }
+.wb-vote-opt-del {
+  width: 28px; height: 28px; flex-shrink: 0;
+  border-radius: 8px; border: 1.5px solid var(--blue-border);
+  background: #fff; color: #c0392b; cursor: pointer;
+  margin-bottom: 10px; font-size: 14px;
+}
+.wb-vote-opt-add {
+  border: 1.5px dashed var(--blue-border); background: transparent;
+  color: var(--blue); border-radius: 10px;
+  padding: 7px 12px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: inherit; margin-bottom: 10px;
+}
+.wb-vote-opt-add:hover { background: var(--blue-light); }
 
 /* template picker */
 .wb-picker { width: 460px; }
@@ -715,4 +610,5 @@ body {
   .wb-toolbar { padding: 0 8px; gap: 4px; }
   .wb-tb-btn { padding: 0 10px; font-size: 12px; }
   .wb-logo span { display: none; }
+  .wb-pen-bar { bottom: 12px; padding: 6px 10px; gap: 6px; }
 }

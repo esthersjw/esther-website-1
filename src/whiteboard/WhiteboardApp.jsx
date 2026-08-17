@@ -2,36 +2,69 @@ import React from 'react';
 import CardView from './CardView.jsx';
 import MessageModal from './MessageModal.jsx';
 import TemplatePicker from './TemplatePicker.jsx';
-import { TEMPLATES, editableText, withEditedText } from './templates.jsx';
-import { seedCards, messageColors } from './seedCards.js';
+import CardModal from './CardModal.jsx';
+import DoodleLayer from './DoodleLayer.jsx';
+import { getTemplate, editableText, withEditedText } from './templates.jsx';
+import { seedCards } from './seedCards.js';
 import {
   getMyToken,
   isAdmin,
   loadLocalCards,
   saveLocalCards,
+  loadLocalStrokes,
+  saveLocalStrokes,
   deleteRemoteCard,
   postRemoteCard,
   updateRemoteCard,
+  postRemoteStroke,
+  deleteRemoteStroke,
   supabaseReady,
 } from './data.js';
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+const PEN_COLORS = ['#2b2b2b', '#e84a5f', '#4a7cc9', '#3aa655', '#f5a623', '#9b59b6'];
+const PEN_WIDTHS = [3, 6, 11];
+const SEED_VOTES_KEY = 'wb.seedVotes.v1';
+
+function loadSeedVotes() {
+  try {
+    return JSON.parse(localStorage.getItem(SEED_VOTES_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
 
 export default function WhiteboardApp() {
   const myToken = React.useMemo(getMyToken, []);
   const admin = isAdmin(myToken);
 
-  const [cards, setCards] = React.useState(() => [...seedCards, ...loadLocalCards()]);
+  const [cards, setCards] = React.useState(() => {
+    const sv = loadSeedVotes();
+    const seeds = seedCards.map((s) =>
+      sv[s.id] ? { ...s, data: { ...s.data, options: sv[s.id] } } : s
+    );
+    return [...seeds, ...loadLocalCards()];
+  });
+  const [strokes, setStrokes] = React.useState(loadLocalStrokes);
   const [scale, setScale] = React.useState(0.8);
   const [pan, setPan] = React.useState({ x: 40, y: 10 });
   const [editing, setEditing] = React.useState(null); // { id, text }
-  const [modalOpen, setModalOpen] = React.useState(false);
+  const [modalOpen, setModalOpen] = React.useState(false); // 留言
   const [modalStatus, setModalStatus] = React.useState('');
   const [pickerOpen, setPickerOpen] = React.useState(false);
+  const [cardModal, setCardModal] = React.useState(null); // { mode, tpl, card }
   const [statusMsg, setStatusMsg] = React.useState('');
+
+  // 涂鸦
+  const [drawMode, setDrawMode] = React.useState(false);
+  const [pen, setPen] = React.useState({ color: PEN_COLORS[0], width: PEN_WIDTHS[1], eraser: false });
+  const [curStroke, setCurStroke] = React.useState(null);
 
   const canvasRef = React.useRef(null);
   const dragRef = React.useRef(null);
+  const strokeRef = React.useRef(null);
+  const erasingRef = React.useRef(false);
+  const movedRef = React.useRef(false); // 拖动后抑制点击（投票等）
   const zRef = React.useRef(10);
   const cardsRef = React.useRef(cards);
   cardsRef.current = cards;
@@ -74,7 +107,7 @@ export default function WhiteboardApp() {
   // ---------- add message ----------
   const addMessage = React.useCallback(
     (name, text, color) => {
-      const pos = randomPos(cardsRef.current, 30);
+      const pos = randomPos(cardsRef.current);
       const card = {
         id: `msg-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
         kind: 'message',
@@ -102,11 +135,22 @@ export default function WhiteboardApp() {
     [myToken, persist]
   );
 
-  // ---------- add templated note ----------
-  const addNote = React.useCallback(
-    (tplId) => {
-      const tpl = TEMPLATES.find((t) => t.id === tplId);
-      if (!tpl) return;
+  // ---------- templated cards (intro / sticker / polaroid / vote) ----------
+  const openCreateModal = React.useCallback((tplId) => {
+    setPickerOpen(false);
+    setCardModal({ mode: 'create', tpl: tplId, card: null });
+  }, []);
+
+  const submitCardModal = React.useCallback(
+    (data) => {
+      if (!cardModal) return;
+      if (cardModal.mode === 'edit') {
+        updateCard(cardModal.card.id, { data }, true);
+        setCardModal(null);
+        flashStatus('已保存 ✨');
+        return;
+      }
+      const tpl = getTemplate(cardModal.tpl);
       const rect = canvasRef.current?.getBoundingClientRect();
       const cx = rect ? (rect.width / 2 - pan.x) / scale : 400;
       const cy = rect ? (rect.height / 2 - pan.y) / scale : 300;
@@ -116,7 +160,7 @@ export default function WhiteboardApp() {
         owner: myToken,
         tpl: tpl.id,
         name: '',
-        data: defaultData(tpl.id),
+        data,
         x: Math.round(cx - (tpl.w || 240) / 2),
         y: Math.round(cy - (tpl.h || 160) / 2),
         w: tpl.w,
@@ -128,13 +172,41 @@ export default function WhiteboardApp() {
         persist(next);
         return next;
       });
-      setPickerOpen(false);
+      setCardModal(null);
       if (supabaseReady()) {
         postRemoteCard(card).catch(() => {});
       }
-      flashStatus(`新建了一张${tpl.name}，双击编辑 ✏️`);
+      flashStatus(`${tpl.icon} ${tpl.name}已贴到白板 ✨`);
     },
-    [myToken, persist, pan.x, pan.y, scale]
+    [cardModal, myToken, persist, pan.x, pan.y, scale, updateCard]
+  );
+
+  // ---------- vote ----------
+  const onVote = React.useCallback(
+    (card, idx) => {
+      const options = (card.data?.options || []).map((op, i) => {
+        const had = (op.votes || []).includes(myToken);
+        const votes = (op.votes || []).filter((t) => t !== myToken);
+        if (i === idx && !had) votes.push(myToken);
+        return { ...op, votes };
+      });
+      if (card.kind === 'seed') {
+        // 种子投票卡：票数单独存本地（不进入卡片存储）
+        setCards((prev) =>
+          prev.map((c) => (c.id === card.id ? { ...c, data: { ...c.data, options } } : c))
+        );
+        try {
+          const sv = loadSeedVotes();
+          sv[card.id] = options;
+          localStorage.setItem(SEED_VOTES_KEY, JSON.stringify(sv));
+        } catch {
+          /* ignore */
+        }
+      } else {
+        updateCard(card.id, { data: { ...card.data, options } }, true);
+      }
+    },
+    [myToken, updateCard]
   );
 
   // ---------- status toast ----------
@@ -167,10 +239,123 @@ export default function WhiteboardApp() {
     return () => el.removeEventListener('wheel', onWheel);
   }, []);
 
+  const toWorld = React.useCallback(
+    (e) => {
+      const rect = canvasRef.current.getBoundingClientRect();
+      return {
+        x: (e.clientX - rect.left - pan.x) / scale,
+        y: (e.clientY - rect.top - pan.y) / scale,
+      };
+    },
+    [pan.x, pan.y, scale]
+  );
+
+  // ---------- doodle: strokes ----------
+  const eraseAt = React.useCallback(
+    (wx, wy) => {
+      const r = 16 / scale;
+      setStrokes((prev) => {
+        const removed = [];
+        const next = prev.filter((s) => {
+          const hit =
+            (admin || s.owner === myToken) &&
+            s.points.some(
+              (v, i) => i % 2 === 0 && Math.hypot(v - wx, s.points[i + 1] - wy) < r + s.width / 2
+            );
+          if (hit) removed.push(s.id);
+          return !hit;
+        });
+        if (removed.length) {
+          saveLocalStrokes(next);
+          if (supabaseReady()) removed.forEach((id) => deleteRemoteStroke(id).catch(() => {}));
+        }
+        return next;
+      });
+    },
+    [scale, admin, myToken]
+  );
+
+  const strokeStart = React.useCallback(
+    (e) => {
+      if (e.button !== 0) return;
+      const { x, y } = toWorld(e);
+      if (pen.eraser) {
+        erasingRef.current = true;
+        eraseAt(x, y);
+        return;
+      }
+      strokeRef.current = {
+        id: `stk-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
+        owner: myToken,
+        color: pen.color,
+        width: pen.width,
+        points: [x, y],
+        createdAt: Date.now(),
+      };
+      setCurStroke({ ...strokeRef.current });
+    },
+    [toWorld, pen, myToken, eraseAt]
+  );
+
+  React.useEffect(() => {
+    if (!drawMode) return;
+    const onMove = (e) => {
+      if (erasingRef.current) {
+        const { x, y } = toWorld(e);
+        eraseAt(x, y);
+        return;
+      }
+      const s = strokeRef.current;
+      if (!s) return;
+      const { x, y } = toWorld(e);
+      const n = s.points.length;
+      if (Math.hypot(x - s.points[n - 2], y - s.points[n - 1]) > 1.5) {
+        s.points.push(x, y);
+        setCurStroke({ ...s, points: [...s.points] });
+      }
+    };
+    const onUp = () => {
+      erasingRef.current = false;
+      const s = strokeRef.current;
+      if (!s) return;
+      strokeRef.current = null;
+      setCurStroke(null);
+      if (s.points.length < 4) s.points.push(s.points[0] + 0.01, s.points[1] + 0.01); // 点
+      setStrokes((prev) => {
+        const next = [...prev, s];
+        saveLocalStrokes(next);
+        return next;
+      });
+      if (supabaseReady()) postRemoteStroke(s).catch(() => {});
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+    };
+  }, [drawMode, toWorld, eraseAt]);
+
+  const undoStroke = React.useCallback(() => {
+    setStrokes((prev) => {
+      const idxRev = [...prev].reverse().findIndex((s) => s.owner === myToken);
+      if (idxRev === -1) return prev;
+      const idx = prev.length - 1 - idxRev;
+      const removed = prev[idx];
+      const next = prev.filter((_, i) => i !== idx);
+      saveLocalStrokes(next);
+      if (supabaseReady()) deleteRemoteStroke(removed.id).catch(() => {});
+      return next;
+    });
+  }, [myToken]);
+
   // ---------- canvas: pan & card drag via pointer events ----------
   const startDrag = React.useCallback(
     (e, card) => {
       if (e.button !== 0) return;
+      movedRef.current = false;
       if (card) {
         dragRef.current = {
           type: 'card',
@@ -179,6 +364,7 @@ export default function WhiteboardApp() {
           startY: e.clientY,
           cardX: card.x,
           cardY: card.y,
+          moved: false,
         };
         setCards((prev) =>
           prev.map((c) => (c.id === card.id ? { ...c, z: ++zRef.current } : c))
@@ -190,6 +376,7 @@ export default function WhiteboardApp() {
           startY: e.clientY,
           panX: pan.x,
           panY: pan.y,
+          moved: false,
         };
       }
     },
@@ -200,6 +387,7 @@ export default function WhiteboardApp() {
     const onMove = (e) => {
       const d = dragRef.current;
       if (!d) return;
+      if (Math.abs(e.clientX - d.startX) + Math.abs(e.clientY - d.startY) > 4) d.moved = true;
       if (d.type === 'pan') {
         setPan({ x: d.panX + (e.clientX - d.startX), y: d.panY + (e.clientY - d.startY) });
       } else if (d.type === 'card') {
@@ -209,6 +397,12 @@ export default function WhiteboardApp() {
       }
     };
     const onUp = () => {
+      if (dragRef.current?.moved) {
+        movedRef.current = true;
+        setTimeout(() => {
+          movedRef.current = false;
+        }, 120);
+      }
       dragRef.current = null;
     };
     window.addEventListener('pointermove', onMove);
@@ -223,8 +417,17 @@ export default function WhiteboardApp() {
 
   // ---------- edit ----------
   const startEdit = React.useCallback((card) => {
-    const text = card.tpl ? editableText(card.tpl, card.data) : card.text;
-    setEditing({ id: card.id, text: text || '' });
+    if (card.tpl) {
+      const t = getTemplate(card.tpl);
+      if (t.editModal) {
+        setCardModal({ mode: 'edit', tpl: card.tpl, card });
+        return;
+      }
+      if (!t.editField) return;
+      setEditing({ id: card.id, text: editableText(card.tpl, card.data) || '' });
+    } else {
+      setEditing({ id: card.id, text: card.text || '' });
+    }
   }, []);
   const saveEdit = React.useCallback(() => {
     if (!editing) return;
@@ -283,8 +486,18 @@ export default function WhiteboardApp() {
         <button className="wb-tb-btn wb-tb-primary" onClick={() => setModalOpen(true)}>
           ✍️ 留言
         </button>
-        <button className="wb-tb-btn" onClick={() => setPickerOpen(true)} title="选择模板新建卡片">
-          ＋ 新建
+        <button className="wb-tb-btn" onClick={() => setPickerOpen(true)} title="名片 / 贴纸 / 拍立得 / 投票">
+          ＋ 贴一张
+        </button>
+        <button
+          className={`wb-tb-btn wb-tb-doodle${drawMode ? ' active' : ''}`}
+          onClick={() => {
+            setDrawMode((d) => !d);
+            setPen((p) => ({ ...p, eraser: false }));
+          }}
+          title="在白板任意角落画画"
+        >
+          🖌️ 涂鸦
         </button>
         <div className="wb-tb-spacer" />
         <span className="wb-zoom-pct">{Math.round(scale * 100)}%</span>
@@ -305,7 +518,7 @@ export default function WhiteboardApp() {
           <div className="wb-layer-list">
             {cards.map((c) => (
               <div key={c.id} className="wb-layer-item" onClick={() => focusCard(c)}>
-                <span className="wb-layer-dot" style={{ background: c.color || '#ffd166' }} />
+                <span className="wb-layer-dot" style={{ background: c.color || c.data?.color || '#ffd166' }} />
                 <span className="wb-layer-name">{layerLabel(c)}</span>
                 <span className="wb-layer-owner">
                   {c.owner === myToken ? '我' : c.kind === 'seed' ? 'Esther' : '访客'}
@@ -316,9 +529,9 @@ export default function WhiteboardApp() {
         </div>
 
         <div
-          className="wb-canvas"
+          className={`wb-canvas${drawMode ? ' drawing' : ''}`}
           ref={canvasRef}
-          onPointerDown={(e) => startDrag(e, null)}
+          onPointerDown={(e) => (drawMode ? strokeStart(e) : startDrag(e, null))}
         >
           <div
             className="wb-transform"
@@ -338,6 +551,8 @@ export default function WhiteboardApp() {
                 onDelete={deleteCard}
                 onPointerDown={(e, c) => startDrag(e, c)}
                 onStartEdit={startEdit}
+                onVote={onVote}
+                movedRef={movedRef}
                 onBringFront={() => {
                   if (card.z < zRef.current - 1) {
                     setCards((prev) =>
@@ -347,9 +562,50 @@ export default function WhiteboardApp() {
                 }}
               />
             ))}
+            <DoodleLayer strokes={strokes} current={curStroke} />
           </div>
         </div>
       </div>
+
+      {drawMode && (
+        <div className="wb-pen-bar">
+          <span className="wb-pen-label">🖌️</span>
+          {PEN_COLORS.map((c) => (
+            <button
+              key={c}
+              className={`wb-color${pen.color === c && !pen.eraser ? ' active' : ''}`}
+              style={{ background: c }}
+              onClick={() => setPen((p) => ({ ...p, color: c, eraser: false }))}
+              aria-label="画笔颜色"
+            />
+          ))}
+          <span className="wb-pen-sep" />
+          {PEN_WIDTHS.map((w) => (
+            <button
+              key={w}
+              className={`wb-pen-width${pen.width === w && !pen.eraser ? ' active' : ''}`}
+              onClick={() => setPen((p) => ({ ...p, width: w, eraser: false }))}
+              aria-label="笔画粗细"
+            >
+              <span style={{ width: w + 2, height: w + 2 }} />
+            </button>
+          ))}
+          <span className="wb-pen-sep" />
+          <button
+            className={`wb-pen-tool${pen.eraser ? ' active' : ''}`}
+            onClick={() => setPen((p) => ({ ...p, eraser: !p.eraser }))}
+            title="橡皮擦（只能擦自己的笔迹）"
+          >
+            🧽
+          </button>
+          <button className="wb-pen-tool" onClick={undoStroke} title="撤销我上一笔">
+            ↩
+          </button>
+          <button className="wb-pen-done" onClick={() => setDrawMode(false)}>
+            完成 ✓
+          </button>
+        </div>
+      )}
 
       <MessageModal
         open={modalOpen}
@@ -361,7 +617,15 @@ export default function WhiteboardApp() {
         open={pickerOpen}
         admin={admin}
         onClose={() => setPickerOpen(false)}
-        onPick={addNote}
+        onPick={openCreateModal}
+      />
+      <CardModal
+        open={!!cardModal}
+        mode={cardModal?.mode}
+        tpl={cardModal?.tpl}
+        card={cardModal?.card}
+        onClose={() => setCardModal(null)}
+        onSubmit={submitCardModal}
       />
 
       {statusMsg && <div className="wb-toast">{statusMsg}</div>}
@@ -370,33 +634,17 @@ export default function WhiteboardApp() {
 }
 
 function layerLabel(c) {
+  if (c.tpl === 'intro') return `🪪 ${c.data?.name || '名片'}`;
+  if (c.tpl === 'sticker') return `${c.data?.emoji || '😆'} 贴纸`;
+  if (c.tpl === 'polaroid') return `📸 ${c.data?.caption || '拍立得'}`;
+  if (c.tpl === 'vote') return `🗳️ ${c.data?.question || '投票'}`;
   if (c.kind === 'seed') return c.data?.title || c.data?.name || '卡片';
   return c.name ? `💬 ${c.name}` : '💬 匿名';
 }
 
-function defaultData(tplId) {
-  const map = {
-    washi: { title: '新胶带卡', body: '双击编辑内容…' },
-    quote: { text: '在这里写一句想说的话…', source: '— 出处' },
-    dark: { title: '深色卡', body: '双击编辑内容…' },
-    sticky: { text: '写点便签内容…' },
-    narrative: { text: '在这里写一段故事…', author: '' },
-    ai: { bubble: '🤖', name: 'AI 伙伴', desc: '双击编辑描述…' },
-    link: { icon: '🔗', title: '链接标题', url: '' },
-    profile: { avatar: '👩‍💻', name: '名字', sub: '', tag: '', slogan: '', belief: '', quote: '', links: [] },
-    timeline: { icon: '📍', title: '时间线', items: [] },
-    skills: { icon: '🛠️', title: '技能', tags: [] },
-    opinions: { icon: '✍️', title: '观点', items: [] },
-    work: { bannerCls: 'xhs', bannerText: '作品', name: '', desc: '', tags: [], linkHref: '', linkLabel: '' },
-  };
-  return map[tplId] || {};
-}
-
-function randomPos(cards, padding = 30) {
-  const baseX = 400;
-  const baseY = 300;
-  let x = baseX + (Math.random() * 500 - 250);
-  let y = baseY + (Math.random() * 320 - 160);
+function randomPos(cards) {
+  let x = 400 + (Math.random() * 500 - 250);
+  let y = 300 + (Math.random() * 320 - 160);
   for (let i = 0; i < 10; i++) {
     const clash = cards.some((c) => Math.abs(c.x - x) < 320 && Math.abs(c.y - y) < 200);
     if (!clash) break;
