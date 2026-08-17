@@ -9,11 +9,14 @@ export const TEMPLATES = [
   // —— 访客可创建 ——
   { id: 'intro', name: '自我介绍卡', icon: '🪪', w: 300, h: 230, editModal: true, visitor: true },
   { id: 'sticker', name: '贴纸卡', icon: '😆', w: 150, h: 100, editModal: true, visitor: true },
-  { id: 'polaroid', name: '拍立得卡', icon: '📸', w: 230, h: 300, editField: 'caption', visitor: true },
-  { id: 'vote', name: '投票卡', icon: '🗳️', w: 300, h: 260, visitor: true },
+  { id: 'polaroid', name: '拍立得卡', icon: '📸', w: 230, h: 380, editField: 'caption', visitor: true },
+  { id: 'vote', name: '投票卡', icon: '🗳️', w: 300, h: 320, visitor: true },
   // —— 仅管理员预制 ——
-  { id: 'washi', name: '胶带卡', icon: '📦', w: 360, h: 220, editField: 'body' },
-  { id: 'profile', name: '个人卡', icon: '👤', w: 380, h: 320 },
+  { id: 'washi', name: '胶带卡', icon: '📦', w: 360, h: 280, editField: 'body' },
+  { id: 'profile', name: '个人卡', icon: '👤', w: 380, h: 430 },
+  { id: 'sticky', name: '便利贴', icon: '🗒️', w: 220, h: 170, editField: 'text' },
+  { id: 'darkquote', name: '深色引用卡', icon: '❝', w: 340, h: 190, editField: 'text' },
+  { id: 'narrative', name: '叙事卡', icon: '📖', w: 400, h: 230, editField: 'text' },
 ];
 
 export function getTemplate(id) {
@@ -59,6 +62,22 @@ export default function TemplateBody({ tpl, data, myToken, movedRef, onVote }) {
       return <VoteCard data={data} myToken={myToken} movedRef={movedRef} onVote={onVote} />;
     case 'profile':
       return <ProfileCard data={data} />;
+    case 'sticky':
+      return <div className="sticky-text">{data?.text}</div>;
+    case 'darkquote':
+      return (
+        <>
+          <div className="darkquote-text">{data?.text}</div>
+          {data?.author && <div className="darkquote-author">— {data.author}</div>}
+        </>
+      );
+    case 'narrative':
+      return (
+        <>
+          <div className="narrative-text">{data?.text}</div>
+          {data?.author && <div className="narrative-author">— {data.author}</div>}
+        </>
+      );
     case 'washi':
     default:
       return <WashiCard data={data} />;
@@ -122,7 +141,7 @@ function PolaroidCard({ data }) {
       ) : (
         <div className="polaroid-empty">📷</div>
       )}
-      <div className="polaroid-caption">{data?.caption || '…'}</div>
+      <div className="polaroid-caption">{data?.caption || ''}</div>
     </>
   );
 }

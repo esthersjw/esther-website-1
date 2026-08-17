@@ -22,7 +22,7 @@ export default function CardView({
   const isMine = card.owner === myToken;
   const tpl = getTemplate(card.tpl);
   const editable = !!card.tpl && isEditable(card.tpl);
-  const tplClass = TPL_CLASS[card.tpl] || '';
+  const tplClass = `${TPL_CLASS[card.tpl] || ''}${card.tpl === 'sticky' && card.data?.blue ? ' blue-sticky' : ''}`;
   const style = {
     left: card.x,
     top: card.y,
@@ -135,6 +135,9 @@ const TPL_CLASS = {
   vote: 'card-vote',
   washi: 'card-washi',
   profile: 'card-profile',
+  sticky: 'card-sticky',
+  darkquote: 'card-darkquote',
+  narrative: 'card-narrative',
 };
 
 function formatTime(ts) {
