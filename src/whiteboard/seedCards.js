@@ -49,7 +49,7 @@ export const seedCards = [
     x: 960,
     y: 460,
     w: 230,
-    h: 120,
+    h: 300,
     createdAt: 0,
   },
   {

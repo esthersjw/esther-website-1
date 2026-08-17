@@ -107,7 +107,10 @@ export default function WhiteboardApp() {
   // ---------- add message ----------
   const addMessage = React.useCallback(
     (name, text, color) => {
-      const pos = randomPos(cardsRef.current);
+      const rect = canvasRef.current?.getBoundingClientRect();
+      const cx = rect ? (rect.width / 2 - pan.x) / scale : 400;
+      const cy = rect ? (rect.height / 2 - pan.y) / scale : 300;
+      const spot = findSpot(cardsRef.current, 240, 96, cx, cy);
       const card = {
         id: `msg-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
         kind: 'message',
@@ -115,8 +118,8 @@ export default function WhiteboardApp() {
         name: name || '匿名',
         text,
         color,
-        x: pos.x,
-        y: pos.y,
+        x: spot.x,
+        y: spot.y,
         w: 240,
         h: 96,
         createdAt: Date.now(),
@@ -132,7 +135,7 @@ export default function WhiteboardApp() {
       }
       flashStatus('留言已贴到白板 ✨');
     },
-    [myToken, persist]
+    [myToken, persist, pan.x, pan.y, scale]
   );
 
   // ---------- templated cards (intro / sticker / polaroid / vote) ----------
@@ -154,6 +157,7 @@ export default function WhiteboardApp() {
       const rect = canvasRef.current?.getBoundingClientRect();
       const cx = rect ? (rect.width / 2 - pan.x) / scale : 400;
       const cy = rect ? (rect.height / 2 - pan.y) / scale : 300;
+      const spot = findSpot(cardsRef.current, tpl.w || 240, tpl.h || 160, cx, cy);
       const card = {
         id: `note-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
         kind: 'message',
@@ -161,8 +165,8 @@ export default function WhiteboardApp() {
         tpl: tpl.id,
         name: '',
         data,
-        x: Math.round(cx - (tpl.w || 240) / 2),
-        y: Math.round(cy - (tpl.h || 160) / 2),
+        x: spot.x,
+        y: spot.y,
         w: tpl.w,
         h: tpl.h,
         createdAt: Date.now(),
@@ -357,6 +361,8 @@ export default function WhiteboardApp() {
       if (e.button !== 0) return;
       movedRef.current = false;
       if (card) {
+        // 只有创建者（或管理员）能拖动卡片
+        if (!admin && card.owner !== myToken) return;
         dragRef.current = {
           type: 'card',
           id: card.id,
@@ -380,7 +386,7 @@ export default function WhiteboardApp() {
         };
       }
     },
-    [pan.x, pan.y]
+    [pan.x, pan.y, admin, myToken]
   );
 
   React.useEffect(() => {
@@ -642,14 +648,29 @@ function layerLabel(c) {
   return c.name ? `💬 ${c.name}` : '💬 匿名';
 }
 
-function randomPos(cards) {
-  let x = 400 + (Math.random() * 500 - 250);
-  let y = 300 + (Math.random() * 320 - 160);
-  for (let i = 0; i < 10; i++) {
-    const clash = cards.some((c) => Math.abs(c.x - x) < 320 && Math.abs(c.y - y) < 200);
-    if (!clash) break;
-    x += Math.random() * 320 - 160;
-    y += Math.random() * 200 - 100;
+// 从 (cx, cy) 附近向外环形搜索一个不覆盖任何现有卡片的空位
+function findSpot(cards, w, h, cx, cy) {
+  const gap = 24;
+  const hits = (x, y) =>
+    cards.some(
+      (c) =>
+        !(
+          x + w + gap <= c.x ||
+          c.x + (c.w || 300) + gap <= x ||
+          y + h + gap <= c.y ||
+          c.y + (c.h || 200) + gap <= y
+        )
+    );
+  if (!hits(cx - w / 2, cy - h / 2)) return { x: Math.round(cx - w / 2), y: Math.round(cy - h / 2) };
+  const step = 70;
+  for (let ring = 1; ring < 40; ring++) {
+    const n = ring * 8;
+    for (let i = 0; i < n; i++) {
+      const angle = (i / n) * Math.PI * 2;
+      const x = cx - w / 2 + Math.cos(angle) * ring * step * 1.5; // 横向扩散更快
+      const y = cy - h / 2 + Math.sin(angle) * ring * step;
+      if (!hits(x, y)) return { x: Math.round(x), y: Math.round(y) };
+    }
   }
-  return { x: Math.round(x), y: Math.round(y) };
+  return { x: Math.round(cx - w / 2), y: Math.round(cy - h / 2) };
 }

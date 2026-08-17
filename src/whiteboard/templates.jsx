@@ -7,10 +7,10 @@ import React from 'react';
 
 export const TEMPLATES = [
   // —— 访客可创建 ——
-  { id: 'intro', name: '自我介绍卡', icon: '🪪', w: 300, h: 210, editModal: true, visitor: true },
-  { id: 'sticker', name: '贴纸卡', icon: '😆', w: 150, h: 150, editModal: true, visitor: true },
-  { id: 'polaroid', name: '拍立得卡', icon: '📸', w: 230, h: 120, editField: 'caption', visitor: true },
-  { id: 'vote', name: '投票卡', icon: '🗳️', w: 300, h: 180, visitor: true },
+  { id: 'intro', name: '自我介绍卡', icon: '🪪', w: 300, h: 230, editModal: true, visitor: true },
+  { id: 'sticker', name: '贴纸卡', icon: '😆', w: 150, h: 100, editModal: true, visitor: true },
+  { id: 'polaroid', name: '拍立得卡', icon: '📸', w: 230, h: 300, editField: 'caption', visitor: true },
+  { id: 'vote', name: '投票卡', icon: '🗳️', w: 300, h: 260, visitor: true },
   // —— 仅管理员预制 ——
   { id: 'washi', name: '胶带卡', icon: '📦', w: 360, h: 220, editField: 'body' },
   { id: 'profile', name: '个人卡', icon: '👤', w: 380, h: 320 },

@@ -29,6 +29,7 @@ export default function CardView({
     width: card.w || tpl.w,
     minHeight: card.h || tpl.h,
     zIndex: card.z || 1,
+    cursor: canEdit ? undefined : 'default', // 别人的卡：不可拖动
   };
 
   return (
@@ -36,7 +37,10 @@ export default function CardView({
       className={`wb-card ${tplClass}${isMessage ? ' wb-card-message' : ''}${editing ? ' editing' : ''}`}
       id={card.id}
       style={style}
-      onPointerDown={(e) => onPointerDown(e, card)}
+      onPointerDown={(e) => {
+        e.stopPropagation(); // 阻止冒泡到画布（否则卡片拖拽会被平移覆盖）
+        onPointerDown(e, card);
+      }}
       onMouseEnter={onBringFront}
       onDoubleClick={(e) => {
         if (!canEdit || (!editable && !isMessage)) return;

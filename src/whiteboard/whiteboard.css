@@ -118,13 +118,13 @@ body {
   transform-origin: 0 0;
 }
 
-/* ---------- Doodle layer ---------- */
+/* ---------- Doodle layer（在卡片之下：画到卡片位置的笔迹会被卡片盖住） ---------- */
 .wb-doodles {
   position: absolute; top: 0; left: 0;
   width: 10px; height: 10px;
   overflow: visible;
   pointer-events: none;
-  z-index: 100000;
+  z-index: 0;
 }
 
 /* ---------- Card base ---------- */
