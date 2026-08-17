@@ -208,7 +208,7 @@ function WorksTab() {
 }
 
 function SystemTab() {
-  return <main className="tab-page" id="page-system"><div className="canvas-page"><iframe data-src="infinite-canvas.html" id="canvasFrame" title="ESTHER's OS Canvas"></iframe><div className="canvas-hint">Scroll 缩放 · Drag 移动画布</div></div></main>;
+  return <main className="tab-page" id="page-system"><div className="canvas-page"><iframe data-src="whiteboard.html" id="canvasFrame" title="ESTHER's Whiteboard"></iframe><div className="canvas-hint">Scroll 缩放 · Drag 移动画布</div></div></main>;
 }
 
 export default function HomePage() {
