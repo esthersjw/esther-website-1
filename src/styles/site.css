@@ -1427,7 +1427,7 @@ body {
 }
 .canvas-hint {
   position: fixed;
-  top: 16px;
+  top: 60px; /* below the 48px canvas toolbar so it never covers its buttons */
   left: 50%;
   transform: translateX(-50%);
   font-family: 'Fira Code', monospace;
@@ -1462,6 +1462,8 @@ body {
   .pill-nav { bottom: 16px; }
   .pill-nav button { font-size: 12px; padding: 8px 13px; }
   .pill-nav .pill-num { display: none; }
+
+  .canvas-hint { display: none; } /* canvas already shows its own help hint */
 
   .goodbye-terminal { font-size: 11px; line-height: 1.9; }
 
