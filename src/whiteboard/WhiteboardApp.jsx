@@ -1,10 +1,9 @@
 import React from 'react';
 import CardView from './CardView.jsx';
 import MessageModal from './MessageModal.jsx';
-import {
-  seedCards,
-  messageColors,
-} from './seedCards.js';
+import TemplatePicker from './TemplatePicker.jsx';
+import { TEMPLATES, editableText, withEditedText } from './templates.jsx';
+import { seedCards, messageColors } from './seedCards.js';
 import {
   getMyToken,
   isAdmin,
@@ -14,7 +13,6 @@ import {
   postRemoteCard,
   updateRemoteCard,
   supabaseReady,
-  WB_CONFIG,
 } from './data.js';
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
@@ -24,11 +22,12 @@ export default function WhiteboardApp() {
   const admin = isAdmin(myToken);
 
   const [cards, setCards] = React.useState(() => [...seedCards, ...loadLocalCards()]);
-  const [scale, setScale] = React.useState(0.85);
-  const [pan, setPan] = React.useState({ x: 60, y: 20 });
+  const [scale, setScale] = React.useState(0.8);
+  const [pan, setPan] = React.useState({ x: 40, y: 10 });
   const [editing, setEditing] = React.useState(null); // { id, text }
   const [modalOpen, setModalOpen] = React.useState(false);
   const [modalStatus, setModalStatus] = React.useState('');
+  const [pickerOpen, setPickerOpen] = React.useState(false);
   const [statusMsg, setStatusMsg] = React.useState('');
 
   const canvasRef = React.useRef(null);
@@ -51,7 +50,6 @@ export default function WhiteboardApp() {
         return next;
       });
       if (syncRemote && supabaseReady()) {
-        // RLS 保证只能改自己的
         updateRemoteCard(id, patch).catch(() => {});
       }
     },
@@ -76,7 +74,7 @@ export default function WhiteboardApp() {
   // ---------- add message ----------
   const addMessage = React.useCallback(
     (name, text, color) => {
-      const pos = randomPos(cardsRef.current, scale, pan);
+      const pos = randomPos(cardsRef.current, 30);
       const card = {
         id: `msg-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
         kind: 'message',
@@ -101,37 +99,43 @@ export default function WhiteboardApp() {
       }
       flashStatus('留言已贴到白板 ✨');
     },
-    [myToken, persist, pan, scale]
+    [myToken, persist]
   );
 
-  // ---------- add blank note ----------
-  const addNote = React.useCallback(() => {
-    const rect = canvasRef.current?.getBoundingClientRect();
-    const cx = rect ? (rect.width / 2 - pan.x) / scale : 400;
-    const cy = rect ? (rect.height / 2 - pan.y) / scale : 300;
-    const card = {
-      id: `note-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
-      kind: 'message',
-      owner: myToken,
-      name: '',
-      text: '双击编辑内容…',
-      color: '#ffd166',
-      x: Math.round(cx - 120),
-      y: Math.round(cy - 60),
-      w: 240,
-      h: 120,
-      createdAt: Date.now(),
-    };
-    setCards((prev) => {
-      const next = [...prev, card];
-      persist(next);
-      return next;
-    });
-    if (supabaseReady()) {
-      postRemoteCard(card).catch(() => {});
-    }
-    flashStatus('新建了一张卡片，双击编辑 ✏️');
-  }, [myToken, persist, pan.x, pan.y, scale]);
+  // ---------- add templated note ----------
+  const addNote = React.useCallback(
+    (tplId) => {
+      const tpl = TEMPLATES.find((t) => t.id === tplId);
+      if (!tpl) return;
+      const rect = canvasRef.current?.getBoundingClientRect();
+      const cx = rect ? (rect.width / 2 - pan.x) / scale : 400;
+      const cy = rect ? (rect.height / 2 - pan.y) / scale : 300;
+      const card = {
+        id: `note-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
+        kind: 'message',
+        owner: myToken,
+        tpl: tpl.id,
+        name: '',
+        data: defaultData(tpl.id),
+        x: Math.round(cx - (tpl.w || 240) / 2),
+        y: Math.round(cy - (tpl.h || 160) / 2),
+        w: tpl.w,
+        h: tpl.h,
+        createdAt: Date.now(),
+      };
+      setCards((prev) => {
+        const next = [...prev, card];
+        persist(next);
+        return next;
+      });
+      setPickerOpen(false);
+      if (supabaseReady()) {
+        postRemoteCard(card).catch(() => {});
+      }
+      flashStatus(`新建了一张${tpl.name}，双击编辑 ✏️`);
+    },
+    [myToken, persist, pan.x, pan.y, scale]
+  );
 
   // ---------- status toast ----------
   const flashStatus = React.useCallback((msg) => {
@@ -164,34 +168,33 @@ export default function WhiteboardApp() {
   }, []);
 
   // ---------- canvas: pan & card drag via pointer events ----------
-  const startDrag = React.useCallback((e, card) => {
-    if (e.button !== 0) return;
-    if (card) {
-      dragRef.current = {
-        type: 'card',
-        id: card.id,
-        startX: e.clientX,
-        startY: e.clientY,
-        cardX: card.x,
-        cardY: card.y,
-      };
-      // bring to front
-      setCards((prev) => {
-        const next = prev.map((c) =>
-          c.id === card.id ? { ...c, z: ++zRef.current } : c
+  const startDrag = React.useCallback(
+    (e, card) => {
+      if (e.button !== 0) return;
+      if (card) {
+        dragRef.current = {
+          type: 'card',
+          id: card.id,
+          startX: e.clientX,
+          startY: e.clientY,
+          cardX: card.x,
+          cardY: card.y,
+        };
+        setCards((prev) =>
+          prev.map((c) => (c.id === card.id ? { ...c, z: ++zRef.current } : c))
         );
-        return next;
-      });
-    } else {
-      dragRef.current = {
-        type: 'pan',
-        startX: e.clientX,
-        startY: e.clientY,
-        panX: pan.x,
-        panY: pan.y,
-      };
-    }
-  }, [pan.x, pan.y]);
+      } else {
+        dragRef.current = {
+          type: 'pan',
+          startX: e.clientX,
+          startY: e.clientY,
+          panX: pan.x,
+          panY: pan.y,
+        };
+      }
+    },
+    [pan.x, pan.y]
+  );
 
   React.useEffect(() => {
     const onMove = (e) => {
@@ -220,28 +223,33 @@ export default function WhiteboardApp() {
 
   // ---------- edit ----------
   const startEdit = React.useCallback((card) => {
-    setEditing({ id: card.id, text: card.text });
+    const text = card.tpl ? editableText(card.tpl, card.data) : card.text;
+    setEditing({ id: card.id, text: text || '' });
   }, []);
   const saveEdit = React.useCallback(() => {
     if (!editing) return;
-    updateCard(editing.id, { text: editing.text }, true);
+    const card = cardsRef.current.find((c) => c.id === editing.id);
+    if (card) {
+      if (card.tpl) {
+        updateCard(editing.id, { data: withEditedText(card.tpl, card.data, editing.text) }, true);
+      } else {
+        updateCard(editing.id, { text: editing.text }, true);
+      }
+    }
     setEditing(null);
   }, [editing, updateCard]);
   const cancelEdit = React.useCallback(() => setEditing(null), []);
 
   // ---------- view helpers ----------
-  const focusCard = React.useCallback(
-    (card) => {
-      const rect = canvasRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      setScale(1);
-      setPan({
-        x: rect.width / 2 - (card.x + card.w / 2),
-        y: rect.height / 2 - (card.y + card.h / 2),
-      });
-    },
-    []
-  );
+  const focusCard = React.useCallback((card) => {
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setScale(1);
+    setPan({
+      x: rect.width / 2 - (card.x + (card.w || 300) / 2),
+      y: rect.height / 2 - (card.y + (card.h || 200) / 2),
+    });
+  }, []);
 
   const fitAll = React.useCallback(() => {
     const rect = canvasRef.current?.getBoundingClientRect();
@@ -250,8 +258,8 @@ export default function WhiteboardApp() {
     if (!cs.length) return;
     const minX = Math.min(...cs.map((c) => c.x));
     const minY = Math.min(...cs.map((c) => c.y));
-    const maxX = Math.max(...cs.map((c) => c.x + c.w));
-    const maxY = Math.max(...cs.map((c) => c.y + c.h));
+    const maxX = Math.max(...cs.map((c) => c.x + (c.w || 300)));
+    const maxY = Math.max(...cs.map((c) => c.y + (c.h || 200)));
     const w = maxX - minX + 80;
     const h = maxY - minY + 80;
     const s = clamp(Math.min(rect.width / w, rect.height / h), 0.2, 1.4);
@@ -275,14 +283,14 @@ export default function WhiteboardApp() {
         <button className="wb-tb-btn wb-tb-primary" onClick={() => setModalOpen(true)}>
           ✍️ 留言
         </button>
-        <button className="wb-tb-btn" onClick={addNote} title="新建一张自己的卡片">
+        <button className="wb-tb-btn" onClick={() => setPickerOpen(true)} title="选择模板新建卡片">
           ＋ 新建
         </button>
         <div className="wb-tb-spacer" />
+        <span className="wb-zoom-pct">{Math.round(scale * 100)}%</span>
         <button className="wb-tb-btn" onClick={() => setScale((s) => clamp(s * 0.9, 0.2, 3))} title="缩小">
           −
         </button>
-        <span className="wb-zoom-pct">{Math.round(scale * 100)}%</span>
         <button className="wb-tb-btn" onClick={() => setScale((s) => clamp(s * 1.1, 0.2, 3))} title="放大">
           +
         </button>
@@ -297,10 +305,8 @@ export default function WhiteboardApp() {
           <div className="wb-layer-list">
             {cards.map((c) => (
               <div key={c.id} className="wb-layer-item" onClick={() => focusCard(c)}>
-                <span className="wb-layer-dot" style={{ background: c.color }} />
-                <span className="wb-layer-name">
-                  {c.kind === 'seed' ? c.name : `💬 ${c.name || '匿名'}`}
-                </span>
+                <span className="wb-layer-dot" style={{ background: c.color || '#ffd166' }} />
+                <span className="wb-layer-name">{layerLabel(c)}</span>
                 <span className="wb-layer-owner">
                   {c.owner === myToken ? '我' : c.kind === 'seed' ? 'Esther' : '访客'}
                 </span>
@@ -351,22 +357,48 @@ export default function WhiteboardApp() {
         onSubmit={addMessage}
         status={modalStatus}
       />
+      <TemplatePicker
+        open={pickerOpen}
+        admin={admin}
+        onClose={() => setPickerOpen(false)}
+        onPick={addNote}
+      />
 
       {statusMsg && <div className="wb-toast">{statusMsg}</div>}
     </div>
   );
 }
 
-function randomPos(cards, scale, pan) {
-  // 视口中心附近随机，尽量避开已有卡片
+function layerLabel(c) {
+  if (c.kind === 'seed') return c.data?.title || c.data?.name || '卡片';
+  return c.name ? `💬 ${c.name}` : '💬 匿名';
+}
+
+function defaultData(tplId) {
+  const map = {
+    washi: { title: '新胶带卡', body: '双击编辑内容…' },
+    quote: { text: '在这里写一句想说的话…', source: '— 出处' },
+    dark: { title: '深色卡', body: '双击编辑内容…' },
+    sticky: { text: '写点便签内容…' },
+    narrative: { text: '在这里写一段故事…', author: '' },
+    ai: { bubble: '🤖', name: 'AI 伙伴', desc: '双击编辑描述…' },
+    link: { icon: '🔗', title: '链接标题', url: '' },
+    profile: { avatar: '👩‍💻', name: '名字', sub: '', tag: '', slogan: '', belief: '', quote: '', links: [] },
+    timeline: { icon: '📍', title: '时间线', items: [] },
+    skills: { icon: '🛠️', title: '技能', tags: [] },
+    opinions: { icon: '✍️', title: '观点', items: [] },
+    work: { bannerCls: 'xhs', bannerText: '作品', name: '', desc: '', tags: [], linkHref: '', linkLabel: '' },
+  };
+  return map[tplId] || {};
+}
+
+function randomPos(cards, padding = 30) {
   const baseX = 400;
   const baseY = 300;
   let x = baseX + (Math.random() * 500 - 250);
   let y = baseY + (Math.random() * 320 - 160);
   for (let i = 0; i < 10; i++) {
-    const clash = cards.some(
-      (c) => Math.abs(c.x - x) < 300 && Math.abs(c.y - y) < 180
-    );
+    const clash = cards.some((c) => Math.abs(c.x - x) < 320 && Math.abs(c.y - y) < 200);
     if (!clash) break;
     x += Math.random() * 320 - 160;
     y += Math.random() * 200 - 100;

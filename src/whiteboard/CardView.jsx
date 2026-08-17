@@ -1,4 +1,5 @@
 import React from 'react';
+import TemplateBody, { getTemplate, editableText, withEditedText } from './templates.jsx';
 
 // 一张卡：种子卡（esther 只读给访客）或留言卡（owner 可编辑/删除）
 export default function CardView({
@@ -17,26 +18,33 @@ export default function CardView({
 }) {
   const isMessage = card.kind === 'message';
   const isMine = card.owner === myToken;
-
+  const tpl = getTemplate(card.tpl);
+  const editable = tpl.editField != null;
+  const tplClass = TPL_CLASS[card.tpl] || 'card-tpl-quote';
   const style = {
     left: card.x,
     top: card.y,
-    width: card.w,
-    minHeight: card.h,
-    background: card.color,
+    width: card.w || tpl.w,
+    minHeight: card.h || tpl.h,
+    zIndex: card.z || 1,
   };
 
   return (
     <div
-      className={`wb-card${isMessage ? ' wb-card-message' : ''}${editing ? ' editing' : ''}`}
+      className={`wb-card ${tplClass}${isMessage ? ' wb-card-message' : ''}${editing ? ' editing' : ''}`}
       id={card.id}
       style={style}
       onPointerDown={(e) => onPointerDown(e, card)}
       onMouseEnter={onBringFront}
+      onDoubleClick={(e) => {
+        if (!canEdit || !editable) return;
+        e.stopPropagation();
+        onStartEdit(card);
+      }}
     >
       {canEdit && (
         <div className="wb-card-actions">
-          {!editing && (
+          {!editing && editable && (
             <button
               className="wb-card-act"
               title="编辑"
@@ -61,7 +69,7 @@ export default function CardView({
         </div>
       )}
 
-      {isMessage && (
+      {isMessage && !card.tpl && (
         <div className="wb-card-head">
           <span className="wb-card-avatar" style={{ background: avatarColor(card.owner) }}>
             {(card.name || '匿').charAt(0)}
@@ -91,17 +99,12 @@ export default function CardView({
             }
           }}
         />
-      ) : (
-        <div
-          className="wb-card-body"
-          onDoubleClick={(e) => {
-            e.stopPropagation();
-            onStartEdit(card);
-          }}
-        >
-          {card.name && isMessage ? null : null}
-          <pre className="wb-card-text">{card.text}</pre>
+      ) : card.tpl ? (
+        <div className="wb-card-body">
+          <TemplateBody tpl={card.tpl} data={card.data} />
         </div>
+      ) : (
+        <pre className="wb-card-text">{card.text}</pre>
       )}
     </div>
   );
@@ -112,6 +115,21 @@ function avatarColor(token) {
   for (let i = 0; i < token.length; i++) h = (h * 31 + token.charCodeAt(i)) % 360;
   return `hsl(${h}, 60%, 55%)`;
 }
+
+const TPL_CLASS = {
+  profile: 'card-profile',
+  timeline: 'card-timeline',
+  skills: 'card-skills',
+  opinions: 'card-opinions',
+  work: 'card-work',
+  ai: 'card-ai',
+  link: 'card-tpl-link',
+  dark: 'card-tpl-dark',
+  sticky: 'card-tpl-sticky',
+  narrative: 'card-narrative',
+  quote: 'card-tpl-quote',
+  washi: 'card-washi',
+};
 
 function formatTime(ts) {
   if (!ts) return '';
