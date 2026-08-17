@@ -25,6 +25,7 @@ const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 const PEN_COLORS = ['#2b2b2b', '#e84a5f', '#4a7cc9', '#3aa655', '#f5a623', '#9b59b6'];
 const PEN_WIDTHS = [3, 6, 11];
 const SEED_VOTES_KEY = 'wb.seedVotes.v1';
+const SEED_OVERRIDES_KEY = 'wb.seedOverrides.v1';
 
 function loadSeedVotes() {
   try {
@@ -34,15 +35,42 @@ function loadSeedVotes() {
   }
 }
 
+// 管理员对种子卡的本地调整：位置 / 内容 / 删除
+function loadSeedOverrides() {
+  try {
+    return JSON.parse(localStorage.getItem(SEED_OVERRIDES_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveSeedOverride(id, patch) {
+  try {
+    const ov = loadSeedOverrides();
+    ov[id] = { ...ov[id], ...patch };
+    localStorage.setItem(SEED_OVERRIDES_KEY, JSON.stringify(ov));
+  } catch {
+    /* ignore */
+  }
+}
+
 export default function WhiteboardApp() {
   const myToken = React.useMemo(getMyToken, []);
   const admin = isAdmin(myToken);
 
   const [cards, setCards] = React.useState(() => {
     const sv = loadSeedVotes();
-    const seeds = seedCards.map((s) =>
-      sv[s.id] ? { ...s, data: { ...s.data, options: sv[s.id] } } : s
-    );
+    const ov = loadSeedOverrides();
+    const seeds = seedCards
+      .filter((s) => !ov[s.id]?.deleted)
+      .map((s) => {
+        const o = ov[s.id];
+        let merged = o
+          ? { ...s, x: o.x ?? s.x, y: o.y ?? s.y, data: o.data ? { ...s.data, ...o.data } : s.data }
+          : s;
+        if (sv[s.id]) merged = { ...merged, data: { ...merged.data, options: sv[s.id] } };
+        return merged;
+      });
     return [...seeds, ...loadLocalCards()];
   });
   const [strokes, setStrokes] = React.useState(loadLocalStrokes);
@@ -80,6 +108,10 @@ export default function WhiteboardApp() {
       setCards((prev) => {
         const next = prev.map((c) => (c.id === id ? { ...c, ...patch } : c));
         persist(next);
+        const target = next.find((c) => c.id === id);
+        if (target?.kind === 'seed') {
+          saveSeedOverride(id, { x: target.x, y: target.y, data: target.data });
+        }
         return next;
       });
       if (syncRemote && supabaseReady()) {
@@ -97,7 +129,9 @@ export default function WhiteboardApp() {
         persist(next);
         return next;
       });
-      if (card.kind === 'message' && supabaseReady()) {
+      if (card.kind === 'seed') {
+        saveSeedOverride(card.id, { deleted: true });
+      } else if (card.kind === 'message' && supabaseReady()) {
         deleteRemoteCard(card.id).catch(() => {});
       }
     },

@@ -19,17 +19,17 @@ export const seedCards = [
     createdAt: 0,
   },
   {
-    id: 'seed-vote',
+    id: 'seed-vote-who',
     kind: 'seed',
     owner: 'esther',
     tpl: 'vote',
     data: {
-      question: '路过这里的你，今天心情如何？',
+      question: '🕵️ 你是谁派来的？',
       options: [
-        { text: '😆 开心', votes: [] },
-        { text: '🙂 平静', votes: [] },
-        { text: '🥱 想躺平', votes: [] },
-        { text: '🤯 忙到飞起', votes: [] },
+        { text: '📕 小红书观光团', votes: [] },
+        { text: '🫂 朋友按头安利', votes: [] },
+        { text: '🌀 互联网迷路误入', votes: [] },
+        { text: '🤖 我是 AI，来视察的', votes: [] },
       ],
     },
     x: 960,
