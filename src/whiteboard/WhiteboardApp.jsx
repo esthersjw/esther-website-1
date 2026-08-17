@@ -291,7 +291,7 @@ export default function WhiteboardApp() {
   // ---------- doodle: strokes ----------
   const eraseAt = React.useCallback(
     (wx, wy) => {
-      const r = 16 / scale;
+      const r = 26 / scale; // 约 26 屏幕像素的擦除半径
       setStrokes((prev) => {
         const removed = [];
         const next = prev.filter((s) => {

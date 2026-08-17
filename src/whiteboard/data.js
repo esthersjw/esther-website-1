@@ -8,6 +8,15 @@ export const CARDS_KEY = 'wb.cards.v2';
 export const STROKES_KEY = 'wb.strokes.v1';
 
 export function getMyToken() {
+  // 管理员激活：访问 whiteboard.html?admin=esther 即可（换设备时用）
+  try {
+    const q = new URLSearchParams(window.location.search);
+    if (q.get('admin') === ESTHER_OWNER) {
+      localStorage.setItem(TOKEN_KEY, ESTHER_OWNER);
+    }
+  } catch {
+    /* ignore */
+  }
   let token = localStorage.getItem(TOKEN_KEY);
   if (!token) {
     token = crypto.randomUUID();
