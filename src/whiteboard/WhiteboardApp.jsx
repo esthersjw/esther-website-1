@@ -82,6 +82,7 @@ export default function WhiteboardApp() {
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const [cardModal, setCardModal] = React.useState(null); // { mode, tpl, card }
   const [statusMsg, setStatusMsg] = React.useState('');
+  const [qrSrc, setQrSrc] = React.useState(null); // 微信二维码弹窗
 
   // 涂鸦
   const [drawMode, setDrawMode] = React.useState(false);
@@ -110,7 +111,10 @@ export default function WhiteboardApp() {
         persist(next);
         const target = next.find((c) => c.id === id);
         if (target?.kind === 'seed') {
-          saveSeedOverride(id, { x: target.x, y: target.y, data: target.data });
+          // 拖拽只存位置；只有真正改了数据才存 data，避免旧数据冻结卡片内容
+          const ov = { x: target.x, y: target.y };
+          if (patch.data) ov.data = target.data;
+          saveSeedOverride(id, ov);
         }
         return next;
       });
@@ -592,6 +596,7 @@ export default function WhiteboardApp() {
                 onPointerDown={(e, c) => startDrag(e, c)}
                 onStartEdit={startEdit}
                 onVote={onVote}
+                onShowQr={setQrSrc}
                 movedRef={movedRef}
                 onBringFront={() => {
                   if (card.z < zRef.current - 1) {
@@ -667,6 +672,17 @@ export default function WhiteboardApp() {
         onClose={() => setCardModal(null)}
         onSubmit={submitCardModal}
       />
+
+      {qrSrc && (
+        <div className="wb-modal-backdrop" onClick={() => setQrSrc(null)}>
+          <div className="wb-modal wb-qr-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="wb-modal-title">📮 来加个微信吧</div>
+            <img className="wb-qr-img" src={qrSrc} alt="Esther 的微信二维码" draggable={false} />
+            <div className="wb-qr-tip">微信扫码或长按识别</div>
+            <div className="wb-qr-note">⚠️ 添加时请一定备注来意，不然不通过哦～</div>
+          </div>
+        </div>
+      )}
 
       {statusMsg && <div className="wb-toast">{statusMsg}</div>}
     </div>

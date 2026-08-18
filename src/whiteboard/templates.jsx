@@ -50,7 +50,7 @@ export const EMOJI_CHOICES = [
 ];
 
 // ---------- 模板渲染 ----------
-export default function TemplateBody({ tpl, data, myToken, movedRef, onVote }) {
+export default function TemplateBody({ tpl, data, myToken, movedRef, onVote, onShowQr }) {
   switch (tpl) {
     case 'intro':
       return <IntroCard data={data} />;
@@ -61,7 +61,7 @@ export default function TemplateBody({ tpl, data, myToken, movedRef, onVote }) {
     case 'vote':
       return <VoteCard data={data} myToken={myToken} movedRef={movedRef} onVote={onVote} />;
     case 'profile':
-      return <ProfileCard data={data} />;
+      return <ProfileCard data={data} movedRef={movedRef} onShowQr={onShowQr} />;
     case 'sticky':
       return <div className="sticky-text">{data?.text}</div>;
     case 'darkquote':
@@ -192,11 +192,15 @@ function WashiCard({ data }) {
 }
 
 // 👤 个人卡（预制：站主名片）
-function ProfileCard({ data }) {
+function ProfileCard({ data, movedRef, onShowQr }) {
   return (
     <>
       <div className="card-profile-header">
-        <div className="profile-avatar">{data?.avatar || '👩‍💻'}</div>
+        {data?.avatarImg ? (
+          <img className="profile-avatar-img" src={data.avatarImg} alt={data?.name || '头像'} draggable={false} />
+        ) : (
+          <div className="profile-avatar">{data?.avatar || '👩‍💻'}</div>
+        )}
         <div className="profile-name">{data?.name}</div>
         {data?.sub && <div className="profile-sub">{data.sub}</div>}
         {data?.tag && <span className="profile-tag">{data.tag}</span>}
@@ -207,11 +211,26 @@ function ProfileCard({ data }) {
         {data?.quote && <div className="profile-quote">{data.quote}</div>}
         {data?.links && data.links.length > 0 && (
           <div className="profile-links">
-            {data.links.map((l, i) => (
-              <a key={i} className="profile-link" href={l.href} target="_blank" rel="noreferrer" onPointerDown={(e) => e.stopPropagation()}>
-                {l.label}
-              </a>
-            ))}
+            {data.links.map((l, i) =>
+              l.qr ? (
+                <button
+                  key={i}
+                  className="profile-link"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (movedRef?.current) return; // 拖动卡片时不触发
+                    onShowQr?.(l.qr);
+                  }}
+                >
+                  {l.label}
+                </button>
+              ) : (
+                <a key={i} className="profile-link" href={l.href} target="_blank" rel="noreferrer" onPointerDown={(e) => e.stopPropagation()}>
+                  {l.label}
+                </a>
+              )
+            )}
           </div>
         )}
       </div>

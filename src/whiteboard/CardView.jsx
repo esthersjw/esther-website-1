@@ -16,6 +16,7 @@ export default function CardView({
   onStartEdit,
   onBringFront,
   onVote,
+  onShowQr,
   movedRef,
 }) {
   const isMessage = card.kind === 'message' && !card.tpl;
@@ -113,6 +114,7 @@ export default function CardView({
             myToken={myToken}
             movedRef={movedRef}
             onVote={onVote ? (idx) => onVote(card, idx) : undefined}
+            onShowQr={onShowQr}
           />
         </div>
       ) : (
