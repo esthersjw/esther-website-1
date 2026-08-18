@@ -517,7 +517,7 @@ body {
 /* 微信二维码弹窗 */
 .wb-qr-modal { text-align: center; max-width: 300px; }
 .wb-qr-img {
-  width: 240px; height: 240px;
+  width: 220px; height: auto;
   border-radius: 12px;
   border: 2px solid var(--blue-border);
   display: block;
