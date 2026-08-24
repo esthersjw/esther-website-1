@@ -13,12 +13,23 @@ import {
   saveLocalCards,
   loadLocalStrokes,
   saveLocalStrokes,
-  deleteRemoteCard,
-  postRemoteCard,
-  updateRemoteCard,
-  postRemoteStroke,
-  deleteRemoteStroke,
   supabaseReady,
+  initRemoteAuth,
+  fetchAdmins,
+  fetchCards,
+  fetchStrokesRemote,
+  fetchVotes,
+  insertCardRemote,
+  updateCardRemote,
+  deleteCardRemote,
+  syncCardDebounced,
+  isOwnEcho,
+  insertStrokeRemote,
+  deleteStrokeRemote,
+  upsertVoteRemote,
+  deleteVoteRemote,
+  mergeVotes,
+  subscribeRemote,
 } from './data.js';
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
@@ -54,26 +65,30 @@ function saveSeedOverride(id, patch) {
   }
 }
 
-export default function WhiteboardApp() {
-  const myToken = React.useMemo(getMyToken, []);
-  const admin = isAdmin(myToken);
+function buildLocalCards() {
+  const sv = loadSeedVotes();
+  const ov = loadSeedOverrides();
+  const seeds = seedCards
+    .filter((s) => !ov[s.id]?.deleted)
+    .map((s) => {
+      const o = ov[s.id];
+      let merged = o
+        ? { ...s, x: o.x ?? s.x, y: o.y ?? s.y, data: o.data ? { ...s.data, ...o.data } : s.data }
+        : s;
+      if (sv[s.id]) merged = { ...merged, data: { ...merged.data, options: sv[s.id] } };
+      return merged;
+    });
+  return [...seeds, ...loadLocalCards()];
+}
 
-  const [cards, setCards] = React.useState(() => {
-    const sv = loadSeedVotes();
-    const ov = loadSeedOverrides();
-    const seeds = seedCards
-      .filter((s) => !ov[s.id]?.deleted)
-      .map((s) => {
-        const o = ov[s.id];
-        let merged = o
-          ? { ...s, x: o.x ?? s.x, y: o.y ?? s.y, data: o.data ? { ...s.data, ...o.data } : s.data }
-          : s;
-        if (sv[s.id]) merged = { ...merged, data: { ...merged.data, options: sv[s.id] } };
-        return merged;
-      });
-    return [...seeds, ...loadLocalCards()];
-  });
-  const [strokes, setStrokes] = React.useState(loadLocalStrokes);
+export default function WhiteboardApp() {
+  const localToken = React.useMemo(getMyToken, []);
+  const [remote, setRemote] = React.useState(null); // { uid, isAdmin }，连接成功后才有
+  const myToken = remote?.uid ?? localToken;
+  const admin = remote ? remote.isAdmin : isAdmin(localToken);
+
+  const [cards, setCards] = React.useState(() => (supabaseReady() ? [] : buildLocalCards()));
+  const [strokes, setStrokes] = React.useState(() => (supabaseReady() ? [] : loadLocalStrokes()));
   const [scale, setScale] = React.useState(0.8);
   const [pan, setPan] = React.useState({ x: 40, y: 10 });
   const [editing, setEditing] = React.useState(null); // { id, text }
@@ -97,10 +112,14 @@ export default function WhiteboardApp() {
   const zRef = React.useRef(10);
   const cardsRef = React.useRef(cards);
   cardsRef.current = cards;
+  const remoteRef = React.useRef(null);
+  remoteRef.current = remote;
+  const votesRef = React.useRef([]); // wb_votes 行（remote 模式）
   const statusTimer = React.useRef(null);
 
   // ---------- persistence ----------
   const persist = React.useCallback((nextCards) => {
+    if (remoteRef.current) return; // remote 模式以数据库为准
     saveLocalCards(nextCards.filter((c) => c.kind === 'message'));
   }, []);
 
@@ -108,19 +127,27 @@ export default function WhiteboardApp() {
     (id, patch, syncRemote = false) => {
       setCards((prev) => {
         const next = prev.map((c) => (c.id === id ? { ...c, ...patch } : c));
-        persist(next);
         const target = next.find((c) => c.id === id);
-        if (target?.kind === 'seed') {
-          // 拖拽只存位置；只有真正改了数据才存 data，避免旧数据冻结卡片内容
-          const ov = { x: target.x, y: target.y };
-          if (patch.data) ov.data = target.data;
-          saveSeedOverride(id, ov);
+        if (remoteRef.current) {
+          // remote：内容编辑立即写库；拖拽等高频更新防抖写库
+          if (target) {
+            if (syncRemote) updateCardRemote(target).catch((e) => console.warn(e));
+            else
+              syncCardDebounced(target, 600, (cid) =>
+                cardsRef.current.find((c) => c.id === cid)
+              );
+          }
+        } else {
+          persist(next);
+          if (target?.kind === 'seed') {
+            // 拖拽只存位置；只有真正改了数据才存 data，避免旧数据冻结卡片内容
+            const ov = { x: target.x, y: target.y };
+            if (patch.data) ov.data = target.data;
+            saveSeedOverride(id, ov);
+          }
         }
         return next;
       });
-      if (syncRemote && supabaseReady()) {
-        updateRemoteCard(id, patch).catch(() => {});
-      }
     },
     [persist]
   );
@@ -133,10 +160,11 @@ export default function WhiteboardApp() {
         persist(next);
         return next;
       });
-      if (card.kind === 'seed') {
+      if (card.kind === 'seed' && !remoteRef.current) {
         saveSeedOverride(card.id, { deleted: true });
-      } else if (card.kind === 'message' && supabaseReady()) {
-        deleteRemoteCard(card.id).catch(() => {});
+      }
+      if (remoteRef.current) {
+        deleteCardRemote(card.id).catch(() => {});
       }
     },
     [persist]
@@ -168,8 +196,8 @@ export default function WhiteboardApp() {
         return next;
       });
       setModalOpen(false);
-      if (supabaseReady()) {
-        postRemoteCard(card).catch(() => setModalStatus('发送失败，请稍后再试 🙏'));
+      if (remoteRef.current) {
+        insertCardRemote(card).catch(() => setModalStatus('发送失败，请稍后再试 🙏'));
       }
       flashStatus('留言已贴到白板 ✨');
     },
@@ -215,8 +243,8 @@ export default function WhiteboardApp() {
         return next;
       });
       setCardModal(null);
-      if (supabaseReady()) {
-        postRemoteCard(card).catch(() => {});
+      if (remoteRef.current) {
+        insertCardRemote(card).catch(() => {});
       }
       flashStatus(`${tpl.icon} ${tpl.name}已贴到白板 ✨`);
     },
@@ -232,7 +260,23 @@ export default function WhiteboardApp() {
         if (i === idx && !had) votes.push(myToken);
         return { ...op, votes };
       });
-      if (card.kind === 'seed') {
+      if (remoteRef.current) {
+        // remote：票数存 wb_votes（一人一票），不动卡片本体——否则访客改不了别人的投票卡
+        setCards((prev) =>
+          prev.map((c) => (c.id === card.id ? { ...c, data: { ...c.data, options } } : c))
+        );
+        const mine = votesRef.current.find((v) => v.card_id === card.id && v.voter === myToken);
+        if (mine && mine.option_index === idx) {
+          votesRef.current = votesRef.current.filter((v) => v !== mine);
+          deleteVoteRemote(card.id, myToken).catch(() => {});
+        } else {
+          votesRef.current = [
+            ...votesRef.current.filter((v) => v !== mine),
+            { card_id: card.id, voter: myToken, option_index: idx },
+          ];
+          upsertVoteRemote(card.id, myToken, idx).catch(() => {});
+        }
+      } else if (card.kind === 'seed') {
         // 种子投票卡：票数单独存本地（不进入卡片存储）
         setCards((prev) =>
           prev.map((c) => (c.id === card.id ? { ...c, data: { ...c.data, options } } : c))
@@ -256,6 +300,112 @@ export default function WhiteboardApp() {
     setStatusMsg(msg);
     clearTimeout(statusTimer.current);
     statusTimer.current = setTimeout(() => setStatusMsg(''), 2600);
+  }, []);
+
+  // ---------- remote：连接数据库 + 实时订阅 ----------
+  React.useEffect(() => {
+    if (!supabaseReady()) return; // local 模式：useState 已初始化
+    let cancelled = false;
+    let dispose;
+    (async () => {
+      try {
+        const uid = await initRemoteAuth();
+        const [admins, cardRows, strokeRows, voteRows] = await Promise.all([
+          fetchAdmins(),
+          fetchCards(),
+          fetchStrokesRemote(),
+          fetchVotes(),
+        ]);
+        if (cancelled) return;
+        votesRef.current = voteRows;
+        const isAdm = admins.includes(uid);
+        setRemote({ uid, isAdmin: isAdm });
+        setCards(mergeVotes(cardRows, voteRows));
+        setStrokes(strokeRows);
+        dispose = subscribeRemote({
+          onCard: (p) => {
+            if (p.eventType === 'DELETE') {
+              setCards((prev) => prev.filter((c) => c.id !== p.old.id));
+              return;
+            }
+            if (p.eventType === 'UPDATE' && isOwnEcho(p.new.id)) return; // 忽略自己的回广播
+            const card = { ...p.new.data, id: p.new.id, owner: p.new.owner };
+            setCards((prev) =>
+              mergeVotes(
+                prev.some((c) => c.id === card.id)
+                  ? prev.map((c) => (c.id === card.id ? card : c))
+                  : [...prev, card],
+                votesRef.current
+              )
+            );
+          },
+          onStroke: (p) => {
+            if (p.eventType === 'DELETE') {
+              setStrokes((prev) => prev.filter((s) => s.id !== p.old.id));
+              return;
+            }
+            const stroke = { ...p.new.data, id: p.new.id, owner: p.new.owner };
+            setStrokes((prev) =>
+              prev.some((s) => s.id === stroke.id) ? prev : [...prev, stroke]
+            );
+          },
+          onVote: (p) => {
+            if (p.eventType === 'DELETE') {
+              votesRef.current = votesRef.current.filter(
+                (v) => !(v.card_id === p.old.card_id && v.voter === p.old.voter)
+              );
+            } else {
+              const row = p.new;
+              votesRef.current = [
+                ...votesRef.current.filter(
+                  (v) => !(v.card_id === row.card_id && v.voter === row.voter)
+                ),
+                row,
+              ];
+            }
+            setCards((prev) => mergeVotes(prev, votesRef.current));
+          },
+        });
+        flashStatus('已连接共享白板 🌐 大家的内容实时同步');
+        // 数据库还没有预制卡：管理员首次到访时把代码里的种子卡种进去
+        if (isAdm && !cardRows.some((c) => c.kind === 'seed')) {
+          const seeds = seedCards.map((s) => ({
+            ...s,
+            owner: uid,
+            data: s.data?.options
+              ? { ...s.data, options: s.data.options.map((o) => ({ ...o, votes: [] })) }
+              : s.data,
+          }));
+          for (const c of seeds) {
+            try {
+              await insertCardRemote(c);
+            } catch {
+              /* 并发播种时忽略冲突 */
+            }
+          }
+          if (!cancelled) {
+            setCards((prev) =>
+              mergeVotes(
+                [...seeds, ...prev.filter((c) => !seeds.some((s) => s.id === c.id))],
+                votesRef.current
+              )
+            );
+          }
+        }
+      } catch (e) {
+        console.warn('supabase 连接失败，回退到单机模式', e);
+        if (!cancelled) {
+          setCards(buildLocalCards());
+          setStrokes(loadLocalStrokes());
+          flashStatus('数据库未连接，本次是单机模式 📴');
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+      dispose?.();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ---------- canvas: wheel zoom (non-passive) ----------
@@ -308,8 +458,8 @@ export default function WhiteboardApp() {
           return !hit;
         });
         if (removed.length) {
-          saveLocalStrokes(next);
-          if (supabaseReady()) removed.forEach((id) => deleteRemoteStroke(id).catch(() => {}));
+          if (remoteRef.current) removed.forEach((id) => deleteStrokeRemote(id).catch(() => {}));
+          else saveLocalStrokes(next);
         }
         return next;
       });
@@ -365,10 +515,10 @@ export default function WhiteboardApp() {
       if (s.points.length < 4) s.points.push(s.points[0] + 0.01, s.points[1] + 0.01); // 点
       setStrokes((prev) => {
         const next = [...prev, s];
-        saveLocalStrokes(next);
+        if (!remoteRef.current) saveLocalStrokes(next);
         return next;
       });
-      if (supabaseReady()) postRemoteStroke(s).catch(() => {});
+      if (remoteRef.current) insertStrokeRemote(s).catch(() => {});
     };
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onUp);
@@ -387,8 +537,8 @@ export default function WhiteboardApp() {
       const idx = prev.length - 1 - idxRev;
       const removed = prev[idx];
       const next = prev.filter((_, i) => i !== idx);
-      saveLocalStrokes(next);
-      if (supabaseReady()) deleteRemoteStroke(removed.id).catch(() => {});
+      if (remoteRef.current) deleteStrokeRemote(removed.id).catch(() => {});
+      else saveLocalStrokes(next);
       return next;
     });
   }, [myToken]);
