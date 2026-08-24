@@ -534,7 +534,7 @@ body {
    Pen bar (draw mode)
    ============================================================ */
 .wb-pen-bar {
-  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  position: fixed; bottom: 96px; left: 50%; transform: translateX(-50%);
   display: flex; align-items: center; gap: 8px;
   background: rgba(255, 255, 255, 0.96);
   border: 2px dashed var(--blue-border);
@@ -660,7 +660,7 @@ body {
 .wb-picker { width: 460px; }
 .wb-template-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin-bottom: 12px;
 }
@@ -707,5 +707,5 @@ body {
   .wb-toolbar { padding: 0 8px; gap: 4px; }
   .wb-tb-btn { padding: 0 10px; font-size: 12px; }
   .wb-logo span { display: none; }
-  .wb-pen-bar { bottom: 12px; padding: 6px 10px; gap: 6px; }
+  .wb-pen-bar { bottom: 92px; padding: 6px 10px; gap: 6px; }
 }
