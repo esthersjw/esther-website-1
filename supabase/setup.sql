@@ -75,7 +75,7 @@ create policy wb_strokes_insert on public.wb_strokes for insert to authenticated
 create policy wb_strokes_delete on public.wb_strokes for delete to authenticated
   using (owner = auth.uid()::text or public.wb_is_admin());
 
--- 投票规则：大家都能看；只能以自己的身份投/改/取消
+-- 投票规则：大家都能看；只能以自己的身份投/改/取消；管理员可管理
 drop policy if exists wb_votes_select on public.wb_votes;
 drop policy if exists wb_votes_insert on public.wb_votes;
 drop policy if exists wb_votes_update on public.wb_votes;
@@ -84,10 +84,10 @@ create policy wb_votes_select on public.wb_votes for select using (true);
 create policy wb_votes_insert on public.wb_votes for insert to authenticated
   with check (voter = auth.uid()::text);
 create policy wb_votes_update on public.wb_votes for update to authenticated
-  using (voter = auth.uid()::text)
-  with check (voter = auth.uid()::text);
+  using (voter = auth.uid()::text or public.wb_is_admin())
+  with check (voter = auth.uid()::text or public.wb_is_admin());
 create policy wb_votes_delete on public.wb_votes for delete to authenticated
-  using (voter = auth.uid()::text);
+  using (voter = auth.uid()::text or public.wb_is_admin());
 
 -- 管理员名单：大家可读（前端据此显示管理功能）；写入只在 SQL Editor 手动进行
 drop policy if exists wb_admins_select on public.wb_admins;
