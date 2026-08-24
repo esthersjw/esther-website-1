@@ -23,6 +23,9 @@ export default function CardModal({ open, mode, tpl, card, onClose, onSubmit }) 
   // vote
   const [question, setQuestion] = React.useState('');
   const [options, setOptions] = React.useState(['', '']);
+  // 通用文字模板（叙事卡 / 胶带卡 / 深色引用卡等带 editField 的模板）
+  const [genericText, setGenericText] = React.useState('');
+  const [author, setAuthor] = React.useState('');
 
   React.useEffect(() => {
     if (!open) return;
@@ -38,6 +41,8 @@ export default function CardModal({ open, mode, tpl, card, onClose, onSubmit }) 
     setCaption(d.caption || '');
     setQuestion(d.question || '');
     setOptions(d.options ? d.options.map((o) => o.text) : ['', '']);
+    setGenericText(t.editField ? d[t.editField] || '' : '');
+    setAuthor(d.author || '');
   }, [open, card]);
 
   if (!open) return null;
@@ -65,6 +70,10 @@ export default function CardModal({ open, mode, tpl, card, onClose, onSubmit }) 
         question: question.trim().slice(0, 30),
         options: ops.map((text) => ({ text, votes: [] })),
       });
+    } else if (t.editField) {
+      const payload = { [t.editField]: genericText.trim().slice(0, 300) };
+      if (tpl === 'darkquote' || tpl === 'narrative') payload.author = author.trim().slice(0, 20);
+      onSubmit(payload);
     }
   };
 
@@ -73,6 +82,7 @@ export default function CardModal({ open, mode, tpl, card, onClose, onSubmit }) 
     : tpl === 'sticker' ? !!sticker
     : tpl === 'polaroid' ? (isEdit || !!image)
     : tpl === 'vote' ? !!(question.trim() && options.filter((s) => s.trim()).length >= 2)
+    : t.editField ? !!genericText.trim()
     : false;
 
   return (
@@ -168,6 +178,24 @@ export default function CardModal({ open, mode, tpl, card, onClose, onSubmit }) 
               <button className="wb-vote-opt-add" onClick={() => setOptions((prev) => [...prev, ''])}>
                 ＋ 加一个选项
               </button>
+            )}
+          </>
+        )}
+
+        {!['intro', 'sticker', 'polaroid', 'vote'].includes(tpl) && t.editField && (
+          <>
+            <textarea
+              className="wb-modal-input wb-modal-textarea"
+              rows={4}
+              maxLength={300}
+              placeholder={t.editField === 'body' ? "写点内容…（支持换行）" : "写点什么吧…"}
+              value={genericText}
+              autoFocus
+              onChange={(e) => setGenericText(e.target.value)}
+            />
+            {(tpl === 'darkquote' || tpl === 'narrative') && (
+              <input className="wb-modal-input" maxLength={20} placeholder="署名（选填，如：Charles Bukowski）"
+                value={author} onChange={(e) => setAuthor(e.target.value)} />
             )}
           </>
         )}

@@ -206,12 +206,8 @@ body {
   background: linear-gradient(160deg, #ffffff 0%, #f6f9ff 100%);
 }
 .card-intro .intro-head { display: flex; align-items: center; gap: 12px; }
-.card-intro .intro-avatar {
-  width: 52px; height: 52px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px; flex-shrink: 0;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 8px rgba(74, 124, 201, 0.15);
+.card-intro .intro-avatar-bare {
+  font-size: 40px; line-height: 1; flex-shrink: 0;
 }
 .card-intro .intro-id { min-width: 0; }
 .card-intro .intro-name {

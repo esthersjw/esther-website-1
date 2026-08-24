@@ -89,9 +89,7 @@ function IntroCard({ data }) {
   return (
     <>
       <div className="intro-head">
-        <span className="intro-avatar" style={{ background: data?.color || '#ffd166' }}>
-          {data?.emoji || '😀'}
-        </span>
+        <span className="intro-avatar-bare">{data?.emoji || '😀'}</span>
         <div className="intro-id">
           <div className="intro-name">{data?.name || '神秘访客'}</div>
           {data?.bio && <div className="intro-bio">{data.bio}</div>}
