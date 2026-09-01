@@ -51,7 +51,7 @@ const guests = {
       { day: "出发前", label: "出发", title: "按自己的节奏来", detail: "从上海出发，抵达城市和日期可以自行安排。", kind: "travel" },
       { day: "9月17日", label: "登记日", title: "来澳门见我们", detail: "前往嘉模圣母堂参加登记，10:30开始，请稍微早一点到～水舞间门票已经为你们留好。", kind: "event" },,
       { day: "9月17日", label: "晚上", title: "朋友局", detail: "晚上一起吃饭、聊天。", kind: "meal" },
-      { day: "全程", label: "住宿", title: "珠海 & 澳门", detail: "可按自己的行程安排；需要推荐时随时问我们。", kind: "stay" },
+      { day: "全程", label: "推荐住宿", title: "银河旗下酒店", detail: "入住银河旗下酒店，可以送免费的天浪淘园水世界门票。", kind: "stay" },
     ],
   },
   "沈健": {
