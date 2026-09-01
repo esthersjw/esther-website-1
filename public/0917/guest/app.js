@@ -142,11 +142,9 @@ function renderTimeline(items) {
 function renderGuest(name) {
   const guest = guests[name];
   const hasTimeline = guest.timeline.length > 0;
-  const guestHeading = document.querySelector("#guest-heading");
   const reminderSection = document.querySelector(".reminder-section");
   const showDetails = !guest.hideReminder;
   document.querySelector("#guest-name-heading").textContent = name;
-  guestHeading.hidden = !showDetails;
   reminderSection.hidden = !showDetails;
   if (showDetails) {
     document.querySelector("#guest-remark").textContent = guest.prep;

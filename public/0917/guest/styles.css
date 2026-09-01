@@ -62,10 +62,8 @@ mark { padding: 0 .1em; color: inherit; background: linear-gradient(transparent 
 .details-content { position: relative; z-index: 1; padding: clamp(44px, 7vw, 64px) 11% clamp(22px, 4vw, 36px); text-align: center; }
 .closing-illustration { position: relative; z-index: 1; width: min(100%, 510px); margin: 0 auto; padding: 0 5% clamp(40px, 8vw, 64px); line-height: 0; }
 .closing-illustration img { display: block; width: 100%; height: auto; }
-.for-name { margin: 0 0 4px; color: var(--ink-soft); font: 700 clamp(1rem, 2.2vw, 1.32rem)/1 "Caveat", "Noto Sans SC", sans-serif; letter-spacing: .04em; transform: rotate(-2deg); }
-.details-content > h1 { margin: 0; font: 400 clamp(2.45rem, 5.1vw, 3.75rem)/1.2 "Huiwen Mincho", "Noto Serif SC", serif; letter-spacing: -.02em; }
-.details-intro { margin: 12px auto 0; color: var(--ink-soft); font: 400 clamp(.92rem, 1.8vw, 1.05rem)/1.7 "Noto Sans SC", sans-serif; transform: none; }
-.detail-section { position: relative; margin: clamp(54px, 8vw, 76px) auto 0; }
+.for-name { margin: 0; color: var(--ink-soft); font: 700 clamp(1rem, 2.2vw, 1.32rem)/1 "Caveat", "Noto Sans SC", sans-serif; letter-spacing: .04em; transform: rotate(-2deg); }
+.detail-section { position: relative; margin: clamp(26px, 4vw, 38px) auto 0; }
 .section-label { margin-bottom: 5px; }
 .detail-section h2 { margin: 0 0 15px; font: 400 clamp(2.08rem, 4.25vw, 3.15rem)/1.15 "Huiwen Mincho", "Noto Serif SC", serif; letter-spacing: -.02em; }
 .handwritten-copy { max-width: 385px; margin: 0 auto; color: var(--ink-soft); font: 400 clamp(.92rem, 1.8vw, 1.05rem)/1.85 "Noto Sans SC", sans-serif; letter-spacing: .025em; }
@@ -102,9 +100,7 @@ mark { padding: 0 .1em; color: inherit; background: linear-gradient(transparent 
   .login-dialog h1 { font-size: 1.55rem; }
   .details-content { padding: 53px 10% 22px; }
   .closing-illustration { padding: 0 7% 48px; }
-  .details-content > h1 { font-size: clamp(2.2rem, 9vw, 2.8rem); }
-  .details-intro { font-size: .92rem; }
-  .detail-section { margin-top: 58px; }
+  .detail-section { margin-top: 30px; }
   .detail-section h2 { font-size: clamp(1.95rem, 8vw, 2.5rem); }
   .handwritten-copy { font-size: .92rem; }
   .timeline-section { max-width: 100%; }
