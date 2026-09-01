@@ -144,7 +144,6 @@ function renderGuest(name) {
   const hasTimeline = guest.timeline.length > 0;
   const reminderSection = document.querySelector(".reminder-section");
   const showDetails = !guest.hideReminder;
-  document.querySelector("#cover-guest-name").textContent = name;
   reminderSection.hidden = !showDetails;
   if (showDetails) {
     document.querySelector("#guest-remark").textContent = guest.prep;
