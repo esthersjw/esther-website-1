@@ -1,5 +1,15 @@
 const SITE_PASSWORD = "20260917";
 
+const macauRegistrationTimeline = [
+  {
+    day: "9月17日",
+    label: "登记日",
+    title: "嘉模圣母堂",
+    detail: "我们会在澳门嘉模圣母堂举行结婚登记，10:30开始，请大家稍微早一点到～中午一起吃饭。",
+    kind: "event",
+  },
+];
+
 const guests = {
   "沈婉婷": {
     prep: "请务必随身带好港澳通行证原件，确认通行证仍在有效期内；还需要有有效的赴澳签注。你的赴澳签注还没办好，记得在珠海提前补办。",
@@ -61,46 +71,39 @@ const guests = {
     timeline: [],
   },
   "颜艺辉": {
-    prep: "9月17日当天从珠海往返澳门，前往嘉模圣母堂参加登记。登记10:30开始，请稍微早一点到；记得随身带好澳门身份证原件。中午一起吃饭～",
-    timeline: [
-      { day: "9月17日", label: "登记日", title: "珠海 ↔ 澳门", detail: "当天往返，前往嘉模圣母堂参加登记；10:30开始，请稍微早一点到。中午一起吃饭。", kind: "travel" },
-    ],
+    prep: "",
+    hideReminder: true,
+    timeline: macauRegistrationTimeline,
   },
   "唐丽娜": {
-    prep: "9月17日当天从珠海往返澳门，前往嘉模圣母堂参加登记。登记10:30开始，请稍微早一点到；记得随身带好澳门身份证原件。中午一起吃饭～",
-    timeline: [
-      { day: "9月17日", label: "登记日", title: "珠海 ↔ 澳门", detail: "当天往返，前往嘉模圣母堂参加登记；10:30开始，请稍微早一点到。中午一起吃饭。", kind: "travel" },
-    ],
+    prep: "",
+    hideReminder: true,
+    timeline: macauRegistrationTimeline,
   },
   "爷爷": {
-    prep: "9月17日当天从珠海往返澳门，前往嘉模圣母堂参加登记。登记10:30开始，请稍微早一点到；记得随身带好澳门身份证原件。中午一起吃饭～",
-    timeline: [
-      { day: "9月17日", label: "登记日", title: "珠海 ↔ 澳门", detail: "当天往返，前往嘉模圣母堂参加登记；10:30开始，请稍微早一点到。中午一起吃饭。", kind: "travel" },
-    ],
+    prep: "",
+    hideReminder: true,
+    timeline: macauRegistrationTimeline,
   },
   "姑姑": {
-    prep: "9月17日当天从珠海往返澳门，前往嘉模圣母堂参加登记。登记10:30开始，请稍微早一点到；记得随身带好澳门身份证原件。中午一起吃饭～",
-    timeline: [
-      { day: "9月17日", label: "登记日", title: "珠海 ↔ 澳门", detail: "当天往返，前往嘉模圣母堂参加登记；10:30开始，请稍微早一点到。中午一起吃饭。", kind: "travel" },
-    ],
+    prep: "",
+    hideReminder: true,
+    timeline: macauRegistrationTimeline,
   },
   "奶奶": {
-    prep: "9月17日当天从珠海往返澳门，前往嘉模圣母堂参加登记。登记10:30开始，请稍微早一点到；记得随身带好澳门身份证原件。中午一起吃饭～",
-    timeline: [
-      { day: "9月17日", label: "登记日", title: "珠海 ↔ 澳门", detail: "当天往返，前往嘉模圣母堂参加登记；10:30开始，请稍微早一点到。中午一起吃饭。", kind: "travel" },
-    ],
+    prep: "",
+    hideReminder: true,
+    timeline: macauRegistrationTimeline,
   },
   "Vera": {
-    prep: "9月17日当天从珠海往返澳门，前往嘉模圣母堂参加登记。登记10:30开始，请稍微早一点到；记得随身带好澳门身份证原件。中午一起吃饭～",
-    timeline: [
-      { day: "9月17日", label: "登记日", title: "珠海 ↔ 澳门", detail: "当天往返，前往嘉模圣母堂参加登记；10:30开始，请稍微早一点到。中午一起吃饭。", kind: "travel" },
-    ],
+    prep: "",
+    hideReminder: true,
+    timeline: macauRegistrationTimeline,
   },
   "Richard": {
-    prep: "9月17日当天从珠海往返澳门，前往嘉模圣母堂参加登记。登记10:30开始，请稍微早一点到；记得随身带好澳门身份证原件。中午一起吃饭～",
-    timeline: [
-      { day: "9月17日", label: "登记日", title: "珠海 ↔ 澳门", detail: "当天往返，前往嘉模圣母堂参加登记；10:30开始，请稍微早一点到。中午一起吃饭。", kind: "travel" },
-    ],
+    prep: "",
+    hideReminder: true,
+    timeline: macauRegistrationTimeline,
   },
 };
 
@@ -139,10 +142,15 @@ function renderTimeline(items) {
 function renderGuest(name) {
   const guest = guests[name];
   const hasTimeline = guest.timeline.length > 0;
+  const reminderSection = document.querySelector(".reminder-section");
+  const showReminder = !guest.hideReminder;
   document.querySelector("#guest-name-heading").textContent = name;
-  document.querySelector("#guest-remark").textContent = guest.prep;
-  document.querySelector("#reminder-label").textContent = hasTimeline ? "01 · BEFORE YOU GO" : "A LITTLE NOTE";
-  document.querySelector("#reminder-title").textContent = hasTimeline ? "行前提醒" : "想对你们说";
+  reminderSection.hidden = !showReminder;
+  if (showReminder) {
+    document.querySelector("#guest-remark").textContent = guest.prep;
+    document.querySelector("#reminder-label").textContent = hasTimeline ? "01 · BEFORE YOU GO" : "A LITTLE NOTE";
+    document.querySelector("#reminder-title").textContent = hasTimeline ? "行前提醒" : "想对你们说";
+  }
   renderTimeline(guest.timeline);
   loginDialog.close();
   loginView.hidden = true;
