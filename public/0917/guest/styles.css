@@ -53,8 +53,9 @@ mark { padding: 0 .1em; color: inherit; background: linear-gradient(transparent 
 /* One continuous invitation */
 .guest-view { min-height: 100vh; padding: clamp(24px, 5vw, 64px); background: var(--cream-deep); }
 .invitation { width: min(100%, 540px); margin: 0 auto; overflow: hidden; background: var(--cream); box-shadow: 0 12px 33px rgba(51, 42, 26, .1); }
-.cover-art { width: 100%; height: clamp(610px, 126vw, 735px); overflow: hidden; line-height: 0; }
+.cover-art { position: relative; width: 100%; height: clamp(610px, 126vw, 735px); overflow: hidden; line-height: 0; }
 .cover-art img { display: block; width: 100%; height: auto; }
+.cover-guest-name { position: absolute; top: 20.5%; left: 31%; margin: 0; color: var(--ink); font: 400 clamp(1.2rem, 3vw, 1.65rem)/1.15 "Huiwen Mincho", "Noto Serif SC", serif; letter-spacing: .04em; line-height: 1.15; white-space: nowrap; }
 .details-paper { position: relative; min-height: 620px; background: var(--cream); }
 .details-paper::before, .details-paper::after { content: "✦"; position: absolute; color: rgba(23, 22, 25, .14); font: 500 clamp(2.2rem, 5vw, 3.4rem)/1 "Caveat", cursive; pointer-events: none; }
 .details-paper::before { top: 9%; left: 10%; }
@@ -90,6 +91,7 @@ mark { padding: 0 .1em; color: inherit; background: linear-gradient(transparent 
   .guest-view { padding: 0; }
   .invitation { width: 100%; box-shadow: none; }
   .cover-art { height: min(127vw, 685px); }
+  .cover-guest-name { top: 20.2%; left: 31%; font-size: clamp(1.08rem, 4.2vw, 1.45rem); }
 }
 
 @media (max-width: 600px) {
