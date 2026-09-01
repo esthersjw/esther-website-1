@@ -9,7 +9,7 @@
   const hotspot = document.createElement("button");
   hotspot.type = "button";
   hotspot.className = "invite-hotspot";
-  hotspot.setAttribute("aria-label", "打开邀请函");
+  hotspot.setAttribute("aria-label", "打开架子上的邀请函");
   hotspot.hidden = true;
   document.body.appendChild(hotspot);
 
