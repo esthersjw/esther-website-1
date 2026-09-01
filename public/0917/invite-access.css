@@ -4,10 +4,10 @@
 .invite-hotspot {
   position: fixed;
   z-index: 50;
-  left: 34%;
-  top: 7%;
-  width: 32%;
-  height: 62%;
+  left: 65.5%;
+  top: 61.5%;
+  width: 10.5%;
+  height: 7.5%;
   padding: 0;
   border: 0;
   border-radius: 3px;
@@ -106,10 +106,10 @@
 
 @media (max-width: 700px) {
   .invite-hotspot {
-    left: 39%;
-    top: 10%;
-    width: 36%;
-    height: 63%;
+    left: 45%;
+    top: 61%;
+    width: 28%;
+    height: 10%;
   }
   .invite-access-dialog { width: min(calc(100vw - 32px), 390px); }
   .invite-access-form { padding: 28px 24px; }
