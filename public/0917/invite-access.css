@@ -1,0 +1,117 @@
+#invite-access-form,
+#invite-access-form * { box-sizing: border-box; }
+
+.invite-hotspot {
+  position: fixed;
+  z-index: 50;
+  left: 65.5%;
+  top: 61.5%;
+  width: 10.5%;
+  height: 7.5%;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+}
+.invite-hotspot:focus-visible {
+  outline: 2px solid #e84a5f;
+  outline-offset: 4px;
+}
+
+.invite-access-dialog {
+  width: min(calc(100vw - 40px), 390px);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #1a1a2e;
+  background: #fefcf6;
+  box-shadow: 0 20px 64px rgba(23, 22, 25, .28);
+}
+.invite-access-dialog::backdrop {
+  background: rgba(23, 22, 25, .52);
+  backdrop-filter: blur(3px);
+}
+.invite-access-form {
+  position: relative;
+  display: grid;
+  gap: 7px;
+  padding: clamp(28px, 5vw, 42px);
+}
+.invite-access-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: #1a1a2e;
+  border: 0;
+  background: transparent;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+}
+.invite-access-eyebrow {
+  margin: 0 0 8px;
+  color: #8a8a9a;
+  font: 600 11px/1.2 Arial, sans-serif;
+  letter-spacing: .13em;
+}
+.invite-access-form h1 {
+  margin: 0 0 20px;
+  font: 400 clamp(1.55rem, 4vw, 2rem)/1.35 Georgia, "Songti SC", serif;
+}
+.invite-access-form label {
+  margin-top: 10px;
+  font: 500 13px/1.4 Arial, "Noto Sans SC", sans-serif;
+}
+.invite-access-form input {
+  width: 100%;
+  padding: 11px 2px;
+  color: #1a1a2e;
+  border: 0;
+  border-bottom: 1px solid #1a1a2e;
+  border-radius: 0;
+  outline: none;
+  background: transparent;
+  font: 400 16px/1.4 Arial, "Noto Sans SC", sans-serif;
+}
+.invite-access-form input:focus {
+  border-color: #2b7fd8;
+  box-shadow: 0 1px 0 #2b7fd8;
+}
+.invite-access-error {
+  min-height: 20px;
+  margin: 4px 0 0;
+  color: #e84a5f;
+  font: 400 13px/1.5 Arial, "Noto Sans SC", sans-serif;
+}
+.invite-access-submit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px 15px;
+  color: #fefcf6;
+  border: 1px solid #1a1a2e;
+  background: #1a1a2e;
+  font: 600 15px/1.4 Arial, "Noto Sans SC", sans-serif;
+  cursor: pointer;
+}
+.invite-access-submit:hover { color: #1a1a2e; background: #f4d758; }
+.invite-access-submit span { font-size: 21px; line-height: .7; }
+
+@media (max-width: 700px) {
+  .invite-hotspot {
+    left: 45%;
+    top: 61%;
+    width: 28%;
+    height: 10%;
+  }
+  .invite-access-dialog { width: min(calc(100vw - 32px), 390px); }
+  .invite-access-form { padding: 28px 24px; }
+  .invite-access-form h1 { font-size: 1.55rem; }
+}

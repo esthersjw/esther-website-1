@@ -1,0 +1,123 @@
+@font-face {
+  font-family: "Wenyue Xin Qingnian";
+  src: url("assets/fonts/wenyue-xinqingnian-w8.otf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Huiwen Mincho";
+  src: url("assets/fonts/huiwen-mincho.ttf") format("truetype");
+  font-display: swap;
+}
+
+:root {
+  --cream: #fffdf7;
+  --cream-deep: #f9f6eb;
+  --ink: #171619;
+  --ink-soft: #5d5962;
+  --yellow: #f4d758;
+  --blue: #2b7fd8;
+  --red: #e84a5f;
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; background: var(--cream-deep); }
+body { margin: 0; color: var(--ink); background: var(--cream-deep); font: 400 16px/1.75 "Noto Sans SC", -apple-system, BlinkMacSystemFont, sans-serif; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+::selection { color: var(--ink); background: var(--yellow); }
+h1, h2, h3, p { margin-top: 0; }
+mark { padding: 0 .1em; color: inherit; background: linear-gradient(transparent 53%, var(--yellow) 53% 91%, transparent 91%); }
+.mini-type, .section-label { color: var(--ink-soft); font: 600 12px/1.3 "Caveat", cursive; letter-spacing: .13em; }
+
+/* Login: one quiet, non-scrolling cover with a modal sign-in */
+.login-active { overflow: hidden; }
+.login-view { min-height: 100dvh; display: grid; place-items: center; padding: clamp(20px, 4vw, 52px); overflow: hidden; background: var(--cream); }
+.login-cover-button { display: block; width: min(82vw, 470px); padding: 0; border: 0; background: transparent; line-height: 0; transition: transform .24s ease-out; }
+.login-cover-button:hover { transform: translateY(-4px) rotate(.4deg); }
+.login-cover-button:focus-visible { outline: 3px solid var(--blue); outline-offset: 8px; }
+.login-cover { display: block; width: 100%; height: min(82dvh, 770px); object-fit: contain; object-position: center; }
+.login-dialog { width: min(calc(100vw - 40px), 390px); margin: auto; padding: clamp(28px, 5vw, 42px); color: var(--ink); border: 0; border-radius: 0; background: var(--cream); box-shadow: 0 20px 64px rgba(23, 22, 25, .22); }
+.login-dialog::backdrop { background: rgba(23, 22, 25, .42); backdrop-filter: blur(2px); }
+.login-dialog h1 { margin: 0 0 28px; font: 400 clamp(1.65rem, 4vw, 2rem)/1.35 "Huiwen Mincho", "Noto Serif SC", serif; letter-spacing: -.02em; }
+.login-dialog form { display: grid; gap: 7px; }
+.login-dialog label { margin-top: 10px; font-size: 13px; }
+.login-dialog input { width: 100%; padding: 11px 2px; color: var(--ink); border: 0; border-bottom: 1px solid var(--ink); border-radius: 0; outline: none; background: transparent; }
+.login-dialog input:focus { border-color: var(--blue); box-shadow: 0 1px 0 var(--blue); }
+.form-error { min-height: 20px; margin: 4px 0 0; color: var(--red); font-size: 13px; }
+.ink-button { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 14px; padding: 13px 15px; color: var(--cream); border: 1px solid var(--ink); border-radius: 0; background: var(--ink); font-weight: 600; transition: background .2s ease-out, transform .2s ease-out; }
+.ink-button:hover { color: var(--ink); background: var(--yellow); transform: translateY(-2px); }
+.ink-button span { font-size: 21px; line-height: .7; }
+
+/* One continuous invitation */
+.guest-view { min-height: 100vh; padding: clamp(24px, 5vw, 64px); background: var(--cream-deep); }
+.invitation { width: min(100%, 540px); margin: 0 auto; overflow: hidden; background: var(--cream); box-shadow: 0 12px 33px rgba(51, 42, 26, .1); }
+.cover-art { width: 100%; height: clamp(610px, 126vw, 735px); overflow: hidden; line-height: 0; }
+.cover-art img { display: block; width: 100%; height: auto; }
+.details-paper { position: relative; min-height: 620px; background: var(--cream); }
+.details-paper::before, .details-paper::after { content: "✦"; position: absolute; color: rgba(23, 22, 25, .14); font: 500 clamp(2.2rem, 5vw, 3.4rem)/1 "Caveat", cursive; pointer-events: none; }
+.details-paper::before { top: 9%; left: 10%; }
+.details-paper::after { right: 12%; bottom: 11%; }
+.details-content { position: relative; z-index: 1; padding: clamp(44px, 7vw, 64px) 11% clamp(22px, 4vw, 36px); text-align: center; }
+.closing-illustration { position: relative; z-index: 1; width: min(100%, 510px); margin: 0 auto; padding: 0 5% clamp(40px, 8vw, 64px); line-height: 0; }
+.closing-illustration img { display: block; width: 100%; height: auto; }
+.for-name { margin: 0 0 4px; color: var(--ink-soft); font: 700 clamp(1rem, 2.2vw, 1.32rem)/1 "Caveat", "Noto Sans SC", sans-serif; letter-spacing: .04em; transform: rotate(-2deg); }
+.details-content > h1 { margin: 0; font: 400 clamp(2.45rem, 5.1vw, 3.75rem)/1.2 "Huiwen Mincho", "Noto Serif SC", serif; letter-spacing: -.02em; }
+.details-intro { margin: 12px auto 0; color: var(--ink-soft); font: 400 clamp(.92rem, 1.8vw, 1.05rem)/1.7 "Noto Sans SC", sans-serif; transform: none; }
+.detail-section { position: relative; margin: clamp(54px, 8vw, 76px) auto 0; }
+.section-label { margin-bottom: 5px; }
+.detail-section h2 { margin: 0 0 15px; font: 400 clamp(2.08rem, 4.25vw, 3.15rem)/1.15 "Huiwen Mincho", "Noto Serif SC", serif; letter-spacing: -.02em; }
+.handwritten-copy { max-width: 385px; margin: 0 auto; color: var(--ink-soft); font: 400 clamp(.92rem, 1.8vw, 1.05rem)/1.85 "Noto Sans SC", sans-serif; letter-spacing: .025em; }
+.reminder-section::after { content: "✦"; position: absolute; right: 0; bottom: -46px; color: rgba(23, 22, 25, .15); font: 500 3rem/1 "Caveat", cursive; }
+.timeline-section { max-width: 430px; }
+.guest-timeline { position: relative; display: grid; gap: 0; margin: 38px auto 0; text-align: left; }
+.guest-timeline::before { content: ""; position: absolute; top: 11px; bottom: 11px; left: 50%; width: 1px; background: rgba(43, 127, 216, .26); transform: translateX(-50%); }
+.timeline-item { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr); align-items: start; min-height: 128px; }
+.timeline-item:last-child { min-height: 86px; }
+.timeline-day { grid-column: 1; margin: 5px 20px 0 0; color: var(--ink-soft); font: 600 clamp(.85rem, 1.7vw, 1rem)/1.4 "Caveat", "Noto Sans SC", sans-serif; text-align: right; letter-spacing: .03em; }
+.timeline-dot { grid-column: 2; position: relative; z-index: 1; justify-self: center; width: 14px; height: 14px; margin-top: 6px; border: 3px solid var(--cream); border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 1px rgba(43, 127, 216, .8); }
+.timeline-copy { grid-column: 3; margin-left: 10px; padding-bottom: 28px; }
+.timeline-label { display: inline-block; margin: 0 0 3px; color: var(--blue); font: 700 clamp(.95rem, 1.9vw, 1.1rem)/1.15 "Caveat", "Noto Sans SC", sans-serif; letter-spacing: .04em; transform: rotate(-3deg); }
+.timeline-copy h3 { margin: 0 0 4px; color: var(--ink); font: 400 clamp(1.02rem, 2vw, 1.18rem)/1.4 "Huiwen Mincho", "Noto Serif SC", serif; letter-spacing: .01em; }
+.timeline-copy > p:last-child { margin: 0; color: var(--ink-soft); font: 400 clamp(.76rem, 1.5vw, .88rem)/1.75 "Noto Sans SC", sans-serif; }
+.timeline-item--stay .timeline-dot { background: var(--yellow); box-shadow: 0 0 0 1px rgba(201, 170, 33, .75); }
+.timeline-item--event .timeline-dot { background: var(--red); box-shadow: 0 0 0 1px rgba(232, 74, 95, .75); }
+.timeline-item--meal .timeline-dot { background: var(--ink); box-shadow: 0 0 0 1px rgba(23, 22, 25, .75); }
+.meal-section, .meal-sign, .info-list, .info-item, .info-label { display: none; }
+
+@media (max-width: 900px) {
+  .login-cover-button { width: min(88vw, 470px); }
+  .login-cover { height: min(82dvh, 720px); }
+  .guest-view { padding: 0; }
+  .invitation { width: 100%; box-shadow: none; }
+  .cover-art { height: min(127vw, 685px); }
+}
+
+@media (max-width: 600px) {
+  .login-view { padding: 16px; }
+  .login-cover-button { width: min(94vw, 390px); }
+  .login-cover { height: min(82dvh, 680px); }
+  .login-dialog { width: min(calc(100vw - 32px), 390px); padding: 28px 24px; }
+  .login-dialog h1 { font-size: 1.55rem; }
+  .details-content { padding: 53px 10% 22px; }
+  .closing-illustration { padding: 0 7% 48px; }
+  .details-content > h1 { font-size: clamp(2.2rem, 9vw, 2.8rem); }
+  .details-intro { font-size: .92rem; }
+  .detail-section { margin-top: 58px; }
+  .detail-section h2 { font-size: clamp(1.95rem, 8vw, 2.5rem); }
+  .handwritten-copy { font-size: .92rem; }
+  .timeline-section { max-width: 100%; }
+  .guest-timeline { margin-top: 30px; }
+  .timeline-item { grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr); min-height: 122px; }
+  .timeline-day { margin-right: 12px; font-size: .86rem; }
+  .timeline-copy { margin-left: 6px; padding-bottom: 23px; }
+  .timeline-label { font-size: .98rem; }
+  .timeline-copy h3 { font-size: 1.03rem; }
+  .timeline-copy > p:last-child { font-size: .8rem; }
+
+
+@media (prefers-reduced-motion: no-preference) {
+  .guest-view:not([hidden]) .invitation { animation: reveal .55s both cubic-bezier(.16, 1, .3, 1); }
+  @keyframes reveal { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+}

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fffdf7" />
+    <title>Samuel & Esther · 给你的邀请</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="login-active">
+    <main class="page-shell">
+      <section class="login-view" id="login-view" aria-labelledby="login-title">
+        <button class="login-cover-button" id="open-login" type="button" aria-haspopup="dialog" aria-controls="login-dialog">
+          <img class="login-cover" src="assets/reference-cover.png" alt="打开 Samuel 与 Esther 的结婚登记邀请函" />
+        </button>
+
+        <dialog class="login-dialog" id="login-dialog" aria-labelledby="login-title">
+          <form id="login-form" method="dialog">
+            <h1 id="login-title">请输入你的名字和邀请码</h1>
+            <label for="guest-name">你的名字</label>
+            <input id="guest-name" name="guest-name" autocomplete="name" placeholder="输入中文姓名" required />
+            <label for="invite-code">邀请码</label>
+            <input id="invite-code" name="invite-code" type="password" inputmode="numeric" placeholder="输入邀请码" required />
+            <p class="form-error" id="form-error" role="alert"></p>
+            <button class="ink-button" type="submit">打开邀请函 <span aria-hidden="true">→</span></button>
+          </form>
+        </dialog>
+      </section>
+
+      <section class="guest-view" id="guest-view" hidden>
+        <article class="invitation" aria-label="Samuel 与 Esther 的结婚登记邀请函与专属安排">
+          <div class="cover-art" aria-label="Samuel 与 Esther 的结婚登记邀请函">
+            <img src="assets/reference-cover.png" alt="Samuel 与 Esther 的结婚登记邀请函" />
+          </div>
+
+          <div class="details-paper">
+            <div class="details-content">
+              <p class="for-name">FOR <span id="guest-name-heading"></span></p>
+              <h1>你的<mark>小小安排</mark></h1>
+              <p class="details-intro">我们把需要准备的事写在这里，<br />慢慢看就好。</p>
+
+              <section class="detail-section reminder-section" aria-labelledby="reminder-title">
+                <p class="section-label" id="reminder-label">01 · BEFORE YOU GO</p>
+                <h2 id="reminder-title">行前提醒</h2>
+                <p id="guest-remark" class="handwritten-copy"></p>
+              </section>
+
+              <section class="detail-section timeline-section" id="timeline-section" aria-labelledby="timeline-title">
+                <p class="section-label">YOUR LITTLE TIMELINE</p>
+                <h2 id="timeline-title">接下来的<mark>安排</mark></h2>
+                <div class="guest-timeline" id="guest-timeline"></div>
+              </section>
+            </div>
+
+            <figure class="closing-illustration" aria-label="Samuel 与 Esther 用手臂围成爱心">
+              <img src="assets/bru-buer-arm-heart-cutout.png" alt="Samuel 与 Esther 用手臂围成一个大爱心的手绘插画" />
+            </figure>
+          </div>
+        </article>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
