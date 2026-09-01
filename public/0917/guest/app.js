@@ -142,11 +142,13 @@ function renderTimeline(items) {
 function renderGuest(name) {
   const guest = guests[name];
   const hasTimeline = guest.timeline.length > 0;
+  const guestHeading = document.querySelector("#guest-heading");
   const reminderSection = document.querySelector(".reminder-section");
-  const showReminder = !guest.hideReminder;
+  const showDetails = !guest.hideReminder;
   document.querySelector("#guest-name-heading").textContent = name;
-  reminderSection.hidden = !showReminder;
-  if (showReminder) {
+  guestHeading.hidden = !showDetails;
+  reminderSection.hidden = !showDetails;
+  if (showDetails) {
     document.querySelector("#guest-remark").textContent = guest.prep;
     document.querySelector("#reminder-label").textContent = hasTimeline ? "01 · BEFORE YOU GO" : "A LITTLE NOTE";
     document.querySelector("#reminder-title").textContent = hasTimeline ? "行前提醒" : "想对你们说";
