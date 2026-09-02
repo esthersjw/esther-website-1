@@ -142,7 +142,18 @@ function WindowTemplates() {
 
 function HomeTab() {
   return (
-    <main className="tab-page active" id="page-home">
+    <main className="tab-page active" id="page-home" aria-labelledby="site-heading">
+      <header className="semantic-summary">
+        <h1 id="site-heading">ESTHER不二：AI 时代的个人系统与 AI 协作实践</h1>
+        <p>ESTHER不二是一位从建筑转向 AI 的内容创作者，记录如何与 AI Agent 一起搭建个人系统、创作内容和开发工具。</p>
+        <nav aria-label="网站主要内容">
+          <a href="tutorials/人生系统/">用两个 Agent 搭建人生系统</a>
+          <a href="tutorials/esther-design-system/">Esther Design System</a>
+          <a href="tutorials/personal-dashboard/">不二的个人看板</a>
+          <a href="tutorials/Build-Your-Own-Tool/">用 Agent 开发自己的工具</a>
+          <a href="tutorials/cola+ob自媒体分享/">Cola + Obsidian 自媒体工作流</a>
+        </nav>
+      </header>
       <section className="hero-section" id="heroSection">
         <div className="macbook-wrapper" id="macbookWrapper">
           <div className="macbook-screen-bezel" id="macbookBezel">
