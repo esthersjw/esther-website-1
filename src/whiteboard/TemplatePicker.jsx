@@ -24,7 +24,7 @@ export default function TemplatePicker({ open, admin, onClose, onPick }) {
           ))}
         </div>
         {!admin && (
-          <div className="wb-picker-note">创建后只有你能编辑/删除它 ✏️ 想随便画？点工具栏的 🖌️ 涂鸦</div>
+          <div className="wb-picker-note">创建后只有你能编辑/删除它</div>
         )}
         <div className="wb-modal-actions">
           <button className="wb-modal-cancel" onClick={onClose}>
