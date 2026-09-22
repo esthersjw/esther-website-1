@@ -64,10 +64,6 @@ body {
 .wb-tb-btn:hover { background: var(--blue-light); border-color: var(--blue); border-style: solid; }
 .wb-tb-primary { background: var(--yellow-light); border-color: rgba(255, 217, 61, 0.5); color: #9a7b00; }
 .wb-tb-primary:hover { background: var(--yellow); border-style: solid; }
-.wb-tb-doodle.active {
-  background: var(--blue); color: #fff;
-  border-style: solid; border-color: var(--blue);
-}
 .wb-tb-spacer { flex: 1; }
 .wb-zoom-pct { color: var(--blue); font-size: 11px; font-family: 'Fira Code', monospace; min-width: 44px; text-align: center; opacity: 0.6; }
 
@@ -109,22 +105,10 @@ body {
   touch-action: none;
 }
 .wb-canvas:active { cursor: grabbing; }
-.wb-canvas.drawing { cursor: crosshair; }
-.wb-canvas.drawing:active { cursor: crosshair; }
-.wb-canvas.drawing .wb-card { pointer-events: none; }
 .wb-transform {
   position: absolute; top: 0; left: 0;
   width: 0; height: 0;
   transform-origin: 0 0;
-}
-
-/* ---------- Doodle layer（在卡片之下：画到卡片位置的笔迹会被卡片盖住） ---------- */
-.wb-doodles {
-  position: absolute; top: 0; left: 0;
-  width: 10px; height: 10px;
-  overflow: visible;
-  pointer-events: none;
-  z-index: 0;
 }
 
 /* ---------- Card base ---------- */
@@ -531,45 +515,6 @@ body {
 }
 
 /* ============================================================
-   Pen bar (draw mode)
-   ============================================================ */
-.wb-pen-bar {
-  position: fixed; bottom: 96px; left: 50%; transform: translateX(-50%);
-  display: flex; align-items: center; gap: 8px;
-  background: rgba(255, 255, 255, 0.96);
-  border: 2px dashed var(--blue-border);
-  border-radius: 999px;
-  padding: 8px 14px;
-  box-shadow: 0 8px 24px rgba(26, 26, 46, 0.14);
-  z-index: 4000;
-  animation: wbPop 0.22s ease;
-}
-.wb-pen-label { font-size: 16px; }
-.wb-pen-sep { width: 1.5px; height: 20px; background: var(--blue-border); }
-.wb-pen-width {
-  width: 28px; height: 28px; border-radius: 50%;
-  border: 2px solid transparent;
-  background: transparent; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-}
-.wb-pen-width span { background: var(--text); border-radius: 50%; display: block; }
-.wb-pen-width.active { border-color: var(--blue); }
-.wb-pen-tool {
-  width: 32px; height: 32px; border-radius: 50%;
-  border: 2px solid transparent;
-  background: transparent; cursor: pointer; font-size: 15px;
-  display: flex; align-items: center; justify-content: center;
-}
-.wb-pen-tool.active { border-color: var(--blue); background: var(--blue-light); }
-.wb-pen-done {
-  border: none; background: var(--blue); color: #fff;
-  border-radius: 999px; padding: 7px 14px;
-  font-size: 12px; font-weight: 700; cursor: pointer;
-  font-family: inherit;
-}
-.wb-pen-done:hover { filter: brightness(1.1); }
-
-/* ============================================================
    Modal / Picker / Toast
    ============================================================ */
 .wb-modal-backdrop {
@@ -707,5 +652,4 @@ body {
   .wb-toolbar { padding: 0 8px; gap: 4px; }
   .wb-tb-btn { padding: 0 10px; font-size: 12px; }
   .wb-logo span { display: none; }
-  .wb-pen-bar { bottom: 92px; padding: 6px 10px; gap: 6px; }
 }

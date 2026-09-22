@@ -3,7 +3,6 @@ import CardView from './CardView.jsx';
 import MessageModal from './MessageModal.jsx';
 import TemplatePicker from './TemplatePicker.jsx';
 import CardModal from './CardModal.jsx';
-import DoodleLayer from './DoodleLayer.jsx';
 import { getTemplate, editableText, withEditedText } from './templates.jsx';
 import { seedCards } from './seedCards.js';
 import {
@@ -11,21 +10,16 @@ import {
   isAdmin,
   loadLocalCards,
   saveLocalCards,
-  loadLocalStrokes,
-  saveLocalStrokes,
   supabaseReady,
   initRemoteAuth,
   fetchAdmins,
   fetchCards,
-  fetchStrokesRemote,
   fetchVotes,
   insertCardRemote,
   updateCardRemote,
   deleteCardRemote,
   syncCardDebounced,
   isOwnEcho,
-  insertStrokeRemote,
-  deleteStrokeRemote,
   upsertVoteRemote,
   deleteVoteRemote,
   mergeVotes,
@@ -33,8 +27,6 @@ import {
 } from './data.js';
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
-const PEN_COLORS = ['#2b2b2b', '#e84a5f', '#4a7cc9', '#3aa655', '#f5a623', '#9b59b6'];
-const PEN_WIDTHS = [3, 6, 11];
 const SEED_VOTES_KEY = 'wb.seedVotes.v1';
 const SEED_OVERRIDES_KEY = 'wb.seedOverrides.v1';
 
@@ -88,7 +80,6 @@ export default function WhiteboardApp() {
   const admin = remote ? remote.isAdmin : isAdmin(localToken);
 
   const [cards, setCards] = React.useState(() => (supabaseReady() ? [] : buildLocalCards()));
-  const [strokes, setStrokes] = React.useState(() => (supabaseReady() ? [] : loadLocalStrokes()));
   const [scale, setScale] = React.useState(0.8);
   const [pan, setPan] = React.useState({ x: 40, y: 10 });
   const [editing, setEditing] = React.useState(null); // { id, text }
@@ -99,15 +90,8 @@ export default function WhiteboardApp() {
   const [statusMsg, setStatusMsg] = React.useState('');
   const [qrSrc, setQrSrc] = React.useState(null); // 微信二维码弹窗
 
-  // 涂鸦
-  const [drawMode, setDrawMode] = React.useState(false);
-  const [pen, setPen] = React.useState({ color: PEN_COLORS[0], width: PEN_WIDTHS[1], eraser: false });
-  const [curStroke, setCurStroke] = React.useState(null);
-
   const canvasRef = React.useRef(null);
   const dragRef = React.useRef(null);
-  const strokeRef = React.useRef(null);
-  const erasingRef = React.useRef(false);
   const movedRef = React.useRef(false); // 拖动后抑制点击（投票等）
   const zRef = React.useRef(10);
   const cardsRef = React.useRef(cards);
@@ -310,10 +294,9 @@ export default function WhiteboardApp() {
     (async () => {
       try {
         const uid = await initRemoteAuth();
-        const [admins, cardRows, strokeRows, voteRows] = await Promise.all([
+        const [admins, cardRows, voteRows] = await Promise.all([
           fetchAdmins(),
           fetchCards(),
-          fetchStrokesRemote(),
           fetchVotes(),
         ]);
         if (cancelled) return;
@@ -321,7 +304,6 @@ export default function WhiteboardApp() {
         const isAdm = admins.includes(uid);
         setRemote({ uid, isAdmin: isAdm });
         setCards(mergeVotes(cardRows, voteRows));
-        setStrokes(strokeRows);
         dispose = subscribeRemote({
           onCard: (p) => {
             if (p.eventType === 'DELETE') {
@@ -337,16 +319,6 @@ export default function WhiteboardApp() {
                   : [...prev, card],
                 votesRef.current
               )
-            );
-          },
-          onStroke: (p) => {
-            if (p.eventType === 'DELETE') {
-              setStrokes((prev) => prev.filter((s) => s.id !== p.old.id));
-              return;
-            }
-            const stroke = { ...p.new.data, id: p.new.id, owner: p.new.owner };
-            setStrokes((prev) =>
-              prev.some((s) => s.id === stroke.id) ? prev : [...prev, stroke]
             );
           },
           onVote: (p) => {
@@ -396,7 +368,6 @@ export default function WhiteboardApp() {
         console.warn('supabase 连接失败，回退到单机模式', e);
         if (!cancelled) {
           setCards(buildLocalCards());
-          setStrokes(loadLocalStrokes());
           flashStatus('数据库未连接，本次是单机模式 📴');
         }
       }
@@ -430,118 +401,6 @@ export default function WhiteboardApp() {
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
   }, []);
-
-  const toWorld = React.useCallback(
-    (e) => {
-      const rect = canvasRef.current.getBoundingClientRect();
-      return {
-        x: (e.clientX - rect.left - pan.x) / scale,
-        y: (e.clientY - rect.top - pan.y) / scale,
-      };
-    },
-    [pan.x, pan.y, scale]
-  );
-
-  // ---------- doodle: strokes ----------
-  const eraseAt = React.useCallback(
-    (wx, wy) => {
-      const r = 26 / scale; // 约 26 屏幕像素的擦除半径
-      setStrokes((prev) => {
-        const removed = [];
-        const next = prev.filter((s) => {
-          const hit =
-            (admin || s.owner === myToken) &&
-            s.points.some(
-              (v, i) => i % 2 === 0 && Math.hypot(v - wx, s.points[i + 1] - wy) < r + s.width / 2
-            );
-          if (hit) removed.push(s.id);
-          return !hit;
-        });
-        if (removed.length) {
-          if (remoteRef.current) removed.forEach((id) => deleteStrokeRemote(id).catch(() => {}));
-          else saveLocalStrokes(next);
-        }
-        return next;
-      });
-    },
-    [scale, admin, myToken]
-  );
-
-  const strokeStart = React.useCallback(
-    (e) => {
-      if (e.button !== 0) return;
-      const { x, y } = toWorld(e);
-      if (pen.eraser) {
-        erasingRef.current = true;
-        eraseAt(x, y);
-        return;
-      }
-      strokeRef.current = {
-        id: `stk-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
-        owner: myToken,
-        color: pen.color,
-        width: pen.width,
-        points: [x, y],
-        createdAt: Date.now(),
-      };
-      setCurStroke({ ...strokeRef.current });
-    },
-    [toWorld, pen, myToken, eraseAt]
-  );
-
-  React.useEffect(() => {
-    if (!drawMode) return;
-    const onMove = (e) => {
-      if (erasingRef.current) {
-        const { x, y } = toWorld(e);
-        eraseAt(x, y);
-        return;
-      }
-      const s = strokeRef.current;
-      if (!s) return;
-      const { x, y } = toWorld(e);
-      const n = s.points.length;
-      if (Math.hypot(x - s.points[n - 2], y - s.points[n - 1]) > 1.5) {
-        s.points.push(x, y);
-        setCurStroke({ ...s, points: [...s.points] });
-      }
-    };
-    const onUp = () => {
-      erasingRef.current = false;
-      const s = strokeRef.current;
-      if (!s) return;
-      strokeRef.current = null;
-      setCurStroke(null);
-      if (s.points.length < 4) s.points.push(s.points[0] + 0.01, s.points[1] + 0.01); // 点
-      setStrokes((prev) => {
-        const next = [...prev, s];
-        if (!remoteRef.current) saveLocalStrokes(next);
-        return next;
-      });
-      if (remoteRef.current) insertStrokeRemote(s).catch(() => {});
-    };
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerup', onUp);
-    window.addEventListener('pointercancel', onUp);
-    return () => {
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerup', onUp);
-      window.removeEventListener('pointercancel', onUp);
-    };
-  }, [drawMode, toWorld, eraseAt]);
-
-  const undoStroke = React.useCallback(() => {
-    setStrokes((prev) => {
-      const idxRev = [...prev].reverse().findIndex((s) => s.owner === myToken);
-      if (idxRev === -1) return prev;
-      const idx = prev.length - 1 - idxRev;
-      const removed = prev[idx];
-      const next = prev.filter((_, i) => i !== idx);
-      if (remoteRef.current) deleteStrokeRemote(removed.id).catch(() => {});
-      else saveLocalStrokes(next);
-      return next;
-    });
-  }, [myToken]);
 
   // ---------- canvas: pan & card drag via pointer events ----------
   const startDrag = React.useCallback(
@@ -683,16 +542,6 @@ export default function WhiteboardApp() {
         <button className="wb-tb-btn" onClick={() => setPickerOpen(true)} title="名片 / 贴纸 / 拍立得 / 投票">
           ＋ 贴一张
         </button>
-        <button
-          className={`wb-tb-btn wb-tb-doodle${drawMode ? ' active' : ''}`}
-          onClick={() => {
-            setDrawMode((d) => !d);
-            setPen((p) => ({ ...p, eraser: false }));
-          }}
-          title="在白板任意角落画画"
-        >
-          🖌️ 涂鸦
-        </button>
         <div className="wb-tb-spacer" />
         <span className="wb-zoom-pct">{Math.round(scale * 100)}%</span>
         <button className="wb-tb-btn" onClick={() => setScale((s) => clamp(s * 0.9, 0.2, 3))} title="缩小">
@@ -723,9 +572,9 @@ export default function WhiteboardApp() {
         </div>
 
         <div
-          className={`wb-canvas${drawMode ? ' drawing' : ''}`}
+          className="wb-canvas"
           ref={canvasRef}
-          onPointerDown={(e) => (drawMode ? strokeStart(e) : startDrag(e, null))}
+          onPointerDown={(e) => startDrag(e, null)}
         >
           <div
             className="wb-transform"
@@ -757,50 +606,9 @@ export default function WhiteboardApp() {
                 }}
               />
             ))}
-            <DoodleLayer strokes={strokes} current={curStroke} />
           </div>
         </div>
       </div>
-
-      {drawMode && (
-        <div className="wb-pen-bar">
-          <span className="wb-pen-label">🖌️</span>
-          {PEN_COLORS.map((c) => (
-            <button
-              key={c}
-              className={`wb-color${pen.color === c && !pen.eraser ? ' active' : ''}`}
-              style={{ background: c }}
-              onClick={() => setPen((p) => ({ ...p, color: c, eraser: false }))}
-              aria-label="画笔颜色"
-            />
-          ))}
-          <span className="wb-pen-sep" />
-          {PEN_WIDTHS.map((w) => (
-            <button
-              key={w}
-              className={`wb-pen-width${pen.width === w && !pen.eraser ? ' active' : ''}`}
-              onClick={() => setPen((p) => ({ ...p, width: w, eraser: false }))}
-              aria-label="笔画粗细"
-            >
-              <span style={{ width: w + 2, height: w + 2 }} />
-            </button>
-          ))}
-          <span className="wb-pen-sep" />
-          <button
-            className={`wb-pen-tool${pen.eraser ? ' active' : ''}`}
-            onClick={() => setPen((p) => ({ ...p, eraser: !p.eraser }))}
-            title="橡皮擦（只能擦自己的笔迹）"
-          >
-            🧽
-          </button>
-          <button className="wb-pen-tool" onClick={undoStroke} title="撤销我上一笔">
-            ↩
-          </button>
-          <button className="wb-pen-done" onClick={() => setDrawMode(false)}>
-            完成 ✓
-          </button>
-        </div>
-      )}
 
       <MessageModal
         open={modalOpen}

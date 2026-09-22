@@ -10,7 +10,6 @@ import { createClient } from '@supabase/supabase-js';
 export const ESTHER_OWNER = 'esther'; // local 模式的管理员 token
 export const TOKEN_KEY = 'wb.myToken';
 export const CARDS_KEY = 'wb.cards.v2';
-export const STROKES_KEY = 'wb.strokes.v1';
 
 export const WB_CONFIG = {
   MODE: 'supabase', // 'local' | 'supabase'
@@ -18,7 +17,6 @@ export const WB_CONFIG = {
   SUPABASE_ANON_KEY:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZubnlhcm9pY2Zsem1qdXZ0ZW1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NDY1ODcsImV4cCI6MjEwMzEyMjU4N30.Eb4hdlu_5Y5ig42kaKGPgGBRrrdYhzXmIJtDIdNTGZA',
   TABLE: 'wb_cards',
-  STROKES_TABLE: 'wb_strokes',
   VOTES_TABLE: 'wb_votes',
   ADMINS_TABLE: 'wb_admins',
 };
@@ -66,22 +64,6 @@ export function loadLocalCards() {
 export function saveLocalCards(cards) {
   try {
     localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
-  } catch {
-    /* ignore quota */
-  }
-}
-
-export function loadLocalStrokes() {
-  try {
-    return JSON.parse(localStorage.getItem(STROKES_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-export function saveLocalStrokes(strokes) {
-  try {
-    localStorage.setItem(STROKES_KEY, JSON.stringify(strokes));
   } catch {
     /* ignore quota */
   }
@@ -174,31 +156,6 @@ export function isOwnEcho(id, ms = 2000) {
   return Date.now() - (localWriteTs.get(id) || 0) < ms;
 }
 
-// ---------- 涂鸦笔迹 ----------
-
-const rowToStroke = (row) => ({ ...row.data, id: row.id, owner: row.owner });
-
-export async function fetchStrokesRemote() {
-  const { data, error } = await getSb()
-    .from(WB_CONFIG.STROKES_TABLE)
-    .select('*')
-    .order('created_at', { ascending: true });
-  if (error) throw error;
-  return (data || []).map(rowToStroke);
-}
-
-export async function insertStrokeRemote(stroke) {
-  const { error } = await getSb()
-    .from(WB_CONFIG.STROKES_TABLE)
-    .insert({ id: stroke.id, owner: stroke.owner, data: stroke });
-  if (error) throw error;
-}
-
-export async function deleteStrokeRemote(id) {
-  const { error } = await getSb().from(WB_CONFIG.STROKES_TABLE).delete().eq('id', id);
-  if (error) throw error;
-}
-
 // ---------- 投票（一人一票，可改可取消） ----------
 
 export async function fetchVotes() {
@@ -251,11 +208,6 @@ export function subscribeRemote(handlers) {
       'postgres_changes',
       { event: '*', schema: 'public', table: WB_CONFIG.TABLE },
       (p) => handlers.onCard?.(p)
-    )
-    .on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: WB_CONFIG.STROKES_TABLE },
-      (p) => handlers.onStroke?.(p)
     )
     .on(
       'postgres_changes',
