@@ -66,6 +66,7 @@ body {
 .wb-tb-primary:hover { background: var(--yellow); border-style: solid; }
 .wb-tb-spacer { flex: 1; }
 .wb-zoom-pct { color: var(--blue); font-size: 11px; font-family: 'Fira Code', monospace; min-width: 44px; text-align: center; opacity: 0.6; }
+.wb-frozen-note { color: var(--blue); font-size: 13px; font-weight: 600; opacity: 0.7; white-space: nowrap; }
 
 /* ---------- Body ---------- */
 .wb-body { flex: 1; display: flex; min-height: 0; }

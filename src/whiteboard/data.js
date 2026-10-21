@@ -12,7 +12,8 @@ export const TOKEN_KEY = 'wb.myToken';
 export const CARDS_KEY = 'wb.cards.v2';
 
 export const WB_CONFIG = {
-  MODE: 'supabase', // 'local' | 'supabase'
+  // 2026-10-21 起封存：只读展示 snapshot.json，不再连数据库、不能留言/贴卡/投票
+  MODE: 'frozen', // 'local' | 'supabase' | 'frozen'
   SUPABASE_URL: 'https://fnnyaroicflzmjuvtemc.supabase.co',
   SUPABASE_ANON_KEY:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZubnlhcm9pY2Zsem1qdXZ0ZW1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NDY1ODcsImV4cCI6MjEwMzEyMjU4N30.Eb4hdlu_5Y5ig42kaKGPgGBRrrdYhzXmIJtDIdNTGZA',
@@ -20,6 +21,8 @@ export const WB_CONFIG = {
   VOTES_TABLE: 'wb_votes',
   ADMINS_TABLE: 'wb_admins',
 };
+
+export const isFrozen = () => WB_CONFIG.MODE === 'frozen';
 
 export function supabaseReady() {
   return (

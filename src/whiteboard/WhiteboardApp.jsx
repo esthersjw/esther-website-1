@@ -24,7 +24,9 @@ import {
   deleteVoteRemote,
   mergeVotes,
   subscribeRemote,
+  isFrozen,
 } from './data.js';
+import snapshot from './snapshot.json';
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 const SEED_VOTES_KEY = 'wb.seedVotes.v1';
@@ -57,6 +59,12 @@ function saveSeedOverride(id, patch) {
   }
 }
 
+const frozenCards = () =>
+  mergeVotes(
+    snapshot.cards.map((r) => ({ ...r.data, id: r.id, owner: r.owner })),
+    snapshot.votes
+  );
+
 function buildLocalCards() {
   const sv = loadSeedVotes();
   const ov = loadSeedOverrides();
@@ -77,9 +85,12 @@ export default function WhiteboardApp() {
   const localToken = React.useMemo(getMyToken, []);
   const [remote, setRemote] = React.useState(null); // { uid, isAdmin }，连接成功后才有
   const myToken = remote?.uid ?? localToken;
-  const admin = remote ? remote.isAdmin : isAdmin(localToken);
+  const frozen = isFrozen();
+  const admin = frozen ? false : remote ? remote.isAdmin : isAdmin(localToken);
 
-  const [cards, setCards] = React.useState(() => (supabaseReady() ? [] : buildLocalCards()));
+  const [cards, setCards] = React.useState(() =>
+    frozen ? frozenCards() : supabaseReady() ? [] : buildLocalCards()
+  );
   const [scale, setScale] = React.useState(0.8);
   const [pan, setPan] = React.useState({ x: 40, y: 10 });
   const [editing, setEditing] = React.useState(null); // { id, text }
@@ -409,7 +420,7 @@ export default function WhiteboardApp() {
       movedRef.current = false;
       if (card) {
         // 只有创建者（或管理员）能拖动卡片
-        if (!admin && card.owner !== myToken) return;
+        if (frozen || (!admin && card.owner !== myToken)) return;
         dragRef.current = {
           type: 'card',
           id: card.id,
@@ -527,7 +538,7 @@ export default function WhiteboardApp() {
   }, []);
 
   // ---------- render ----------
-  const canEditCard = (card) => admin || card.owner === myToken;
+  const canEditCard = (card) => !frozen && (admin || card.owner === myToken);
 
   return (
     <div className="wb-app">
@@ -536,12 +547,18 @@ export default function WhiteboardApp() {
           <div className="wb-logo-icon">E</div>
           <span>共享白板</span>
         </div>
-        <button className="wb-tb-btn wb-tb-primary" onClick={() => setModalOpen(true)}>
-          ✍️ 留言
-        </button>
-        <button className="wb-tb-btn" onClick={() => setPickerOpen(true)} title="名片 / 贴纸 / 拍立得 / 投票">
-          ＋ 贴一张
-        </button>
+        {frozen ? (
+          <span className="wb-frozen-note">已封存 · 只能看看 ✦</span>
+        ) : (
+          <>
+            <button className="wb-tb-btn wb-tb-primary" onClick={() => setModalOpen(true)}>
+              ✍️ 留言
+            </button>
+            <button className="wb-tb-btn" onClick={() => setPickerOpen(true)} title="名片 / 贴纸 / 拍立得 / 投票">
+              ＋ 贴一张
+            </button>
+          </>
+        )}
         <div className="wb-tb-spacer" />
         <span className="wb-zoom-pct">{Math.round(scale * 100)}%</span>
         <button className="wb-tb-btn" onClick={() => setScale((s) => clamp(s * 0.9, 0.2, 3))} title="缩小">
@@ -594,7 +611,7 @@ export default function WhiteboardApp() {
                 onDelete={deleteCard}
                 onPointerDown={(e, c) => startDrag(e, c)}
                 onStartEdit={startEdit}
-                onVote={onVote}
+                onVote={frozen ? undefined : onVote}
                 onShowQr={setQrSrc}
                 movedRef={movedRef}
                 onBringFront={() => {
